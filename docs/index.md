@@ -7,17 +7,25 @@ description: Skills and prompts for agents that write text without sounding like
 
 **Skills and prompts for agents that write text without sounding like AI.**
 
-Research-grounded. Open source. Works with [opencode](https://opencode.ai), [pi](https://github.com/badlogic/pi-mono), Claude Code, Codex CLI, and any other Agent Skills-compatible agent.
+Research-grounded. Open source. Works with opencode, pi, Claude Code, Codex CLI, and any other Agent Skills-compatible agent.
 
-## Install in one command
+## How to install
 
-```bash
-git clone https://github.com/11111000000/agents-writing-skills.git
-cd agents-writing-skills
-./install.sh all
+This repository contains a `manifest.json` that any agent can read to understand what's available and where to put it.
+
+**Tell your agent:**
+
+```
+Clone https://github.com/11111000000/agents-writing-skills and install the skills from manifest.json
 ```
 
-This installs four skills and nine prompt templates to your agent. Then just ask your agent to write something — the right skill loads automatically.
+The agent will:
+1. Clone the repository
+2. Read `manifest.json`
+3. Copy skills to its own skill directory
+4. Register prompts if applicable
+
+No shell scripts. No hardcoded paths. Any agent, any OS.
 
 ## What you get
 
@@ -34,7 +42,7 @@ Nine prompt templates for pi: `/humanize`, `/audit-ai`, `/audit-43`, `/humanize-
 
 ## What's in the knowledge base
 
-The repository includes an [Obsidian-format knowledge base](knowledge-base.md) documenting:
+The repository includes an Obsidian-format knowledge base documenting:
 
 - **43 AI-pattern categories** (from Aboudjem/humanizer-skill)
 - **9 humanization levers** (from harshaneel/humanize)
@@ -61,8 +69,6 @@ Each skill encodes:
 >
 > Skills are **literary editors**, not **detector-bypass tools**.
 
-See [Limitations](limitations.md) for full discussion.
-
 ## Built on real research
 
 - [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill) — 43-pattern catalogue (MIT, 98★)
@@ -78,6 +84,6 @@ See [Limitations](limitations.md) for full discussion.
 
 ## Contributing
 
-See [Contributing](contributing.md). New skills start from [`skills/template-skill/`](https://github.com/11111000000/agents-writing-skills/tree/main/skills/template-skill).
+New skills start from [`skills/template-skill/`](https://github.com/11111000000/agents-writing-skills/tree/main/skills/template-skill).
 
-[Get started →](getting-started.md) | [Browse skills →](skills-overview.md) | [Read knowledge base →](knowledge-base.md)
+Read the [43-pattern catalogue](01-patterns/43-patterns-catalogue) to understand what AI patterns look like. Read [limits-and-self-critique](05-references/limits-and-self-critique) to understand what these skills can and cannot do.

@@ -4,49 +4,30 @@
 
 This repository provides:
 
-1. **Skills** for [opencode](https://opencode.ai), [pi](https://github.com/badlogic/pi-mono), Claude Code, and other Agent Skills-compatible agents. Skills help the agent write, edit, and audit prose so it reads as human-authored.
-2. **Prompt templates** for [pi](https://github.com/badlogic/pi-mono), exposed as `/humanize`, `/audit-ai`, etc.
+1. **Skills** for opencode, pi, Claude Code, Codex CLI, and other Agent Skills-compatible agents. Skills help the agent write, edit, and audit prose so it reads as human-authored.
+2. **Prompt templates** for pi, exposed as `/humanize`, `/audit-ai`, etc.
 3. **Knowledge base** — an Obsidian-formatted vault documenting the patterns, techniques, and detection methods behind the skills.
 
 > [!important] What this is NOT
 > This is not a tool for evading AI detection. Skills help text **read as human** to human readers. They do not guarantee passing commercial detectors like GPTZero, Pangram, or Grammarly. See [`knowledge/05-References/limits-and-self-critique.md`](knowledge/05-References/limits-and-self-critique.md) for what works and what doesn't.
 
-## Quick start
+## How to install
 
-### Install all skills
+This repository contains a `manifest.json` that any agent can read to understand what's available and where to put it.
 
-```bash
-git clone https://github.com/11111000000/agents-writing-skills.git
-cd agents-writing-skills
-./install.sh opencode    # install skills to ~/.config/opencode/skills/
-./install.sh pi          # install skills + prompts to ~/.pi/agent/
+**Tell your agent:**
+
+```
+Clone https://github.com/11111000000/agents-writing-skills and install the skills from manifest.json
 ```
 
-Or install for both at once:
+The agent will:
+1. Clone the repository
+2. Read `manifest.json`
+3. Copy skills to its own skill directory
+4. Register prompts if applicable
 
-```bash
-./install.sh all
-```
-
-### Install a single skill
-
-```bash
-./install.sh skill humanize-writer
-./install.sh prompt audit-43
-```
-
-### List available skills and prompts
-
-```bash
-./install.sh list
-```
-
-### Uninstall
-
-```bash
-./install.sh uninstall opencode
-./install.sh uninstall pi
-```
+No shell scripts. No hardcoded paths. Any agent, any OS.
 
 ## What you get
 
@@ -75,11 +56,13 @@ Or install for both at once:
 
 ### Knowledge base (Obsidian)
 
-See [`knowledge/README.md`](knowledge/README.md). The vault documents 43 AI-pattern categories (from Aboudjem), 9 humanization levers (from harshaneel), Russian-specific patterns (from Wikipedia RU), and detection methods (Binoculars, MASH, watermarking).
+The vault documents 43 AI-pattern categories (from Aboudjem), 9 humanization levers (from harshaneel), Russian-specific patterns (from Wikipedia RU), and detection methods (Binoculars, MASH, watermarking).
+
+Browse the [online documentation](https://11111000000.github.io/agents-writing-skills/) or open `knowledge/` directly in Obsidian.
 
 ## How skills work
 
-Skills are Markdown files with YAML frontmatter. They live in `~/.config/opencode/skills/<name>/SKILL.md` (or `~/.pi/agent/skills/<name>/SKILL.md`). When the agent sees a task that matches a skill's `description`, it loads the skill automatically.
+Skills are Markdown files with YAML frontmatter. When the agent sees a task that matches a skill's `description`, it loads the skill automatically.
 
 Each skill encodes:
 
@@ -88,24 +71,10 @@ Each skill encodes:
 - **Companion skills** — when to chain skills
 - **Limitations** — explicit "when NOT to apply" sections
 
-Example frontmatter:
-
-```yaml
----
-name: humanize-writer
-description: Write new prose that avoids typical LLM patterns...
-license: MIT
-compatibility: opencode, pi, claude-code
-metadata:
-  audience: writing-assistants
-  workflow: text-generation
-  version: 2
----
-```
-
 ## Documentation
 
-- **[Knowledge base](knowledge/README.md)** — patterns, techniques, examples
+- **[Online documentation](https://11111000000.github.io/agents-writing-skills/)** — knowledge base rendered as a website
+- **[Knowledge base](knowledge/)** — patterns, techniques, examples (Obsidian format)
 - **[Contributing](CONTRIBUTING.md)** — how to add new skills or prompts
 - **[Changelog](CHANGELOG.md)** — what changed in each release
 - **[Limitations](knowledge/05-References/limits-and-self-critique.md)** — epistemological analysis

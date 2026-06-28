@@ -1,0 +1,103 @@
+{
+  "name": "agents-writing-skills",
+  "version": "1.0.0",
+  "description": "Skills and prompts for agents that write text without sounding like AI",
+  "repository": "https://github.com/11111000000/agents-writing-skills",
+  "license": "MIT",
+  "skills": [
+    {
+      "name": "humanize-writer",
+      "path": "skills/humanize-writer/SKILL.md",
+      "description": "Write new prose without AI tells",
+      "use_when": "User asks to write documentation, README, blog post, email, or any narrative text",
+      "companion_skills": ["humanize-editor", "anti-ai-auditor"],
+      "references": ["skills/humanize-writer/references/lexicon.md"]
+    },
+    {
+      "name": "humanize-editor",
+      "path": "skills/humanize-editor/SKILL.md",
+      "description": "Rewrite existing text to read human",
+      "use_when": "User asks to humanize, de-AI, or rewrite AI-generated text",
+      "companion_skills": ["anti-ai-auditor", "ai-pattern-rewriter"],
+      "references": []
+    },
+    {
+      "name": "anti-ai-auditor",
+      "path": "skills/anti-ai-auditor/SKILL.md",
+      "description": "Diagnose AI patterns without rewriting",
+      "use_when": "User asks to check if text sounds like AI, or wants a diagnosis only",
+      "companion_skills": ["humanize-editor", "ai-pattern-rewriter"],
+      "references": []
+    },
+    {
+      "name": "ai-pattern-rewriter",
+      "path": "skills/ai-pattern-rewriter/SKILL.md",
+      "description": "Fix specific AI-pattern phrases surgically",
+      "use_when": "User identifies specific phrases that sound too AI and wants targeted fixes",
+      "companion_skills": ["humanize-editor", "anti-ai-auditor"],
+      "references": []
+    }
+  ],
+  "prompts": [
+    {
+      "name": "humanize",
+      "path": "prompts/humanize.md",
+      "description": "Full humanization workflow",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "audit-ai",
+      "path": "prompts/audit-ai.md",
+      "description": "Quick AI-sounding audit",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "audit-43",
+      "path": "prompts/audit-43.md",
+      "description": "Full 43-pattern audit",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "humanize-9-levers",
+      "path": "prompts/humanize-9-levers.md",
+      "description": "Humanize using 9-lever system",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "anti-thesis",
+      "path": "prompts/anti-thesis.md",
+      "description": "Anti-thesis writing approach",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "writer-voice",
+      "path": "prompts/writer-voice.md",
+      "description": "Find and match writer's voice",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "clean-draft",
+      "path": "prompts/clean-draft.md",
+      "description": "Clean up a draft",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "rewrite-ai",
+      "path": "prompts/rewrite-ai.md",
+      "description": "Rewrite AI text completely",
+      "target_agents": ["pi"]
+    },
+    {
+      "name": "honest-check",
+      "path": "prompts/honest-check.md",
+      "description": "Honest self-check of output",
+      "target_agents": ["pi"]
+    }
+  ],
+  "install_instructions": {
+    "opencode": "Copy each skill directory to ~/.config/opencode/skills/. Each skill is a single SKILL.md file with optional references/ subdirectory.",
+    "pi": "Copy each skill directory to ~/.pi/agent/skills/. Copy prompts to ~/.pi/agent/prompts/.",
+    "claude_code": "Copy each skill directory to ~/.claude/skills/ or use the /install-skill command.",
+    "generic": "Read this manifest, identify which skills you want, and copy the SKILL.md files to your agent's skill directory."
+  }
+}
