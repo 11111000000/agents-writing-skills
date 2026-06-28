@@ -137,7 +137,7 @@ EOF
 # Build
 log "Building Quartz site..."
 mkdir -p "$OUTPUT_DIR"
-(cd "$QUARTZ_DIR" && npx quartz build --output "$OUTPUT_DIR" --serve false)
+(cd "$QUARTZ_DIR" && npx quartz build -d content -o "$OUTPUT_DIR")
 
 ok "Site built at $OUTPUT_DIR"
 log "Next: git add $OUTPUT_DIR && git commit (or use GitHub Actions)"
