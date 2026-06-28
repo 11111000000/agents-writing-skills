@@ -14,11 +14,13 @@ node_modules/
 package-lock.json
 
 # Quartz (cloned separately, regenerated on each build)
-.quartz/
+.quartz-src/
+.quartz-cache/
 
 # Build output (CI-generated, not in repo)
 public/
 site/
+content/
 
 # Obsidian workspace (per-user state, not for repo)
 .obsidian/
