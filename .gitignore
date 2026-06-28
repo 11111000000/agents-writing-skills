@@ -13,20 +13,9 @@ Thumbs.db
 node_modules/
 package-lock.json
 
-# Quartz (cloned separately, regenerated on each build)
-.quartz-cache/
-
-# Copied Quartz files (ephemeral, created during build)
-quartz/
-node_modules/
-package.json
-package-lock.json
-quartz.config.ts
-
 # Build output (CI-generated, not in repo)
 public/
 site/
-content/
 
 # Obsidian workspace (per-user state, not for repo)
 .obsidian/
