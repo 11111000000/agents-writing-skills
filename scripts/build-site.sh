@@ -100,5 +100,9 @@ log "Building Quartz site..."
 mkdir -p "$OUTPUT_DIR"
 (cd "$TEMP_QUARTZ" && npx quartz build -d content -o "$OUTPUT_DIR")
 
+# Post-process: fix data-basepath in all HTML files
+log "Fixing data-basepath in HTML files..."
+find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|data-basepath>|data-basepath="agents-writing-skills">|g' {} +
+
 ok "Site built at $OUTPUT_DIR"
 log "Files: $(find "$OUTPUT_DIR" -type f | wc -l)"
