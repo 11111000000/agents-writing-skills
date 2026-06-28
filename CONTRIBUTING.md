@@ -10,7 +10,7 @@ Be kind. We're all here to make agents write better. Disagreements about techniq
 
 Open an issue using the **Bug Report** template. Include:
 
-- Component affected (skill, prompt, install.sh, knowledge note, build)
+- Component affected (skill, prompt, knowledge note, build)
 - Version (git tag or commit hash)
 - What happened vs what you expected
 - Steps to reproduce
@@ -42,9 +42,10 @@ The knowledge base is an Obsidian vault in `knowledge/`. To add or modify notes:
 2. Create a branch: `git checkout -b feat/your-skill-name`
 3. Make your changes.
 4. Run `./scripts/validate-skills.sh` (validates frontmatter).
-5. Run `./install.sh skill <name>` to test locally.
-6. Commit with a conventional commit message.
-7. Push and open a PR.
+5. Run `./scripts/validate-manifest.sh` (verifies all paths exist).
+6. Run `./scripts/test-skills.sh` (validates skill structure).
+7. Commit with a conventional commit message.
+8. Push and open a PR.
 
 ### Conventional commits
 
@@ -58,7 +59,8 @@ chore: update CI workflow
 ### PR checklist
 
 - [ ] `./scripts/validate-skills.sh` passes
-- [ ] Local installation tested with `./install.sh`
+- [ ] `./scripts/validate-manifest.sh` passes
+- [ ] `./scripts/test-skills.sh` passes
 - [ ] Description ≤ 1024 chars
 - [ ] License specified (MIT or Apache 2.0)
 - [ ] "When NOT to apply" section present
@@ -109,7 +111,7 @@ $@
 
 5. Test:
    ```bash
-   ./install.sh skill your-skill-name
+   ./scripts/test-skills.sh
    # Then in your agent, try triggering it
    ```
 

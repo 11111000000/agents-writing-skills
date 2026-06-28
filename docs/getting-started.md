@@ -8,40 +8,39 @@ title: Getting Started
 
 ### One command
 
-```bash
-git clone https://github.com/11111000000/agents-writing-skills.git
-cd agents-writing-skills
-./install.sh all
+Tell your agent:
+
+```
+Clone https://github.com/11111000000/agents-writing-skills and install the skills from manifest.json
 ```
 
-This installs:
+The agent will:
+1. Clone the repository
+2. Read `manifest.json`
+3. Copy skills to its own skill directory
+4. Register prompts if applicable
 
-- All skills to `~/.config/opencode/skills/`
-- All skills to `~/.pi/agent/skills/`
-- All prompt templates to `~/.pi/agent/prompts/`
+No shell scripts. No hardcoded paths. Any agent, any OS.
 
-### Install for one agent
+### Manual install
 
-```bash
-./install.sh opencode    # only opencode
-./install.sh pi          # only pi
-```
+If you prefer to install manually:
 
-### Install single skill
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/11111000000/agents-writing-skills.git
+   ```
 
-```bash
-./install.sh skill humanize-writer
-```
+2. Read `manifest.json` to understand what's available
+
+3. Copy skills to your agent's skill directory:
+   - opencode: `~/.config/opencode/skills/`
+   - pi: `~/.pi/agent/skills/`
+   - claude-code: `~/.claude/skills/`
 
 ## Verify
 
-List what was installed:
-
-```bash
-./install.sh list
-```
-
-Open your agent and ask: «Help me write a README». The agent should automatically load `humanize-writer`.
+Open your agent and ask: "Help me write a README". The agent should automatically load `humanize-writer`.
 
 ## Usage examples
 
@@ -72,15 +71,9 @@ Pi runs `audit-ai`, returns a structured report with category scores, hit list, 
 ```bash
 cd agents-writing-skills
 git pull
-./install.sh all
 ```
 
-## Uninstall
-
-```bash
-./install.sh uninstall opencode
-./install.sh uninstall pi
-```
+The agent will pick up changes on next load.
 
 ## Next steps
 

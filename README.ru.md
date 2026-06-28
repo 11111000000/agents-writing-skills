@@ -13,40 +13,33 @@
 
 ## Установка
 
-### Все skill'ы сразу
+Скажите агенту:
 
-```bash
-git clone https://github.com/11111000000/agents-writing-skills.git
-cd agents-writing-skills
-./install.sh opencode    # skill'ы в ~/.config/opencode/skills/
-./install.sh pi          # skill'ы + промпты в ~/.pi/agent/
+```
+Клонируй https://github.com/11111000000/agents-writing-skills и установи skill'ы из manifest.json
 ```
 
-Или сразу везде:
+Агент:
+1. Клонирует репозиторий
+2. Читает `manifest.json`
+3. Копирует skill'ы в свою директорию
+4. Регистрирует промпты если нужно
 
-```bash
-./install.sh all
-```
+Без скриптов. Без захардкоженных путей. Любой агент, любая ОС.
 
-### Один skill
+### Ручная установка
 
-```bash
-./install.sh skill humanize-writer
-./install.sh prompt audit-43
-```
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/11111000000/agents-writing-skills.git
+   ```
 
-### Список доступных skill'ов и промптов
+2. Прочитайте `manifest.json` чтобы понять что доступно
 
-```bash
-./install.sh list
-```
-
-### Удаление
-
-```bash
-./install.sh uninstall opencode
-./install.sh uninstall pi
-```
+3. Скопируйте skill'ы в директорию skill'ов вашего агента:
+   - opencode: `~/.config/opencode/skills/`
+   - pi: `~/.pi/agent/skills/`
+   - claude-code: `~/.claude/skills/`
 
 ## Что вы получаете
 

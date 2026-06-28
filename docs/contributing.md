@@ -16,8 +16,8 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root.
 Before submitting:
 
 1. Run `./scripts/validate-skills.sh` to check frontmatter.
-2. Run `./install.sh skill <name>` to test locally.
-3. Run `./install.sh prompt <name>` if adding prompts.
+2. Run `./scripts/validate-manifest.sh` to verify all paths exist.
+3. Run `./scripts/test-skills.sh` to validate skill structure.
 
 ## License
 
