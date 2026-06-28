@@ -5,17 +5,25 @@
 # Requirements: Node.js >= 22, npm >= 10.9.2
 #
 # What it does:
-#   1. Clones Quartz v5 to .quartz-src/ (if not present)
+#   1. Clones Quartz v5 to quartz-src/ (if not present)
 #   2. Sets up content directory with knowledge base + landing page
 #   3. Writes Quartz config (quartz.config.yaml)
 #   4. Builds site to output directory
+#
+# Directory structure expected by Quartz v5:
+#   ./
+#   ├── quartz/           # Quartz source (symlink → quartz-src/quartz)
+#   ├── .quartz-cache/    # Build cache
+#   ├── content/          # Your content
+#   ├── quartz.config.yaml
+#   ├── plugins.json
+#   └── package.json
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUTPUT_DIR="${1:-$REPO_ROOT/public}"
-QUARTZ_SRC="$REPO_ROOT/.quartz-src"
-QUARTZ_CACHE="$REPO_ROOT/.quartz-cache"
+QUARTZ_SRC="$REPO_ROOT/quartz-src"
 KNOWLEDGE_DIR="$REPO_ROOT/knowledge"
 LANDING_SRC="$REPO_ROOT/docs/index.md"
 CONTENT_DIR="$REPO_ROOT/content"
@@ -74,6 +82,24 @@ if [[ -f "$LANDING_SRC" ]]; then
   cp "$LANDING_SRC" "$CONTENT_DIR/index.md"
   ok "Landing page → content/index.md"
 fi
+
+# Set up Quartz directory structure at repo root
+# Quartz expects: quartz/ .quartz-cache/ content/ quartz.config.yaml plugins.json
+log "Setting up Quartz directory structure..."
+
+# Remove old quartz directory if it exists (but not quartz-src)
+if [[ -d "$REPO_ROOT/quartz" ]] && [[ ! -L "$REPO_ROOT/quartz" ]]; then
+  rm -rf "$REPO_ROOT/quartz"
+fi
+
+# Create symlinks for Quartz source
+ln -sfn "$QUARTZ_SRC/quartz" "$REPO_ROOT/quartz"
+ln -sfn "$QUARTZ_SRC/node_modules" "$REPO_ROOT/node_modules"
+ln -sfn "$QUARTZ_SRC/package.json" "$REPO_ROOT/package.json"
+ln -sfn "$QUARTZ_SRC/package-lock.json" "$REPO_ROOT/package-lock.json"
+
+# Create cache directory
+mkdir -p "$REPO_ROOT/.quartz-cache"
 
 # Write Quartz config
 log "Writing Quartz config..."
@@ -155,26 +181,15 @@ cat > "$REPO_ROOT/plugins.json" <<'PLUGINS'
 }
 PLUGINS
 
-# Build using a temporary working directory that matches Quartz expectations
+# Build
 log "Building Quartz site..."
 mkdir -p "$OUTPUT_DIR"
-mkdir -p "$QUARTZ_CACHE"
-
-# Create a temporary build directory with the expected structure
-BUILD_DIR=$(mktemp -d)
-trap "rm -rf $BUILD_DIR" EXIT
-
-# Set up the build directory structure
-ln -sf "$QUARTZ_SRC/quartz" "$BUILD_DIR/quartz"
-ln -sf "$QUARTZ_SRC/node_modules" "$BUILD_DIR/node_modules"
-ln -sf "$QUARTZ_SRC/package.json" "$BUILD_DIR/package.json"
-ln -sf "$REPO_ROOT/quartz.config.yaml" "$BUILD_DIR/quartz.config.yaml"
-ln -sf "$REPO_ROOT/plugins.json" "$BUILD_DIR/plugins.json"
-ln -sf "$CONTENT_DIR" "$BUILD_DIR/content"
-ln -sf "$QUARTZ_CACHE" "$BUILD_DIR/.quartz-cache"
-
-# Run the build
-(cd "$BUILD_DIR" && node quartz/bootstrap-cli.mjs build -d content -o "$OUTPUT_DIR")
+(cd "$REPO_ROOT" && node quartz/bootstrap-cli.mjs build -d content -o "$OUTPUT_DIR")
 
 ok "Site built at $OUTPUT_DIR"
 log "Files: $(find "$OUTPUT_DIR" -type f | wc -l)"
+
+# Cleanup symlinks (but keep content for caching)
+log "Cleaning up symlinks..."
+rm -f "$REPO_ROOT/quartz" "$REPO_ROOT/node_modules" "$REPO_ROOT/package.json" "$REPO_ROOT/package-lock.json"
+ok "Done"
