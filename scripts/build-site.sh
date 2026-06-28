@@ -112,5 +112,9 @@ mkdir -p "$OUTPUT_DIR"
 log "Fixing data-basepath to absolute path..."
 find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|data-basepath[^>]*>|data-basepath="/agents-writing-skills">|g' {} +
 
+# Post-process: replace default 'Quartz 5' site title with our title
+log "Replacing default site title..."
+find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|Quartz 5|Agents Writing Skills|g' {} +
+
 ok "Site built at $OUTPUT_DIR"
 log "Files: $(find "$OUTPUT_DIR" -type f | wc -l)"
