@@ -14,7 +14,11 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# Convert relative output path to absolute
 OUTPUT_DIR="${1:-$REPO_ROOT/public}"
+if [[ "$OUTPUT_DIR" != /* ]]; then
+  OUTPUT_DIR="$REPO_ROOT/$OUTPUT_DIR"
+fi
 KNOWLEDGE_DIR="$REPO_ROOT/knowledge"
 LANDING_SRC="$REPO_ROOT/docs/index.md"
 TEMP_QUARTZ=$(mktemp -d)
