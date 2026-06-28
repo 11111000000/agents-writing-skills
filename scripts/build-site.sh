@@ -87,7 +87,7 @@ log "Initializing Quartz..."
   --strategy copy \
   --source "$TEMP_QUARTZ/content" \
   --directory content \
-  --links shortest \
+  --links absolute \
   --baseUrl "agents-writing-skills" \
   --no-open 2>&1) || warn "Quartz create may have warnings (non-fatal)"
 
