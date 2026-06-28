@@ -1,0 +1,40 @@
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Editor
+.idea/
+.vscode/
+*.iml
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Quartz build output (CI-generated)
+site/
+.quartz-cache/
+.quartz/
+
+# Obsidian workspace (per-user state, not for repo)
+.obsidian/
+.obsidian.vimrc
+.trash/
+
+# Personal notes / drafts
+drafts/
+private/
+*.local.md
+
+# Secrets / env
+.env
+.env.local
+*.key
+
+# OS file metadata
+.DS_Store
+desktop.ini

@@ -1,0 +1,43 @@
+name: Validate Skills
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'skills/**'
+      - 'prompts/**'
+      - 'scripts/validate-skills.sh'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'skills/**'
+      - 'prompts/**'
+
+jobs:
+  validate:
+    name: Validate SKILL.md frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run validation
+        run: ./scripts/validate-skills.sh .
+
+      - name: Check for stray em-dash patterns
+        run: |
+          echo "Checking for excessive em-dash in skills (limit: 1 per 300 words in descriptions)"
+          for skill_md in skills/*/SKILL.md; do
+            if [[ -f "$skill_md" ]]; then
+              em=$(grep -o '—' "$skill_md" | wc -l)
+              words=$(wc -w < "$skill_md")
+              if [[ $words -gt 0 ]]; then
+                per_300=$(python3 -c "print($em * 300 / $words)")
+                # Allow up to 5 per 300 in examples; flag if > 10
+                if (( $(echo "$per_300 > 10" | bc -l) )); then
+                  echo "::warning::$skill_md has $per_300 em-dashes per 300 words (too many)"
+                else
+                  echo "✓ $skill_md: $per_300 em-dashes per 300 words"
+                fi
+              fi
+            fi
+          done
