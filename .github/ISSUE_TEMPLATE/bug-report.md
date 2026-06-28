@@ -11,7 +11,7 @@ body:
       options:
         - Skill (which one?)
         - Prompt template
-        - install.sh
+        - Manifest / installation
         - Knowledge base note
         - GitHub Pages / Quartz build
     validations:
