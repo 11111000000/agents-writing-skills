@@ -5,33 +5,36 @@
 # Requirements: Node.js >= 22, npm >= 10.9.2
 #
 # What it does:
-#   1. Clones Quartz v5 to quartz-src/ (if not present)
-#   2. Sets up content directory with knowledge base + landing page
-#   3. Writes Quartz config (quartz.config.yaml)
+#   1. Clones Quartz v5 to a temp directory
+#   2. Copies necessary files to repo root (matching Quartz expected structure)
+#   3. Sets up content directory with knowledge base + landing page
 #   4. Builds site to output directory
-#
-# Directory structure expected by Quartz v5:
-#   ./
-#   ├── quartz/           # Quartz source (symlink → quartz-src/quartz)
-#   ├── .quartz-cache/    # Build cache
-#   ├── content/          # Your content
-#   ├── quartz.config.yaml
-#   ├── plugins.json
-#   └── package.json
+#   5. Cleans up copied files
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUTPUT_DIR="${1:-$REPO_ROOT/public}"
-QUARTZ_SRC="$REPO_ROOT/quartz-src"
+QUARTZ_CACHE="$REPO_ROOT/.quartz-cache"
 KNOWLEDGE_DIR="$REPO_ROOT/knowledge"
 LANDING_SRC="$REPO_ROOT/docs/index.md"
 CONTENT_DIR="$REPO_ROOT/content"
+TEMP_QUARTZ=$(mktemp -d)
 
 log() { printf '\033[1;34m[build]\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33m[warn]\033[0m %s\n' "$*" >&2; }
 err() { printf '\033[1;31m[err]\033[0m %s\n' "$*" >&2; }
 ok() { printf '\033[1;32m[ok]\033[0m %s\n' "$*"; }
+
+# Cleanup function
+cleanup() {
+  log "Cleaning up temporary files..."
+  rm -rf "$TEMP_QUARTZ"
+  # Remove copied Quartz files from repo root
+  rm -rf "$REPO_ROOT/quartz" "$REPO_ROOT/node_modules" "$REPO_ROOT/package.json" "$REPO_ROOT/package-lock.json"
+  rm -f "$REPO_ROOT/quartz.config.ts"
+}
+trap cleanup EXIT
 
 # Check Node.js version
 if ! command -v node >/dev/null 2>&1; then
@@ -50,23 +53,26 @@ if ! command -v npm >/dev/null 2>&1; then
   exit 1
 fi
 
-# Clone Quartz v5 (shallow clone for speed)
-if [[ ! -d "$QUARTZ_SRC" ]]; then
-  log "Cloning Quartz v5..."
-  git clone --depth 1 --branch v5 https://github.com/jackyzha0/quartz.git "$QUARTZ_SRC"
-fi
+# Clone Quartz v5 to temp directory
+log "Cloning Quartz v5..."
+git clone --depth 1 --branch v5 https://github.com/jackyzha0/quartz.git "$TEMP_QUARTZ"
 
 # Verify Quartz version
-if [[ ! -f "$QUARTZ_SRC/package.json" ]] || ! grep -q '"@jackyzha0/quartz"' "$QUARTZ_SRC/package.json"; then
-  err "Quartz v5 not found at $QUARTZ_SRC"
+if [[ ! -f "$TEMP_QUARTZ/package.json" ]] || ! grep -q '"@jackyzha0/quartz"' "$TEMP_QUARTZ/package.json"; then
+  err "Quartz v5 not found at $TEMP_QUARTZ"
   exit 1
 fi
 
-# Install dependencies if needed
-if [[ ! -d "$QUARTZ_SRC/node_modules" ]]; then
-  log "Installing Quartz dependencies (this may take a few minutes)..."
-  (cd "$QUARTZ_SRC" && npm ci --ignore-scripts)
-fi
+# Install dependencies
+log "Installing Quartz dependencies (this may take a few minutes)..."
+(cd "$TEMP_QUARTZ" && npm ci --ignore-scripts)
+
+# Copy necessary files to repo root
+log "Copying Quartz files to repo root..."
+cp -R "$TEMP_QUARTZ/quartz" "$REPO_ROOT/"
+cp "$TEMP_QUARTZ/package.json" "$REPO_ROOT/"
+cp "$TEMP_QUARTZ/package-lock.json" "$REPO_ROOT/"
+cp -R "$TEMP_QUARTZ/node_modules" "$REPO_ROOT/"
 
 # Set up content directory: knowledge + landing page
 log "Setting up content directory..."
@@ -83,103 +89,68 @@ if [[ -f "$LANDING_SRC" ]]; then
   ok "Landing page → content/index.md"
 fi
 
-# Set up Quartz directory structure at repo root
-# Quartz expects: quartz/ .quartz-cache/ content/ quartz.config.yaml plugins.json
-log "Setting up Quartz directory structure..."
-
-# Remove old quartz directory if it exists (but not quartz-src)
-if [[ -d "$REPO_ROOT/quartz" ]] && [[ ! -L "$REPO_ROOT/quartz" ]]; then
-  rm -rf "$REPO_ROOT/quartz"
-fi
-
-# Create symlinks for Quartz source
-ln -sfn "$QUARTZ_SRC/quartz" "$REPO_ROOT/quartz"
-ln -sfn "$QUARTZ_SRC/node_modules" "$REPO_ROOT/node_modules"
-ln -sfn "$QUARTZ_SRC/package.json" "$REPO_ROOT/package.json"
-ln -sfn "$QUARTZ_SRC/package-lock.json" "$REPO_ROOT/package-lock.json"
-
-# Create cache directory
-mkdir -p "$REPO_ROOT/.quartz-cache"
-
 # Write Quartz config
 log "Writing Quartz config..."
-cat > "$REPO_ROOT/quartz.config.yaml" <<'EOF'
-pageTitle: "Agents Writing Skills"
-enableSPA: true
-enablePopovers: true
-analytics: null
-baseUrl: "agents-writing-skills"
-ignorePatterns:
-  - private
-  - templates
-  - ".obsidian"
-  - "06-Sources"
-generateSocialImages: false
-enableSiteMap: true
-enableRSS: true
-enableJsonLd: true
-defaultDateType: "modified"
-prettyLinks: true
-showLineNumbers: false
-showBacklinks: true
-showExplorer: true
-showGraph: true
-showTableOfContents: true
-enableToc: true
-tocDepth: 3
-enableCategoryTags: true
-enableTagPreview: true
-enablePopover: true
+cat > "$REPO_ROOT/quartz.config.ts" <<'EOF'
+import { QuartzConfig } from "./quartz/cfg"
+import * as Plugin from "./quartz/plugins"
 
-plugins:
-  transformers:
-    - FrontMatter
-    - CreatedModifiedDate
-    - SyntaxHighlighting
-    - ObsidianFlavoredMarkdown
-    - Latex
-  filters:
-    - RemoveDrafts
-    - IgnorePatterns
-  emitters:
-    - AliasRedirects
-    - ComponentResources
-    - ContentPage
-    - FolderPage
-    - ContentMetadata
-    - RSS
-    - Assets
-    - Static
+const config: QuartzConfig = {
+  configuration: {
+    pageTitle: "Agents Writing Skills",
+    enableSPA: true,
+    enablePopovers: true,
+    analytics: null,
+    baseUrl: "agents-writing-skills",
+    ignorePatterns: ["private", "templates", ".obsidian", "06-Sources"],
+    generateSocialImages: false,
+    enableAutoLightHouse: false,
+    enableSiteMap: true,
+    enableRSS: true,
+    enableJsonLd: true,
+    defaultDateType: "modified",
+    spaRefreshInterval: 1000000000,
+    prettyLinks: true,
+    showLineNumbers: false,
+    showBacklinks: true,
+    showExplorer: true,
+    showGraph: true,
+    showTableOfContents: true,
+    enableToc: true,
+    tocDepth: 3,
+    enableCategoryTags: true,
+    enableTagPreview: true,
+    enablePopover: true,
+  },
+  plugins: {
+    transformers: [
+      Plugin.FrontMatter(),
+      Plugin.CreatedModifiedDate({ priority: ["frontmatter", "filesystem"] }),
+      Plugin.SyntaxHighlighting(),
+      Plugin.ObsidianFlavoredMarkdown(),
+      Plugin.Latex(),
+    ],
+    filters: [
+      Plugin.RemoveDrafts(),
+      Plugin.IgnorePatterns(),
+    ],
+    emitters: [
+      Plugin.AliasRedirects(),
+      Plugin.ComponentResources(),
+      Plugin.ContentPage(),
+      Plugin.FolderPage(),
+      Plugin.ContentMetadata(),
+      Plugin.RSS(),
+      Plugin.Assets(),
+      Plugin.Static(),
+    ],
+  },
+}
+export default config
 EOF
 
-# Write plugins.json (Quartz v5 uses JSON config for plugins)
-cat > "$REPO_ROOT/plugins.json" <<'PLUGINS'
-{
-  "plugins": {
-    "transformers": [
-      { "name": "FrontMatter" },
-      { "name": "CreatedModifiedDate", "options": { "priority": ["frontmatter", "filesystem"] } },
-      { "name": "SyntaxHighlighting" },
-      { "name": "ObsidianFlavoredMarkdown" },
-      { "name": "Latex" }
-    ],
-    "filters": [
-      { "name": "RemoveDrafts" },
-      { "name": "IgnorePatterns" }
-    ],
-    "emitters": [
-      { "name": "AliasRedirects" },
-      { "name": "ComponentResources" },
-      { "name": "ContentPage" },
-      { "name": "FolderPage" },
-      { "name": "ContentMetadata" },
-      { "name": "RSS" },
-      { "name": "Assets" },
-      { "name": "Static" }
-    ]
-  }
-}
-PLUGINS
+# Create cache directory
+mkdir -p "$QUARTZ_CACHE"
 
 # Build
 log "Building Quartz site..."
@@ -188,8 +159,3 @@ mkdir -p "$OUTPUT_DIR"
 
 ok "Site built at $OUTPUT_DIR"
 log "Files: $(find "$OUTPUT_DIR" -type f | wc -l)"
-
-# Cleanup symlinks (but keep content for caching)
-log "Cleaning up symlinks..."
-rm -f "$REPO_ROOT/quartz" "$REPO_ROOT/node_modules" "$REPO_ROOT/package.json" "$REPO_ROOT/package-lock.json"
-ok "Done"

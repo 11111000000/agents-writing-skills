@@ -14,14 +14,14 @@ node_modules/
 package-lock.json
 
 # Quartz (cloned separately, regenerated on each build)
-quartz-src/
 .quartz-cache/
 
-# Symlinks created during build (ephemeral)
-quartz
-node_modules
+# Copied Quartz files (ephemeral, created during build)
+quartz/
+node_modules/
 package.json
 package-lock.json
+quartz.config.ts
 
 # Build output (CI-generated, not in repo)
 public/
