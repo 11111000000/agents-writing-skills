@@ -7,6 +7,7 @@
   "skills": [
     {
       "name": "humanize-writer",
+      "version": "2.0.0",
       "path": "skills/humanize-writer/SKILL.md",
       "description": "Write new prose without AI tells",
       "use_when": "User asks to write documentation, README, blog post, email, or any narrative text",
@@ -15,6 +16,7 @@
     },
     {
       "name": "humanize-editor",
+      "version": "2.0.0",
       "path": "skills/humanize-editor/SKILL.md",
       "description": "Rewrite existing text to read human",
       "use_when": "User asks to humanize, de-AI, or rewrite AI-generated text",
@@ -23,6 +25,7 @@
     },
     {
       "name": "anti-ai-auditor",
+      "version": "1.0.0",
       "path": "skills/anti-ai-auditor/SKILL.md",
       "description": "Diagnose AI patterns without rewriting",
       "use_when": "User asks to check if text sounds like AI, or wants a diagnosis only",
@@ -31,6 +34,7 @@
     },
     {
       "name": "ai-pattern-rewriter",
+      "version": "1.0.0",
       "path": "skills/ai-pattern-rewriter/SKILL.md",
       "description": "Fix specific AI-pattern phrases surgically",
       "use_when": "User identifies specific phrases that sound too AI and wants targeted fixes",

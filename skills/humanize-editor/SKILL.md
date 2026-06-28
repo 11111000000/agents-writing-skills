@@ -1,4 +1,5 @@
 ---
+version: 1.0.0
 name: humanize-editor
 description: Rewrite existing text (yours or someone else's) so it stops reading like LLM output. Use when the user pastes text that came from ChatGPT, GPT, Claude, Gemini, or any AI assistant and wants it to read human. Also use when a first draft from a sub-agent sounds "too polished" or "AI-ish". Do NOT use for code, structured data, or text where the user explicitly wants AI-style uniformity.
 license: MIT
@@ -8,6 +9,7 @@ metadata:
   workflow: text-rewriting
   version: 2
 ---
+version: 1.0.0
 
 # Humanize-Editor (v2)
 

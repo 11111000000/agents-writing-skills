@@ -1,4 +1,5 @@
 ---
+version: 1.0.0
 name: ai-pattern-rewriter
 description: Surgical, line-level rewriting of specific AI-pattern phrases. Use when the user identifies a small number of specific phrases or sentences that read "too AI" and wants targeted fixes, not a full rewrite. Different from humanize-editor: this preserves structure and only changes flagged spans.
 license: MIT
@@ -7,6 +8,7 @@ metadata:
   audience: writing-assistants
   workflow: surgical-edit
 ---
+version: 1.0.0
 
 # AI-Pattern Rewriter
 

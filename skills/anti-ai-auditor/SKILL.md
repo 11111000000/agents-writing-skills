@@ -1,4 +1,5 @@
 ---
+version: 1.0.0
 name: anti-ai-auditor
 description: Audit an existing text for AI-pattern probability without rewriting it. Returns a structured report: per-paragraph risk score, list of specific AI-tells (lexical, structural, rhetorical), perplexity/burstiness estimates, and concrete suggestions. Use when the user wants feedback only, or wants to compare two versions, or is unsure whether a text is "AI enough" to bother rewriting.
 license: MIT
@@ -7,6 +8,7 @@ metadata:
   audience: writing-assistants
   workflow: text-audit
 ---
+version: 1.0.0
 
 # Anti-AI Auditor
 

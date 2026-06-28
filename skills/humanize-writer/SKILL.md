@@ -1,4 +1,5 @@
 ---
+version: 1.0.0
 name: humanize-writer
 description: Write new prose that avoids typical LLM patterns (lexical clichés, uniform sentence length, rule-of-three, impersonality, hedging, RLHF artifacts). Use this skill whenever the user asks for any non-trivial narrative text — documentation, README sections, blog posts, emails, status updates, announcements. Do NOT use for short code comments, log messages, or technical reference where uniformity is desired.
 license: MIT
@@ -8,6 +9,7 @@ metadata:
   workflow: text-generation
   version: 2
 ---
+version: 1.0.0
 
 # Humanize-Writer (v2)
 

@@ -1,4 +1,5 @@
 ---
+version: 1.0.0
 name: template-skill
 description: Template for creating new skills. Copy this directory, rename, fill in the frontmatter, write instructions, submit a PR. Use whenever you want to add a new skill to this repo.
 license: MIT
@@ -7,6 +8,7 @@ metadata:
   workflow: skill-creation
   status: template
 ---
+version: 1.0.0
 
 # Skill Template
 
@@ -25,6 +27,7 @@ Replace the placeholders below. Keep frontmatter at the top.
 
 ```markdown
 ---
+version: 1.0.0
 name: your-skill-name          # kebab-case, lowercase, ≤64 chars
 description: One-sentence description (≤1024 chars). This appears in agent's tool listing.
 license: MIT                   # or Apache 2.0, CC-BY-SA-4.0 for content-only skills
@@ -34,6 +37,7 @@ metadata:
   workflow: <what workflow does this enable>
   version: 1
 ---
+version: 1.0.0
 
 # Your Skill Name
 

@@ -6,12 +6,15 @@ on:
     paths:
       - 'skills/**'
       - 'prompts/**'
+      - 'manifest.json'
       - 'scripts/validate-skills.sh'
+      - 'scripts/validate-manifest.sh'
   pull_request:
     branches: [main, master]
     paths:
       - 'skills/**'
       - 'prompts/**'
+      - 'manifest.json'
 
 jobs:
   validate:
@@ -22,6 +25,9 @@ jobs:
 
       - name: Run validation
         run: ./scripts/validate-skills.sh .
+
+      - name: Validate manifest paths
+        run: ./scripts/validate-manifest.sh
 
       - name: Check for stray em-dash patterns
         run: |
