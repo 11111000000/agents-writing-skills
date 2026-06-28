@@ -12,13 +12,13 @@ Thumbs.db
 # Node
 node_modules/
 package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
-# Quartz build output (CI-generated)
-site/
-.quartz-cache/
+# Quartz (cloned separately, regenerated on each build)
 .quartz/
+
+# Build output (CI-generated, not in repo)
+public/
+site/
 
 # Obsidian workspace (per-user state, not for repo)
 .obsidian/
@@ -36,5 +36,7 @@ private/
 *.key
 
 # OS file metadata
-.DS_Store
 desktop.ini
+
+# Generated docs for skill pages
+skills/*/SKILL.html
