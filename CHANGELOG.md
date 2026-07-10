@@ -7,6 +7,36 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added (v4 — current)
+- **Lever 12: Russian brevity grammar** — парцелляция, эллипсис, литота, нулевая связка как русские грамматические инструменты краткости. LLM их почти не использует. Добавлено в `humanize-writer`, `humanize-editor`, `anti-ai-auditor`, `ai-pattern-rewriter`.
+- **Length bias academic integration**: 5 source-notes из arXiv (Park 2024, Shen 2023, Zhang 2024, Lamparth 2026, Huang 2024) + synthesis заметка `02-Techniques/length-bias-research.md`. Подтверждает, что length bias — структурное свойство preference tuning.
+- **Bias substitution warning** (Lamparth et al. 2026): single-axis сокращение может перенести bias на factual depth. Tighten pass должен сохранять плотность фактов.
+- **Format bias detection** (Zhang et al. 2024): lists/bold/emojis как format-level signals. Добавлено в `anti-ai-auditor`.
+- **Russian grammar synthesis note** `02-Techniques/russian-brevity-grammar.md` — связывает парцелляцию с P3 (деепричастия), эллипсис с P22 (filler), литоту с P11 (elegant variation).
+- **Length bias synthesis note** `02-Techniques/length-bias-research.md` — структурирует 5 академических работ + каузальная цепочка.
+- **Source notes (`06-Sources/`)**:
+  - `06-Sources/research-papers/length-bias/` — 5 arXiv source-notes
+  - `06-Sources/research-papers/detection-datasets/` — HC3 + RAID + HC3-ru source-notes
+  - `06-Sources/web-fetches/russian-grammar/` — Wikipedia RU на парцелляцию, эллипсис, литоту
+  - `templates/source-note.md` — шаблон для новых источников
+
+### Changed (v4)
+- `humanize-writer` v3 → v4: добавлен Lever 12 (Russian brevity grammar), length bias caveat в intro.
+- `humanize-editor` v3 → v4: добавлен Step 5.5 (Russian grammar pass), bias substitution warning в Step 4.
+- `anti-ai-auditor` v2 → v3: добавлены секции 10 (Format bias density), 11 (Length bias structural check), 12 (Russian brevity grammar opportunity).
+- `ai-pattern-rewriter` v2 → v3: добавлен раздел "Russian brevity grammar spans" + bias substitution warning.
+- `references/lexicon.md`: +секция "Russian brevity grammar" с примерами до/после.
+- `knowledge/README.md` (MOC): добавлены ссылки на новые заметки.
+- `manifest.json` 1.1.0 → 1.2.0.
+
+### Notes (v4)
+- **Lever 12 закрывает главный пробел для русского языка.** До v4 наши skill'ы умели *удалять* AI-паттерны в русском, но не умели *активно применять* живые русские традиции краткости.
+- **Length bias research академически подкрепляет Lever 10/11.** Это не наша гипотеза — это эмпирические данные 5 независимых групп 2023–2026.
+- **Bias substitution — новая серьёзная проблема.** Tighten pass может быть контрпродуктивным. Это требует осторожности и human-validation для high-stakes.
+- **Phase 1.5 (специализированные выборки) выявила:** HC3 (English, 24.3k rows) — лучший готовый датасет. HC3-ru — перевод Google, не оригинал. Для русского нужен собственный корпус.
+
+## [v3 — released]
+
 ### Added
 - **Sufficiency principle (Lever 10 / Grice submaxim 2)**: positive principle "не больше, чем нужно" — добавлен в `humanize-writer`. Основан на Grice (1975), Strunk & White (1918/1959), Pascal (1657), Williams (*Style*).
 - **Trust-the-reader principle (Lever 11 / Hemingway iceberg)**: positive principle "оставить пробелы, которые читатель заполнит" — добавлен в `humanize-writer`. Основан на Hemingway (1932), Chekhov (1889–1903).

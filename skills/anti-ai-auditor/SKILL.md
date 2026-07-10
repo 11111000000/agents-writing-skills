@@ -1,17 +1,17 @@
 ---
 name: anti-ai-auditor
-description: Audit an existing text for AI-pattern probability without rewriting it. Returns a structured report: per-paragraph risk score, list of specific AI-tells (lexical, structural, rhetorical, over-generation), perplexity/burstiness/YapScore estimates, and concrete suggestions. Use when the user wants feedback only, or wants to compare two drafts, or is unsure whether a text is "AI enough" to bother rewriting.
+description: Audit an existing text for AI-pattern probability without rewriting it. Returns a structured report: per-paragraph risk score, list of specific AI-tells (lexical, structural, rhetorical, over-generation, length-bias-driven), perplexity/burstiness/YapScore estimates, format-bias density, and concrete suggestions. Use when the user wants feedback only, or wants to compare two drafts, or is unsure whether a text is "AI enough" to bother rewriting.
 license: MIT
 compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-audit
-  version: 2
+  version: 3
 ---
 
-# Anti-AI Auditor (v2)
+# Anti-AI Auditor (v3)
 
-Audit an existing text for AI-pattern probability. **Do not rewrite** — only diagnose. The user will decide what to do with the report. v2 adds over-generation / YapScore / sufficiency metrics.
+Audit an existing text for AI-pattern probability. **Do not rewrite** — only diagnose. v3 adds length bias academic grounding (Park 2024, Lamparth 2026, Zhang 2024), format bias detection (lists/bold/emojis), and bias substitution warnings.
 
 ## When to load
 
@@ -101,6 +101,35 @@ Per YapBench (arXiv 2601.00624, январь 2026): LLMs systematically over-gen
 - Есть ли абзацы, где 1–2 предложения можно удалить, и читатель всё поймёт?
 - Если да — пометьте как iceberg opportunity.
 
+### 10. Format bias density (NEW v3, Zhang et al. 2024)
+
+Count format-level signals that LLMs exploit:
+- **Lists**: трёхпараллельные bullet-списки без rupture
+- **Bold**: чрезмерное `**жирное**` в markdown
+- **Emojis**: 🤖📊💡 и т.п. (Zhang et al. подтверждают, что reward models предпочитают emoji)
+- **Headings**: чрезмерное количество заголовков (Title Case в EN)
+
+Mark **HIGH** if format bias density > baseline (e.g., >5 emoji per 1000 words, >10% words bolded).
+
+### 11. Length bias structural check (NEW v3, Lamparth 2026)
+
+> [!warning] Bias substitution
+> Single-axis mitigation (только сокращение длины) может перенести bias на другие proxies (factual depth, confidence calibration). Audit должен проверять, что **факты не потеряны при сокращении**.
+
+Compute:
+- Number of concrete facts (numbers, names, dates, paths) before vs after Tighten pass.
+- Если количество фактов уменьшилось более чем на 10% → флаг "potential bias substitution".
+
+### 12. Russian brevity grammar opportunity (NEW v3, Lever 12, RU only)
+
+If text is Russian, check if any of these can be applied:
+- **Парцелляция**: есть ли длинные предложения с деепричастиями? (Candidate: P3 + структурная перестройка)
+- **Эллипсис**: есть ли повтор глагола в сложносочинённых предложениях? (Candidate: гэппинг)
+- **Литота**: есть ли абстрактные преуменьшения? (Candidate: «совсем немного» → «кот наплакал»)
+- **Нулевая связка**: разговорный регистр с лишними местоимениями?
+
+Mark as **opportunities**, not as violations. Lever 12 is positive technique, not removal.
+
 ## Output format
 
 ```
@@ -128,6 +157,9 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 - Antithetical recaps: ~X
 - Cuttable sentences (Strunk test): ~X (target <15%)
 - Iceberg opportunities: ~X paragraphs
+- **Format bias density (NEW v3):** emojis X, bold X%, triple-parallel lists X
+- **Bias substitution warning (NEW v3):** факты до/после Tighten: X → Y (потеря Z%)
+- **Russian grammar opportunities (NEW v3, RU only):** парцелляция X, эллипсис X, литота X
 
 ### Burstiness
 - Mean sentence length: ~X words

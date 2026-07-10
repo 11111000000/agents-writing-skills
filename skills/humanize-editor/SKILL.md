@@ -6,34 +6,35 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-rewriting
-  version: 3
+  version: 4
 ---
 
-# Humanize-Editor (v3)
+# Humanize-Editor (v4)
 
-Rewrite existing text so it stops reading like LLM output. **Post-hoc** — input already exists, preserve meaning, kill AI tells. v3 integrates the **9 humanization levers from harshaneel/humanize**, **43-pattern catalogue from Aboudjem**, **Russian-specific patterns from Wikipedia RU**, **lever 10 (Sufficiency / Strunk cut-test)**, and **lever 11 (Trust the reader / iceberg)**.
+Rewrite existing text so it stops reading like LLM output. **Post-hoc** — input already exists, preserve meaning, kill AI tells. v4 integrates **11 levers** (1–11, добавив Lever 12 = Russian brevity grammar), **43-pattern catalogue from Aboudjem**, **Russian-specific patterns from Wikipedia RU**, **length bias research (Park, Shen, Zhang, Lamparth, Huang)**, и **HC3 + RAID datasets для валидации**.
 
 ## When to load
 
 - User pastes AI-generated text and wants it rewritten for human feel
 - Sub-agent's first draft is too smooth
-- **Text is too long / verbose** (new in v3) — applies Tighten pass
+- **Text is too long / verbose** — applies Tighten pass (Lever 10)
+- **Russian text needs русские грамматические приёмы** (парцелляция, эллипсис, литота) — v4
 - User wants to clean up a draft before publishing
 
 ## Hard rules
 
 > [!warning] Meaning preservation
-> - **Preserve factual content** — names, numbers, dates, claims, citations. Don't drop or invent.
+> - **Preserve factual content** — names, numbers, dates, claims, citations. Don't drop or invent. **Especially in Tighten pass** — сохраняйте плотность фактов, не только сокращайте слова (Lamparth et al. 2026: bias substitution).
 > - **Preserve language** — input in RU stays RU, input in EN stays EN. Don't translate.
-> - **Length change allowed** (new in v3): Tighten pass может сократить на 15–30%, потому что LLM обычно выдаёт в 1.5–2× больше нужного (YapBench, arXiv 2601.00624). Если пользователь явно сказал «не сокращай» — не сокращай.
+> - **Length change allowed**: Tighten pass может сократить на 15–30%, потому что LLM обычно выдаёт в 1.5–2× больше нужного (YapBench, arXiv 2601.00624). Если пользователь явно сказал «не сокращай» — не сокращай.
 
 > [!warning] Style overhaul
-> Apply **11 levers** + Russian extensions:
+> Apply **12 levers** + Russian extensions:
 >
-> 1. **Banned lexicon** — `references/lexicon.md` (RU+EN, 43 patterns + 7 over-generation patterns).
+> 1. **Banned lexicon** — `references/lexicon.md` (RU+EN, 43 patterns + 7 over-generation patterns + Russian brevity grammar examples).
 > 2. **Burstiness** — vary sentence lengths.
 > 3. **Strip RLHF voice** (Lever 9) — remove polite hedging, balanced tradeoffs, "I hope this helps", "Надеюсь, это пригодится".
-> 4. **Strip negative parallelisms** (P9) — `это не X, а Y` / `it's not X, it's Y` / `это не просто X` — **HIGHEST LEVERAGE**, #1 AI marker. See `~/Desktop/AgentWritingBase/01-Patterns/rhetorical/negative-parallelisms.md`.
+> 4. **Strip negative parallelisms** (P9) — `это не X, а Y` / `it's not X, it's Y` / `это не просто X` — **HIGHEST LEVERAGE**, #1 AI marker.
 > 5. **Strip hedging** — kill `можно сказать`, `it could be argued`, etc.
 > 6. **Strip pairing** (RU) — "цели и задачи" → pick one.
 > 7. **Strip деепричастия** (RU) — keep ≤1 per paragraph.
@@ -42,9 +43,10 @@ Rewrite existing text so it stops reading like LLM output. **Post-hoc** — inpu
 > 10. **First person** — add `я`/`мы`/`I`/`we` once if missing.
 > 11. **No closing cliché** — drop `таким образом`, `in conclusion`.
 > 12. **Structural flatten** — convert bullet lists to prose where 2–3 sentences would do.
-> 13. **Sufficiency (Lever 10)** — NEW: cut-test, удалить всё, что больше нужного. Grice submaxim 2.
-> 14. **Trust the reader (Lever 11)** — NEW: оставить iceberg-пробелы, удалить over-explanation. Hemingway.
-> 15. **Strip over-generation (P-NEW-1…P-NEW-7)** — NEW: vacuum-filling, restatement chains, bridging, antithetical recap. См. `~/Desktop/AgentWritingBase/01-Patterns/structural/over-generation.md`.
+> 13. **Sufficiency (Lever 10)** — cut-test, удалить всё, что больше нужного. Grice submaxim 2.
+> 14. **Trust the reader (Lever 11)** — iceberg-пробелы, удалить over-explanation.
+> 15. **Strip over-generation (P-NEW-1…P-NEW-7)** — vacuum-filling, restatement chains, bridging, antithetical recap.
+> 16. **Russian brevity grammar (Lever 12)** — NEW v4: парцелляция, эллипсис, литота, нулевая связка как русские грамматические инструменты краткости. См. `~/Desktop/AgentWritingBase/02-Techniques/russian-brevity-grammar.md`.
 
 ## Workflow
 
@@ -108,6 +110,44 @@ Distinctive-word test:
 
 Stop at the turn:
 - Если в абзаце есть «поворотный момент» — остановитесь на нём. Не объясняйте, что это значит. Точка.
+
+### Step 5.5 — Russian grammar pass (Lever 12, RU only)
+
+**Только для русского текста.** Применяйте 4 русских грамматических инструмента краткости:
+
+#### 12.1. Парцелляция
+
+Найдите сложное предложение с деепричастиями или несколькими однородными сказуемыми. Разбейте на 2–5 коротких.
+
+> ❌ «Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.»
+> ✅ «Город стоит на реке. Отсюда — водоснабжение и полив.»
+
+#### 12.2. Эллипсис
+
+Найдите повтор глагола/существительного во второй части сложносочинённого предложения. Опустите.
+
+> ❌ «Я говорю по-английски, а он говорит по-немецки.»
+> ✅ «Я говорю по-английски, а он — по-немецки.»
+
+#### 12.3. Литота
+
+Найдите абстрактные преуменьшения («совсем немного», «практически нет», «очень маленький»). Замените готовой формулой литоты.
+
+> ❌ «У нас совсем немного пользователей.»
+> ✅ «У нас пользователей — кот наплакал.»
+
+Готовые формулы: «черепашьи темпы», «рукой подать», «кот наплакал», «с ноготок», «с овчинку», «не более напёрстка», «девочка-дюймовочка».
+
+#### 12.4. Нулевая связка
+
+В разговорном/постовом регистре: опустите личное местоимение в начале предложения, если это не меняет смысл.
+
+> ❌ «Я пошёл в магазин, чтобы купить хлеб.»
+> ✅ «Пошёл в магазин. Хлеб.»
+
+**Условие применения Lever 12:**
+- Разговорный, постовый, беллетристический регистр — да.
+- Официально-деловой, дипломатический, юридический — нет.
 
 ### Step 6 — Add rupture sentences
 

@@ -1,49 +1,49 @@
 {
   "name": "agents-writing-skills",
-  "version": "1.1.0",
-  "description": "Skills and prompts for agents that write text without sounding like AI (v1.1: sufficiency / iceberg)",
+  "version": "1.2.0",
+  "description": "Skills and prompts for agents that write text without sounding like AI (v1.2: sufficiency + iceberg + Russian brevity grammar + length bias)",
   "repository": "https://github.com/11111000000/agents-writing-skills",
   "license": "MIT",
   "skills": [
     {
       "name": "humanize-writer",
-      "version": "3.0.0",
+      "version": "4.0.0",
       "path": "skills/humanize-writer/SKILL.md",
-      "description": "Write new prose without AI tells (incl. Sufficiency / iceberg)",
+      "description": "Write new prose without AI tells (incl. Sufficiency, iceberg, Russian brevity grammar)",
       "use_when": "User asks to write documentation, README, blog post, email, or any narrative text",
       "companion_skills": ["humanize-editor", "anti-ai-auditor"],
       "references": ["skills/humanize-writer/references/lexicon.md"],
-      "changelog": "v3: added Lever 10 (Sufficiency / Grice), Lever 11 (Trust the reader / iceberg), over-generation patterns P-NEW-1…7, 7-step workflow with Tighten & Reader-fill passes, \"Когда молчать\" table"
+      "changelog": "v4: added Lever 12 (Russian brevity grammar — parcelyaciya, ellipsis, litota, nulevaya svyazka), length bias academic integration (Park, Shen, Zhang, Lamparth, Huang), YapBench validation, bias substitution warning. v3 → v4: RU grammar now active positive technique, not just removal."
     },
     {
       "name": "humanize-editor",
-      "version": "3.0.0",
+      "version": "4.0.0",
       "path": "skills/humanize-editor/SKILL.md",
-      "description": "Rewrite existing text to read human (incl. Tighten pass)",
+      "description": "Rewrite existing text to read human (incl. Tighten pass + Russian grammar pass)",
       "use_when": "User asks to humanize, de-AI, rewrite AI-generated text, or shorten verbose text",
       "companion_skills": ["anti-ai-auditor", "ai-pattern-rewriter"],
       "references": [],
-      "changelog": "v3: added Step 4 Tighten pass (8 scans: vacuum-filling, restatement, bridging, over-explanation, hedging, balanced framing, antithetical recap, Strunk cut-test), Step 5 Trust-the-reader pass, voice profile 'laconic'"
+      "changelog": "v4: added Step 5.5 Russian grammar pass (Lever 12: parcelyaciya, ellipsis, litota, nulevaya svyazka), bias-substitution warning in Tighten pass (Lamparth 2026), now 16 lever refs total"
     },
     {
       "name": "anti-ai-auditor",
-      "version": "2.0.0",
+      "version": "3.0.0",
       "path": "skills/anti-ai-auditor/SKILL.md",
-      "description": "Diagnose AI patterns without rewriting (incl. over-generation metrics)",
+      "description": "Diagnose AI patterns without rewriting (incl. over-generation, length bias, format bias, Russian grammar opportunities)",
       "use_when": "User asks to check if text sounds like AI, asks 'is this too long?', or wants a diagnosis only",
       "companion_skills": ["humanize-editor", "ai-pattern-rewriter"],
       "references": [],
-      "changelog": "v2: added YapScore / Sufficiency estimate (per YapBench 2026), Cut-test pass, Reader-fill test, new 'Over-generation' report section, Sufficiency verdict"
+      "changelog": "v3: added Format bias density (Zhang 2024: lists/bold/emojis), Length bias structural check (Lamparth 2026: bias substitution warning), Russian brevity grammar opportunities (Lever 12, RU only)"
     },
     {
       "name": "ai-pattern-rewriter",
-      "version": "2.0.0",
+      "version": "3.0.0",
       "path": "skills/ai-pattern-rewriter/SKILL.md",
-      "description": "Fix specific AI-pattern phrases surgically (incl. over-generation spans)",
+      "description": "Fix specific AI-pattern phrases surgically (incl. over-generation spans, Russian brevity grammar, bias substitution warning)",
       "use_when": "User identifies specific phrases that sound too AI or 'too long' and wants targeted fixes",
       "companion_skills": ["humanize-editor", "anti-ai-auditor"],
       "references": [],
-      "changelog": "v2: added 'Over-generation spans' section with 10 rewrites (vacuum-filling, restatement, bridging, over-explanation, hedging, balanced framing, antithetical recap, etc.) + Williams 6 operations"
+      "changelog": "v3: added 'Russian brevity grammar spans' section (Lever 12 — parcelyaciya, ellipsis, litota, nulevaya svyazka), bias substitution warning (Lamparth 2026: don't lose facts when tightening)"
     }
   ],
   "prompts": [

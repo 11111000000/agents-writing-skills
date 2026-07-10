@@ -56,6 +56,8 @@ templates/            — шаблоны заметок
 - [[02-Techniques/voice-russian-specifics]] — особенности голоса в русском
 - [[02-Techniques/show-dont-tell]] — конкретика вместо абстракций
 - [[02-Techniques/sufficiency-and-underspecification]] — **NEW**: когда сказать меньше, чем знаешь (Grice, Hemingway, Chekhov, Williams)
+- [[02-Techniques/length-bias-research]] — **NEW**: академический обзор length bias в RLHF (Park, Shen, Zhang, Lamparth, Huang)
+- [[02-Techniques/russian-brevity-grammar]] — **NEW**: парцелляция, эллипсис, литота как русские грамматические инструменты краткости
 - [[02-Techniques/agent-writing-workflow]] — алгоритм Pre-flight → Write → Audit
 
 ### Структурные паттерны

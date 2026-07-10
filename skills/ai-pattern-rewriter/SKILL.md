@@ -6,12 +6,12 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: surgical-edit
-  version: 2
+  version: 3
 ---
 
-# AI-Pattern Rewriter (v2)
+# AI-Pattern Rewriter (v3)
 
-Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v2 adds spans for over-generation patterns (Lever 10/11).
+Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v3 adds **Russian brevity grammar spans (Lever 12)** and **length bias bias-substitution warnings**.
 
 ## When to load
 
@@ -130,6 +130,65 @@ Surgical, span-level rewriting. **Only** rewrite the specific phrases the user f
 4. **Replace a phrase with a word:** «is able to» → «can», «has the ability to» → «can»
 5. **Change negatives to affirmatives:** «did not remember» → «forgot»
 6. **Delete useless adjectives and adverbs:** «absolutely essential», «completely unanimous»
+
+## Russian brevity grammar spans (NEW v3, Lever 12)
+
+> [!info] Активные инструменты, не запреты
+> Эти переписывания применяют русские грамматические приёмы краткости. Подробнее: `~/Desktop/AgentWritingBase/02-Techniques/russian-brevity-grammar.md`.
+
+### Парцелляция (расщепление)
+
+> Before: «Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.»
+> After: «Город стоит на реке. Отсюда — водоснабжение и полив.»
+
+> Before: «Я пошёл в магазин, потому что мне нужно было купить хлеб, а потом вернулся домой.»
+> After: «Пошёл в магазин. Хлеб. Вернулся.»
+
+### Эллипсис (гэппинг, стриппинг, фрагментирование)
+
+> Before: «Я говорю по-английски, а он говорит по-немецки.»
+> After: «Я говорю по-английски, а он — по-немецки.»
+
+> Before: «Он прочитал "Войну и мир", а она прочитала "Мастера и Маргариту".»
+> After: «Он прочитал "Войну и мир", а она — "Мастера".»
+
+> Before: «Я пошёл в магазин, чтобы купить хлеб.»
+> After: «Пошёл в магазин. Хлеб.»
+
+### Литота (преуменьшение)
+
+> Before: «У нас совсем немного пользователей, практически никто не пользуется.»
+> After: «У нас пользователей — кот наплакал.»
+
+> Before: «Это совсем маленький дом.»
+> After: «Дом — с ноготок.»
+
+> Before: «Нам осталось совсем немного времени.»
+> After: «Времени — рукой подать.»
+
+### Нулевая связка (только разговорный/постовый регистр)
+
+> Before: «Я пошёл в магазин, чтобы купить хлеб.»
+> After: «Пошёл в магазин. Хлеб.»
+
+> Before: «Мне стало грустно, и я задумался о жизни.»
+> After: «Стало грустно. Задумался.»
+
+**Условие применения:** разговорный, постовый, беллетристический регистр. НЕ применять в официально-деловом, юридическом, дипломатическом.
+
+## Bias substitution warning (NEW v3)
+
+> [!warning] При Tighten pass
+> Lamparth et al. (arXiv 2605.27996, 2026) показали, что single-axis сокращение может перенести bias на factual depth. **Не удаляйте конкретные факты при сокращении.**
+
+Проверьте, что после переписывания сохранены:
+- Числа (p99 14 мс, 30%, +200 тыс.)
+- Имена (Stripe, Андрей)
+- Команды (`pip install`, `kubectl apply`)
+- Пути (`~/.config/...`, `~/Desktop/`)
+- Даты (2024, 15.06.2026)
+
+Если при сокращении факты потеряны — это плохой rewrite, верните их.
 
 ## Output format
 

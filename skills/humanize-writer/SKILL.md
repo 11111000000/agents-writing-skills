@@ -6,12 +6,12 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-generation
-  version: 3
+  version: 4
 ---
 
-# Humanize-Writer (v3)
+# Humanize-Writer (v4)
 
-Write text that reads like a human wrote it. Bundles the operating instructions from `~/Desktop/AgentWritingBase/` (v3, adds positive sufficiency principle). Apply by default for non-trivial prose.
+Write text that reads like a human wrote it. Bundles the operating instructions from `~/Desktop/AgentWritingBase/` (v4: adds Lever 12 Russian brevity grammar + length bias research integration). Apply by default for non-trivial prose.
 
 > [!warning] Что этот skill МОЖЕТ и чего НЕ МОЖЕТ
 > **Может:** сделать текст, который читается как человеческий для среднестатистического читателя.
@@ -19,7 +19,18 @@ Write text that reads like a human wrote it. Bundles the operating instructions 
 > **Не предназначен для:** обхода академической проверки, сдачи AI-текста как своего. Используйте, чтобы **писать лучше**, не чтобы **скрывать**.
 > См. `~/Desktop/AgentWritingBase/05-References/limits-and-self-critique.md`.
 
-> [!info] Major changes in v3
+> [!warning] Length bias caveat (v4)
+> YapBench (Borisov et al., 2026) и Park et al. (2024) показали, что length bias — структурное свойство RLHF preference tuning. **Tighten pass может привести к bias substitution** (Lamparth et al., 2026): сокращение длины → перенос bias на другие proxies (confidence, factual depth). Tighten pass должен сохранять плотность фактов, не только сокращать слова.
+
+> [!info] Major changes in v4
+> - **Lever 12: Russian brevity grammar** — парцелляция, эллипсис, литота как русские грамматические инструменты краткости
+> - **Length bias academic integration** — 5 source-notes (Park, Shen, Zhang, Lamparth, Huang) в `length-bias-research.md`
+> - **YapBench validation** — 76 LLM, 10× spread, vacuum-filling on ambiguous inputs
+> - **Bias substitution warning** — single-axis mitigation ≠ universal fix
+> - **HC3 + RAID datasets** — для эмпирической валидации наших метрик
+> - **Strunk cut-test + Williams 6 operations** в Tighten pass
+
+> [!info] Major changes in v3 (предыдущая версия)
 > - **Lever 10: Sufficiency (Grice submaxim 2)** — positive principle: сказать ровно столько, сколько нужно
 > - **Lever 11: Trust the reader (iceberg)** — оставлять пробелы, которые читатель заполнит сам
 > - **Antipatterns P-NEW-1…P-NEW-7** — vacuum-filling, restatement chains, bridging, over-explanation, anticipatory hedging, balanced framing, antithetical recap
@@ -28,7 +39,7 @@ Write text that reads like a human wrote it. Bundles the operating instructions 
 > - **Russian litota tradition** — литота как положительная модель
 > - **Updated Step 3 (Audit)** и Step 4 (Rupture) — добавлен pass «Tighten»
 
-> [!info] Major changes in v2 (предыдущая версия)
+> [!info] Major changes in v2
 > - Added **9 levers from harshaneel/humanize** (RLHF voice strip, disfluency)
 > - Added **full 43-pattern catalogue from Aboudjem/humanizer-skill**
 > - Added **Russian-specific patterns** from Wikipedia RU (deeprichastnye, parallel-clauses, em-dash, парные синонимы)
@@ -248,9 +259,66 @@ LLM систематически нарушает это из-за RLHF preferen
 - Onboarding/tutorial for beginners
 - Translations that need to preserve original precision
 
+### Lever 12: Russian brevity grammar (парцелляция, эллипсис, литота)
+
+> [!important] Положительная модель для русского языка
+> В русском есть свои грамматические инструменты краткости. LLM их **почти не использует** — он генерирует «полные» конструкции в стиле канцелярита. Lever 12 учит LLM применять эти инструменты.
+
+**Три рычага:**
+
+#### 12.1. Парцелляция (расщепление)
+
+Разбить сложное предложение на 2–5 коротких через точку.
+
+> ❌ «Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.»
+> ✅ «Город стоит на реке. Отсюда — водоснабжение и полив.»
+
+Примеры из литературы (Шукшин, Антокольский, Гришковец) подтверждают как живую традицию. Шкловский и Сковородников — академические источники.
+
+**Устраняет:** P3 (деепричастия), P8 (copula avoidance).
+
+#### 12.2. Эллипсис (опущение)
+
+Опустить восстанавливаемый элемент.
+
+> ❌ «Я говорю по-английски, а он говорит по-немецки.»
+> ✅ «Я говорю по-английски, а он — по-немецки.» (гэппинг)
+> ✅ «Я пошёл в магазин. Хлеб.» (фрагментирование)
+
+Типы: глагольной группы, именной группы, стриппинг, фрагментирование, гэппинг, псевдогэппинг.
+
+**Устраняет:** P22 (filler phrases), P18 (канцелярит).
+
+#### 12.3. Литота (преуменьшение)
+
+Использовать готовые русские формулы вместо абстрактных.
+
+> ❌ «У нас совсем немного пользователей, практически никто не пользуется.»
+> ✅ «У нас пользователей — кот наплакал.»
+
+Готовые формулы: «черепашьи темпы», «рукой подать», «кот наплакал», «с ноготок», «с овчинку», «не более напёрстка».
+
+**Устраняет:** P11 (elegant variation для синонимов «маленький»), P8 (copula avoidance).
+
+#### 12.4. Нулевая связка и безличные конструкции
+
+В русском **опускается подлежащее** — это норма.
+
+> ❌ «Я пошёл в магазин, чтобы купить хлеб.»
+> ✅ «Пошёл в магазин. Хлеб.»
+
+**Условие:** нулевая связка уместна в разговорном, постовом, беллетристическом регистрах. В официально-деловом — нет.
+
+**When NOT to apply:**
+- Официально-деловой стиль (юридические документы, дипломатические ноты)
+- Научный регистр (частично — допустимо в обзорной части)
+- Перевод с другого языка, где сохранение оригинальной структуры обязательно
+
+Подробнее: `~/Desktop/AgentWritingBase/02-Techniques/russian-brevity-grammar.md`.
+
 ## Russian-specific extensions (Wikipedia RU + own research)
 
-Apply these IN ADDITION to levers 1–11 when writing in Russian. Lever 10 (Sufficiency) и Lever 11 (Trust the reader) особенно важны для русского — литота и iceberg-проза это живые традиции.
+Apply these IN ADDITION to levers 1–12 when writing in Russian. Lever 12 (Russian brevity grammar) особенно важен — парцелляция, эллипсис, литота как живые традиции.
 
 ### R-0: Strip negative parallelisms (P9) — HIGHEST LEVERAGE FOR RU
 
@@ -338,6 +406,9 @@ Re-read. For each paragraph:
 - [ ] No triple-parallel without rupture
 - [ ] No abstract sentence that could be cut without loss
 - [ ] No клише from R-0 through R-5 (RU)
+- [ ] **Lever 12 check (RU):** есть ли кандидаты для парцелляции (длинное предложение с деепричастиями)?
+- [ ] **Lever 12 check (RU):** есть ли кандидаты для эллипсиса (повтор глагола во второй части сложного предложения)?
+- [ ] **Lever 12 check (RU):** есть ли литота для абстрактного преуменьшения («совсем немного» → «кот наплакал»)?
 - [ ] **Sufficiency check (Lever 10)**: есть ли предложение, которое можно удалить без потери смысла? Если да — cut-test: удалить и проверить, выжил ли смысл.
 - [ ] **Vacuum-filling check**: есть ли вводное предложение без информации? Удалить.
 - [ ] **Restatement check**: есть ли 2+ предложения с одинаковым содержанием? Оставить одно самое конкретное.
@@ -434,5 +505,5 @@ Always output **only the final text**. No preamble, no "Here's a draft:", no apo
 ## See also
 
 - Obsidian vault: `~/Desktop/AgentWritingBase/`
-- Especially: `02-Techniques/perplexity-and-burstiness.md`, `02-Techniques/voice-russian-specifics.md`, `02-Techniques/show-dont-tell.md`, `02-Techniques/sufficiency-and-underspecification.md` (NEW), `01-Patterns/43-patterns-catalogue.md`, `01-Patterns/structural/over-generation.md` (NEW).
-- External: [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill), [harshaneel/humanize](https://github.com/harshaneel/humanize), [YapBench paper](https://arxiv.org/abs/2601.00624).
+- Especially: `02-Techniques/perplexity-and-burstiness.md`, `02-Techniques/voice-russian-specifics.md`, `02-Techniques/show-dont-tell.md`, `02-Techniques/sufficiency-and-underspecification.md`, `02-Techniques/length-bias-research.md` (NEW v4), `02-Techniques/russian-brevity-grammar.md` (NEW v4), `01-Patterns/43-patterns-catalogue.md`, `01-Patterns/structural/over-generation.md`.
+- External: [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill), [harshaneel/humanize](https://github.com/harshaneel/humanize), [YapBench paper](https://arxiv.org/abs/2601.00624), [HC3 dataset](https://huggingface.co/datasets/Hello-SimpleAI/HC3), [RAID dataset](https://huggingface.co/datasets/liamdugan/raid).
