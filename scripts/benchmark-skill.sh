@@ -136,9 +136,10 @@ else
   B="0.0"
 fi
 
-# YapScore: длина / baseline (baseline = 60% от текущей длины)
-YAP_BASELINE=$(awk "BEGIN {printf \"%d\", $WORDS * 0.6}")
-if [[ $YAP_BASELINE -gt 0 ]]; then
+YAP_FILLER=$(echo "$INPUT" | grep -Eio '(современн(ое|ый|ая)|Стоит отметить|Более того|значительных результатов|эффективное решение|оптимизаци[яи]|интуитивн|продуманн|comprehensive|seamless|robust|cutting-edge|It is worth noting|In today.s|Moreover|Furthermore)' | wc -l | tr -d ' ')
+YAP_REDUNDANT=$(( (V_OPENER_TOTAL + B_TOTAL) * 8 + AP_TOTAL * 6 + YAP_FILLER * 4 ))
+if [[ $WORDS -gt 0 ]]; then
+  YAP_BASELINE=$(awk "BEGIN {b=$WORDS-$YAP_REDUNDANT; floor=$WORDS*0.6; if (b<floor) b=floor; if (b<1) b=1; printf \"%d\", b}")
   YAP=$(awk "BEGIN {printf \"%.2f\", $WORDS / $YAP_BASELINE}")
 else
   YAP="0.00"

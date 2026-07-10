@@ -90,7 +90,8 @@ templates/            — шаблоны заметок
 - `06-Sources/fabric/` — паттерны Daniel Miessler, MIT
 - `06-Sources/anthropic-skills_*` — примеры skill'ов Anthropic
 - `06-Sources/pi-skills_*` — примеры skill'ов для pi
-- `06-Sources/github-humanizers/` — Aboudjem/humanizer-skill (43 паттерна), harshaneel/humanize (9 levers)
+- `06-Sources/github-humanizers/` — Aboudjem/humanizer-skill (43 паттерна), harshaneel/humanize (9 базовых levers)
+- `06-Sources/web-fetches/laconic-prose/` — Шкловский, Лотман, Гаспаров, Аверинцев для Lever 12
 - `06-Sources/ru-wikipedia-ai-signs.txt` — полный текст ВП:ПРГЕН
 
 ## Конвенции
@@ -105,10 +106,10 @@ templates/            — шаблоны заметок
 - Структурные паттерны заполнены (rule of three, parallelism, em-dash, parallel-clauses, **over-generation 2026-07**)
 - Риторические паттерны заполнены (hedging, impersonality, deeprichastnye)
 - Каталог 43 паттернов готов (P1–P43) + новый класс P-NEW (over-generation)
-- Техники замены описаны (voice, perplexity, show-dont-tell, **sufficiency/underspecification 2026-07**)
-- Примеры до/после собраны (RU базовые + расширенные, EN)
-- Первоисточники скачаны и описаны (Fabric, Anthropic, Pi skills, Aboudjem, harshaneel, lynote-ai, Wikipedia RU)
-- Skill'ы для opencode установлены (v2 → обновляются до v3 в 2026-07 с Lever 10/11 на sufficiency)
+- Техники замены описаны (voice, perplexity, show-dont-tell, sufficiency/underspecification, length bias, Russian brevity grammar, laconic prose models)
+- Примеры до/после собраны (tightening, iceberg, Russian grammar, Kholstomer example)
+- Первоисточники скачаны и описаны (Fabric, Anthropic, Pi skills, Aboudjem, harshaneel, lynote-ai, Wikipedia RU, arXiv length-bias, Шкловский/Лотман/Гаспаров/Аверинцев)
+- Skill'ы для opencode/pi/Claude Code синхронизированы до v6
 - Skill'ы и prompt-templates для pi установлены
 - Регулярный аудит при обновлении upstream (Aboudjem и harshaneel активно развиваются)
 
@@ -133,6 +134,8 @@ Lever 9 (Strip RLHF voice) — самое важное открытие 2025–2
 
 Binoculars (arXiv 2401.12070) — лучший zero-shot детектор (90%+ accuracy). Watermarking (arXiv 2301.10226) даёт >99% AUROC, но требует доступа к модели. MASH (arXiv 2601.08564, ACL 2026) показал ceiling 92% ASR на старых детекторах через static surface rewriting, против новых почти не работает. **YapBench** (arXiv 2601.00624, январь 2026) — эмпирически подтвердил length bias в 76 LLM. Не лечится списком запрещённых слов, требует положительного принципа суффицентности.
 
-### Из литературной теории (Grice, Hemingway, Chekhov, Pascal, Williams)
+### Из литературной теории и стилистики
 
-Существующие skill'ы в основном запрещают (negative rules). Дополняющий положительный принцип — **суффицентность**: сказать ровно столько, сколько нужно. Gricean Maxim of Quantity submaxim 2: «Do not make your contribution more informative than is required». Hemingway's iceberg: «If a writer of prose knows enough of what he is writing about he may omit things that he knows». Chekhov's gun: «Remove everything that has no relevance to the story». Strunk & White: «every word tell». Williams: шесть операций сокращения. Подробнее: [[02-Techniques/sufficiency-and-underspecification]] и [[01-Patterns/structural/over-generation]].
+Суффицентность задаёт минимум: сказать ровно столько, сколько нужно. Gricean Maxim of Quantity submaxim 2: «Do not make your contribution more informative than is required». Hemingway's iceberg оставляет читателю работу. Chekhov's gun и Strunk & White режут лишнее. Williams даёт 6 операций сокращения.
+
+Русский слой v6 добавляет форму: Шкловский — остранение, Лотман — информационная плотность формы, Гаспаров — измеримость ритма, Аверинцев — жанровые границы. Подробнее: [[02-Techniques/sufficiency-and-underspecification]], [[02-Techniques/russian-brevity-grammar]], [[02-Techniques/laconic-prose-models]].

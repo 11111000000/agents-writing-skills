@@ -1,6 +1,6 @@
-# Banned Lexicon — Comprehensive v2
+# Banned Lexicon — Comprehensive v6
 
-Quick reference for `humanize-writer` and `humanize-editor`. v2 includes **43-pattern catalogue from Aboudjem**, **9 levers from harshaneel**, and **Russian-specific patterns from Wikipedia RU**.
+Quick reference for `humanize-writer` and `humanize-editor`. v6 covers the **43-pattern catalogue from Aboudjem**, the **12-lever system** (harshaneel's 9 levers + sufficiency, iceberg, Russian brevity grammar), and Russian-specific patterns.
 
 ## Sentence starters (high-confidence AI markers)
 

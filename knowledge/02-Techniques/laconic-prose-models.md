@@ -3,8 +3,8 @@ type: technique
 tags: [technique, russian-prose, laconic, foundational, lever-12]
 created: 2026-07-10
 status: active
-related: [voice-russian-specifics, russian-brevity-grammar, parcelyaciya-wikipedia, ellipsis-wikipedia, litota-wikipedia, shklovsky-wikipedia]
-sources: [shklovsky-wikipedia]
+related: [voice-russian-specifics, russian-brevity-grammar, parcelyaciya-wikipedia, ellipsis-wikipedia, litota-wikipedia, shklovsky-wikipedia, lotman-structure-artistic-text, gasparov-philological-brevity, averintsev-rhetoric-genre]
+sources: [shklovsky-wikipedia, lotman-structure-artistic-text, gasparov-philological-brevity, averintsev-rhetoric-genre]
 ---
 
 # Laconic prose models — Толстой, Довлатов, Шкловский
@@ -14,6 +14,15 @@ sources: [shklovsky-wikipedia]
 
 > [!warning] Границы применимости
 > Эти авторы писали в свой регистр. **Копировать стиль — нет. Извлекать принципы — да.** Когда LLM пишет «README как Толстой», получается пародия. Когда LLM пишет «с парцелляцией, которую Толстой использовал», получается хороший технический текст.
+
+---
+
+## Теоретические опоры
+
+- **Шкловский (1917/1925)** — остранение: форма возвращает восприятию свежесть.
+- **Лотман (1970)** — форма несёт информацию; короткий фрагмент может быть плотнее длинного объяснения.
+- **Гаспаров (1984/1999/2000)** — ритм и плотность нужно считать, а не описывать вкусом.
+- **Аверинцев (1977/1996)** — жанр задаёт границы краткости; onboarding и API reference требуют явного контекста.
 
 ---
 
@@ -199,6 +208,9 @@ LLM по умолчанию **объясняет**. «Аня была краси
 ## Связанные заметки
 
 - [shklovsky-wikipedia](shklovsky-wikipedia) — Шкловский: остранение через форму.
+- [lotman-structure-artistic-text](lotman-structure-artistic-text) — Лотман: форма как носитель информации.
+- [gasparov-philological-brevity](gasparov-philological-brevity) — Гаспаров: ритм, счёт, плотность.
+- [averintsev-rhetoric-genre](averintsev-rhetoric-genre) — Аверинцев: жанр и регистр как границы краткости.
 - [russian-brevity-grammar](russian-brevity-grammar) — Lever 12: парцелляция, эллипсис, литота, нулевая связка.
 - [parcelyaciya-wikipedia](parcelyaciya-wikipedia) — синтаксический источник для парцелляции.
 - [voice-russian-specifics](voice-russian-specifics) — голос в русском.

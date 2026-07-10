@@ -6,12 +6,12 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-rewriting
-  version: 5
+  version: 6
 ---
 
-# Humanize-Editor (v5)
+# Humanize-Editor (v6)
 
-Rewrite existing text so it stops reading like LLM output. v5 introduces **3-pass architecture** matching `humanize-writer`, with explicit bias substitution check (Lamparth et al. 2026) and Russian grammar pass as separate phases.
+Rewrite existing text so it stops reading like LLM output. v6 keeps the **3-pass architecture** matching `humanize-writer`, with explicit bias substitution check (Lamparth et al. 2026), Russian grammar pass, and laconic prose models for RU text.
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.
@@ -174,7 +174,7 @@ def williams_6(text):
         .delete_useless_adj("absolutely essential", "completely unanimous")
 ```
 
-#### 4.4. Bias substitution check (НОВОЕ v5)
+#### 4.4. Bias substitution check (introduced in v5)
 
 > [!warning] Critical (Lamparth et al. 2026)
 > После TIGHTEN phase проверяем, что **не потеряли факты**.

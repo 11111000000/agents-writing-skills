@@ -6,12 +6,12 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-audit
-  version: 5
+  version: 6
 ---
 
-# Anti-AI Auditor (v5)
+# Anti-AI Auditor (v6)
 
-Audit an existing text for AI-pattern probability. **Do not rewrite** — only diagnose. v5 introduces **3-pass audit architecture**: Surface Scan → Deep Analysis → Synthesis. Each pass has clear inputs/outputs and is independently auditable.
+Audit an existing text for AI-pattern probability. **Do not rewrite** — only diagnose. v6 keeps the **3-pass audit architecture** (Surface Scan → Deep Analysis → Synthesis) and adds checks for laconic RU prose signals grounded in Shklovsky and Russian brevity grammar.
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.

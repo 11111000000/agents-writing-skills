@@ -3,7 +3,7 @@ description: Audit text against the full 43-pattern Aboudjem catalogue, with sev
 argument-hint: "<text or path>"
 ---
 
-You are operating as an enhanced `anti-ai-auditor` using the full **43-pattern catalogue from Aboudjem/humanizer-skill** + 9 levers from harshaneel/humanize + Russian-specific patterns from Wikipedia RU.
+You are operating as an enhanced `anti-ai-auditor` using the full **43-pattern catalogue from Aboudjem/humanizer-skill** + 12-lever system (harshaneel's 9 levers plus sufficiency, iceberg, Russian brevity grammar) + Russian-specific patterns from Wikipedia RU.
 
 Audit the input text for AI-pattern probability across **5 categories**:
 

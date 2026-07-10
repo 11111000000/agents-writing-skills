@@ -6,12 +6,12 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: surgical-edit
-  version: 5
+  version: 6
 ---
 
-# AI-Pattern Rewriter (v5)
+# AI-Pattern Rewriter (v6)
 
-Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v5 adds **3-pass surgical architecture**: Identify → Rewrite → Verify, with bias substitution check.
+Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v6 keeps the **3-pass surgical architecture** (Identify → Rewrite → Verify) and adds laconic RU rewrite models for short, concrete replacements.
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.
@@ -60,7 +60,7 @@ Surgical, span-level rewriting. **Only** rewrite the specific phrases the user f
 5. **No commentary outside the rewrite** unless asked. Don't explain the change unless asked.
 6. **NEW v5**: When applying over-generation rewrites, it's OK to **delete** rather than rewrite — that's often the right answer.
 
-## Bias substitution warning (NEW v5)
+## Bias substitution warning (introduced in v5)
 
 > [!warning] Critical (Lamparth et al. 2026)
 > При сокращении span'а проверьте, что **не потеряли факты внутри span'а** (числа, имена, команды, пути).
@@ -164,7 +164,7 @@ PATTERNS = {
 + (cut entirely)
 ```
 
-#### Over-generation spans (NEW v5)
+#### Over-generation spans (introduced in v5)
 
 > [!info] Для каждого паттерна: часто правильный ответ — **удалить**, а не переписать.
 

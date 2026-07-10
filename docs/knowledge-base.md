@@ -1,69 +1,168 @@
 ---
 title: Knowledge Base
+description: 41+ Obsidian-format notes documenting patterns, techniques, sources, examples, references. The theoretical foundation under each skill.
 ---
 
-# Knowledge Base
+[← Back to Home](index)
 
-The knowledge base in `knowledge/` is an Obsidian-formatted vault documenting the research behind the skills. Use Obsidian to read it locally; Quartz (via GitHub Pages) for the rendered version.
+# 📚 Knowledge Base
 
-## Structure
+> The 41+ notes that ground every recommendation in the 4 skills. Open them in [Obsidian](https://obsidian.md/) for full graph view, or browse here.
+
+<br>
+
+## 🗺 Map
 
 ```
 knowledge/
-├── README.md                    # MOC (Map of Content)
-├── 01-Patterns/                 # 43-pattern catalogue + bilingual lexicons
-│   ├── lexical/
-│   ├── structural/
-│   ├── rhetorical/
-│   └── 43-patterns-catalogue.md
-├── 02-Techniques/               # How to write without AI patterns
-├── 03-Detection/                # How detectors work
-├── 04-Examples/                 # Before/after rewrites
-├── 05-References/                # Self-critique + limits
-└── 06-Sources/                  # Downloaded primary sources
+├── 01-Patterns/             # 43 AI-pattern categories + RU extensions
+├── 02-Techniques/           # 12 levers, voice, brevity grammar
+├── 03-Detection/            # How detectors work
+├── 04-Examples/             # Worked before/after cases
+├── 05-References/           # Limits, self-critique
+└── 06-Sources/              # Raw research papers + web fetches
 ```
 
-## Key notes (start here)
+<br>
 
-### Patterns (what AI does)
+## 1️⃣ Patterns (`01-Patterns/`) — what AI text looks like
 
-- [43-patterns-catalogue.md](../knowledge/01-Patterns/43-patterns-catalogue.md) — all 43 patterns in one file
-- [lexicon-ru-v2.md](../knowledge/01-Patterns/lexical/lexicon-ru-v2.md) — Russian AI clichés, v2
-- [lexicon-en.md](../knowledge/01-Patterns/lexical/lexicon-en.md) — English AI clichés
-- [negative-parallelisms.md](../knowledge/01-Patterns/rhetorical/negative-parallelisms.md) — «Это не X, а Y» (the #1 marker)
-- [em-dash.md](../knowledge/01-Patterns/structural/em-dash.md) — em-dash overuse
-- [deeprichastnye-oboroty.md](../knowledge/01-Patterns/rhetorical/deeprichastnye-oboroty.md) — Russian деепричастия overuse
-- [parallel-clauses.md](../knowledge/01-Patterns/structural/parallel-clauses.md) — Russian «цели и задачи» constructions
+| Note | Covers |
+|---|---|
+| [43-patterns-catalogue](01-patterns/43-patterns-catalogue) | All 43 patterns with examples & detection (from Aboudjem/humanizer-skill) |
+| [P9 Negative Parallelisms](01-patterns/rhetorical/negative-parallelisms) | **The #1 AI marker** per Washington Post 2024 — «это не X, а Y» |
+| [lexicon-ru-v2](01-patterns/lexical/lexicon-ru-v2) | Russian AI clichés: «более того», «стоит отметить» |
+| [lexicon-en](01-patterns/lexical/lexicon-en) | English AI clichés: `delve`, `leverage`, `robust` |
+| [deeprichastnye-oboroty](01-patterns/rhetorical/deeprichastnye-oboroty) | Russian деепричастия (-а/-в) overuse |
+| [parallel-clauses](01-patterns/structural/parallel-clauses) | «цели и задачи», «методы и средства» |
+| [em-dash](01-patterns/structural/em-dash) | Em-dash overuse (3-5× human baseline) |
+| [over-generation](01-patterns/structural/over-generation) | P-NEW-1…7 — vacuum-filling, restatement chains, bridging, etc. |
 
-### Techniques (what to do instead)
+<br>
 
-- [perplexity-and-burstiness.md](../knowledge/02-Techniques/perplexity-and-burstiness.md) — fundamental metrics
-- [voice-and-tone.md](../knowledge/02-Techniques/voice-and-tone.md) — finding your voice
-- [voice-russian-specifics.md](../knowledge/02-Techniques/voice-russian-specifics.md) — voice in Russian
-- [show-dont-tell.md](../knowledge/02-Techniques/show-dont-tell.md) — concrete over abstract
-- [agent-writing-workflow.md](../knowledge/02-Techniques/agent-writing-workflow.md) — Pre-flight → Write → Audit
+## 2️⃣ Techniques (`02-Techniques/`) — what to do instead
 
-### Detection
+| Note | What it covers |
+|---|---|
+| [perplexity-and-burstiness](02-techniques/perplexity-and-burstiness) | Foundation metrics (the basis of detection) |
+| [voice-and-tone](02-techniques/voice-and-tone) | How to find author voice |
+| [voice-russian-specifics](02-techniques/voice-russian-specifics) | Я / мы / безличное в русском |
+| [show-dont-tell](02-techniques/show-dont-tell) | Concreteness vs abstraction (the single biggest bug in LLM text) |
+| [sufficiency-and-underspecification](02-techniques/sufficiency-and-underspecification) | Lever 10 + 11: Grice submaxim 2 + Hemingway iceberg |
+| [length-bias-research](02-techniques/length-bias-research) | Academic grounding: 5 arXiv papers on length bias in RLHF |
+| [russian-brevity-grammar](02-techniques/russian-brevity-grammar) | Lever 12 deep-dive: парцелляция, эллипсис, литота |
+| [laconic-prose-models](02-techniques/laconic-prose-models) | Tolstoy, Dovlatov, Shklovsky, Bunin — principals to extract |
+| [agent-writing-workflow](02-techniques/agent-writing-workflow) | Pre-flight → Write → Audit algorithm |
 
-- [how-detectors-work.md](../knowledge/03-Detection/how-detectors-work.md) — perplexity, burstiness, stylometry
-- [public-detectors.md](../knowledge/03-Detection/public-detectors.md) — ZeroGPT, GPTZero, etc.
-- [russian-detectors.md](../knowledge/03-Detection/russian-detectors.md) — GigaCheck, Антиплагиат
+<br>
 
-### Self-critique
+## 3️⃣ Detection (`03-Detection/`) — what's measurable
 
-- [limits-and-self-critique.md](../knowledge/05-References/limits-and-self-critique.md) — what we know, what we don't, where skills work and don't
+| Note | What |
+|---|---|
+| [how-detectors-work](03-detection/how-detectors-work) | Binoculars (ICML 2024), Watermarking, DetectGPT, Pangram, GPTZero, ZeroGPT |
+| [public-detectors](03-detection/public-detectors) | Comparison of available tools |
+| [russian-detectors](03-detection/russian-detectors) | RU-specific: GigaCheck, Antiplagiat, etc. |
 
-## Reading in Obsidian
+<br>
 
-1. Install [Obsidian](https://obsidian.md/).
-2. File → Open vault → select `knowledge/` directory.
-3. Use `[[wikilinks]]` to navigate.
-4. Use graph view (Ctrl/Cmd+G) to see connections.
+## 4️⃣ Examples (`04-Examples/`) — measured before/after
 
-## Reading on GitHub
+These are **worked cases with measurable metrics**. Run `benchmark-skill.sh` on any to verify.
 
-The vault is plain Markdown. You can browse it directly on GitHub. `[[wikilinks]]` will not resolve, but the structure is the same.
+### `04-Examples/tightening/`
+5 examples showing Lever 10 (TIGHTEN) in action:
 
-## Contributing to the knowledge base
+| # | Domain | Words before → after | % reduction |
+|---|---|---|---|
+| 1 | README | 56 → 18 | -68% |
+| 2 | Email | 48 → 17 | -65% |
+| 3 | Blog post | 84 → 19 | -77% |
+| 4 | Marketing | 67 → 27 | -60% |
+| 5 | Status update | 71 → 16 | -77% |
+| **Avg** | | **65 → 19** | **-69%** |
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md). Add notes following the template in `knowledge/templates/note-template.md`.
+[Read all 5 →](04-examples/tightening)
+
+### `04-Examples/iceberg/`
+3 examples showing Lever 11 (RELY / iceberg) in action:
+
+- Architecture decision (PostgreSQL)
+- Bug fix report
+- Code review feedback
+
+[Read all 3 →](04-examples/iceberg)
+
+### `04-Examples/russian-grammar/`
+5+1 examples showing Lever 12 (REBUILD) in action:
+
+| # | Приём | Source |
+|---|---|---|
+| 1 | Парцелляция | Demo |
+| 2 | Эллипсис | Demo |
+| 3 | Литота | Demo |
+| 4 | Нулевая связка | Demo |
+| 5 | Комбинация всех 4 | Demo |
+| 6 | **Шкловский + Толстой** | Kholstomer example |
+
+[Read all 6 →](04-examples/russian-grammar)
+
+<br>
+
+## 5️⃣ References (`05-References/`) — limits and ethics
+
+| Note | What |
+|---|---|
+| [limits-and-self-critique](05-references/limits-and-self-critique) | Epistemological analysis: what we know, what we don't, what MASH/ACL 2026 means for skill ceilings |
+
+<br>
+
+## 6️⃣ Sources (`06-Sources/`) — raw research
+
+The actual papers and web pages we used as evidence:
+
+### Research papers (arXiv)
+
+- `06-Sources/research-papers/length-bias/`
+  - [park-2024-disentangling-length-dpo](06-sources/research-papers/length-bias/park-2024-disentangling-length-dpo) — DPO exploits length bias
+  - [shen-2023-loose-lips](06-sources/research-papers/length-bias/shen-2023-loose-lips) — RM assumes humans prefer longer (EMNLP 2023)
+  - [zhang-2024-format-bias](06-sources/research-papers/length-bias/zhang-2024-format-bias) — Format bias (lists, bold, emojis)
+  - [huang-2024-post-hoc-calibration](06-sources/research-papers/length-bias/huang-2024-post-hoc-calibration) — ICLR 2025; calibrate without retraining
+  - [lamparth-2026-bias-substitution](06-sources/research-papers/length-bias/lamparth-2026-bias-substitution) — **Critical** (Stanford 2026): single-axis mitigation → bias substitution
+
+### Datasets (used for empirical validation)
+
+- `06-Sources/research-papers/detection-datasets/`
+  - [hc3-english](06-sources/research-papers/detection-datasets/hc3-english) — 24.3k AI-vs-human pairs
+  - [hc3-russian-translated](06-sources/research-papers/detection-datasets/hc3-russian-translated) — translated version
+  - [raid-multi-domain](06-sources/research-papers/detection-datasets/raid-multi-domain) — 8.09M multi-model benchmark
+
+### Web fetches (RU grammar & literary theory)
+
+- `06-Sources/web-fetches/russian-grammar/`
+  - [parcelyaciya-wikipedia](06-sources/web-fetches/russian-grammar/parcelyaciya-wikipedia) — Russian Wikipedia article on parcellation
+  - [ellipsis-wikipedia](06-sources/web-fetches/russian-grammar/ellipsis-wikipedia) — 8 types of ellipsis
+  - [litota-wikipedia](06-sources/web-fetches/russian-grammar/litota-wikipedia) — Litotes with literary examples
+
+- `06-Sources/web-fetches/laconic-prose/`
+  - [shklovsky-wikipedia](06-sources/web-fetches/laconic-prose/shklovsky-wikipedia) — Shklovsky's 1917 "Art as Technique", defamiliarization, Tolstoy analysis
+
+<br>
+
+## 🔍 How to browse
+
+| You want to... | Look at |
+|---|---|
+| Find all AI cliches | `01-Patterns/lexical/lexicon-en` |
+| Remove Russian «канцелярит» | `01-Patterns/structural/parallel-clauses` |
+| Apply iceberg to technical doc | `02-Techniques/sufficiency-and-underspecification` → `04-Examples/iceberg/` |
+| Russian parcellation | `02-Techniques/russian-brevity-grammar` → `04-Examples/russian-grammar/` |
+| Why LLM over-generates | `02-Techniques/length-bias-research` |
+| Apply Shklovsky / Tolstoy style | `02-Techniques/laconic-prose-models` → `04-Examples/russian-grammar/06-shklovsky-tolstoy-kholstomer` |
+| Test your text | `scripts/benchmark-skill.sh` |
+
+<br>
+
+---
+
+[← Back to Home](index) · [Next: Limitations →](limitations)

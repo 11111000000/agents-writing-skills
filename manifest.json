@@ -7,43 +7,43 @@
   "skills": [
     {
       "name": "humanize-writer",
-      "version": "5.0.0",
+      "version": "6.0.0",
       "path": "skills/humanize-writer/SKILL.md",
       "description": "Write new prose without AI tells (3-pass architecture: Audit → Rewrite → Verify)",
       "use_when": "User asks to write documentation, README, blog post, email, or any narrative text",
       "companion_skills": ["humanize-editor", "anti-ai-auditor"],
       "references": ["skills/humanize-writer/references/lexicon.md"],
-      "changelog": "v5: 3-pass architecture (Audit → Rewrite → Verify). 12 levers organized into 4 phases: STRIP (1-9) / TIGHTEN (10) / RELY (11) / REBUILD (12). Decision tree, multi-language support table, code-block examples. v4: Lever 12 + length bias research + bias substitution warning."
+      "changelog": "v6: literary grounding for Russian brevity (Shklovsky, Tolstoy, Dovlatov, Bunin) while keeping v5 3-pass architecture and 12 levers in 4 phases: STRIP (1-9) / TIGHTEN (10) / RELY (11) / REBUILD (12)."
     },
     {
       "name": "humanize-editor",
-      "version": "5.0.0",
+      "version": "6.0.0",
       "path": "skills/humanize-editor/SKILL.md",
       "description": "Rewrite existing text to read human (3-pass: Audit → Rewrite → Verify, with bias substitution check)",
       "use_when": "User asks to humanize, de-AI, rewrite AI-generated text, or shorten verbose text",
       "companion_skills": ["anti-ai-auditor", "ai-pattern-rewriter"],
       "references": [],
-      "changelog": "v5: 3-pass architecture matches humanize-writer. Step 4.4 bias substitution check (Lamparth 2026): факты не потеряны при сокращении. Step 4 reorganized as STRIP/TIGHTEN/RELY/REBUILD phases. Voice profile 'laconic' added."
+      "changelog": "v6: laconic RU prose models added to the rewrite pass. Keeps v5 3-pass architecture, bias substitution check (Lamparth 2026), STRIP/TIGHTEN/RELY/REBUILD phases, and voice profile 'laconic'."
     },
     {
       "name": "anti-ai-auditor",
-      "version": "4.0.0",
+      "version": "6.0.0",
       "path": "skills/anti-ai-auditor/SKILL.md",
       "description": "Diagnose AI patterns without rewriting (3-pass audit: Surface → Deep → Synthesis)",
       "use_when": "User asks to check if text sounds like AI, asks 'is this too long?', or wants a diagnosis only",
       "companion_skills": ["humanize-editor", "ai-pattern-rewriter"],
       "references": [],
-      "changelog": "v4: 3-pass audit architecture (Surface Scan → Deep Analysis → Synthesis). Bias substitution check integrated. Voice, format-bias, Russian-grammar opportunities as independent analysis passes."
+      "changelog": "v6: adds laconic RU prose signals to the 3-pass audit. Keeps Surface Scan → Deep Analysis → Synthesis, bias substitution check, voice, format-bias, and Russian-grammar opportunity passes."
     },
     {
       "name": "ai-pattern-rewriter",
-      "version": "4.0.0",
+      "version": "6.0.0",
       "path": "skills/ai-pattern-rewriter/SKILL.md",
       "description": "Fix specific AI-pattern phrases surgically (3-pass: Identify → Rewrite → Verify)",
       "use_when": "User identifies specific phrases that sound too AI or 'too long' and wants targeted fixes",
       "companion_skills": ["humanize-editor", "anti-ai-auditor"],
       "references": [],
-      "changelog": "v4: 3-pass surgical architecture (Identify → Rewrite → Verify). Per-span bias substitution check. Over-generation spans + Russian brevity grammar spans + Williams 6 ops as integrated catalog."
+      "changelog": "v6: adds laconic RU rewrite models for short concrete replacements. Keeps 3-pass surgical architecture (Identify → Rewrite → Verify), per-span bias check, over-generation spans, Russian brevity grammar spans, and Williams 6 ops."
     }
   ],
   "prompts": [

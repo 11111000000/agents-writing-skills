@@ -6,12 +6,12 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-generation
-  version: 5
+  version: 6
 ---
 
-# Humanize-Writer (v5)
+# Humanize-Writer (v6)
 
-Write text that reads like a human wrote it. v5 introduces an explicit **3-pass architecture**: every text passes through Audit → Rewrite → Verify. 12 levers organized into 4 phases (STRIP / TIGHTEN / RELY / REBUILD).
+Write text that reads like a human wrote it. v6 keeps the explicit **3-pass architecture** (Audit → Rewrite → Verify) and adds literary grounding for Russian brevity through Shklovsky, Tolstoy, Dovlatov, and Bunin. 12 levers stay organized into 4 phases (STRIP / TIGHTEN / RELY / REBUILD).
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). They resolve via the GitHub web UI / API. **No local file dependencies** — works on any machine with internet access.

@@ -95,11 +95,22 @@ log "Initializing Quartz..."
 log "Installing plugins..."
 (cd "$TEMP_QUARTZ" && npx quartz plugin install --from-config 2>&1) || warn "Plugin install may have warnings (non-fatal)"
 
+# Install Mermaid plugin (used for 3-pass architecture diagrams)
+log "Installing Mermaid plugin..."
+(cd "$TEMP_QUARTZ" && timeout 60 npx quartz plugin install @jackyzha0/quartz-mermaid 2>&1) || warn "Mermaid plugin install failed (will fall back to ASCII diagrams)"
+
 # Customize Quartz config (site title, etc.)
 log "Customizing Quartz config..."
 if [[ -f "$TEMP_QUARTZ/quartz.config.ts" ]]; then
   sed -i "s|title: \"Quartz 5\"|title: \"Agents Writing Skills\"|" "$TEMP_QUARTZ/quartz.config.ts"
   sed -i "s|description:.*|description: \"Skills and prompts for agents that write text without sounding like AI.\"|" "$TEMP_QUARTZ/quartz.config.ts"
+
+  # Add Mermaid plugin to config if not already there
+  if ! grep -q "Mermaid" "$TEMP_QUARTZ/quartz.config.ts"; then
+    # Try to insert Mermaid import and plugin registration
+    sed -i 's|plugins: \[|plugins: [\n    Plugin.Mermaid(),|' "$TEMP_QUARTZ/quartz.config.ts"
+  fi
+
   ok "Quartz config customized"
 fi
 

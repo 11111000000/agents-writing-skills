@@ -7,7 +7,11 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Added (v6 — current)
+No pending changes.
+
+## [1.4.0] — 2026-07-10
+
+### Added (v6)
 - **Шкловский «остранение»** as theoretical foundation for Lever 12 (Russian brevity grammar). New source-note `06-Sources/web-fetches/laconic-prose/shklovsky-wikipedia.md` documents his 1917 essay "Art as Technique", the defamiliarization concept, and his analysis of Tolstoy's literary technique.
 - **Laconic prose models** synthesis note `02-Techniques/laconic-prose-models.md` — Tolstoy, Dovlatov, Shklovsky, Bunin as exemplars of Russian laconic prose. Extracts principles (concreteness > abstraction, short sentence > long, detail > general) rather than styles to copy.
 - **Tolstoy Kholstomer example** `04-Examples/russian-grammar/06-shklovsky-tolstoy-kholstomer.md` — concrete demonstration of defamiliarization through form. Bug fix post transformed into Tolstoy-style prose showing 90% word reduction with full fact preservation.
@@ -21,9 +25,9 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - **Why Shklovsky matters**: Without his theoretical framework, Lever 12 looks like ad-hoc tricks (shorten sentences, remove words). With Sklovsky, it's the **Russian tradition of defamiliarization through form**, applied systematically by Soviet and post-Soviet writers.
 - **Why Tolstoy matters**: His prose models are PROOF that laconic writing works. Not "Shklovsky's theory" — actual millions of readers prefer Tolstoy over LLM-style text.
 
-## [v5 — released]
+## [1.3.0] — 2026-07-10
 
-### Added (v5 — current)
+### Added (v5)
 - **3-pass architecture** across all 4 skills (humanize-writer, humanize-editor, anti-ai-auditor, ai-pattern-rewriter). Each skill now has explicit Pass 1 (Audit/Surface/Identify) → Pass 2 (Rewrite) → Pass 3 (Verify) flow.
 - **4-phase lever groups** in humanize-writer & humanize-editor: **STRIP** (Levers 1-9) → **TIGHTEN** (Lever 10) → **RELY** (Lever 11) → **REBUILD** (Lever 12, RU only).
 - **Bias substitution algorithm** in humanize-editor Step 4.4 + ai-pattern-rewriter: extract facts (numbers, names, paths, dates), compare before/after Tighten, FAIL if loss >10%. Inspired by Lamparth et al. (arXiv 2605.27996, 2026).

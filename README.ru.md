@@ -68,7 +68,7 @@
 
 ### База знаний (Obsidian)
 
-См. [`knowledge/README.md`](knowledge/README.md). Хранилище документирует 43 категории AI-паттернов (от Aboudjem), 9 levers от harshaneel, русскую специфику (от Wikipedia RU), и методы обнаружения (Binoculars, MASH, watermarking).
+См. [`knowledge/README.md`](knowledge/README.md). Хранилище документирует 43 категории AI-паттернов (от Aboudjem), 12-lever систему (9 levers от harshaneel + суффицентность, iceberg, русская краткость), русскую специфику и методы обнаружения (Binoculars, MASH, watermarking).
 
 ## Как работают skill'ы
 

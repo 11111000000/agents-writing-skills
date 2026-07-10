@@ -72,7 +72,8 @@ status: active
 | Anthropic skills | https://github.com/anthropics/skills | Эталонные skill'ы |
 | Pi skills | https://github.com/badlogic/pi-skills | Эталонные skill'ы для pi |
 | Humanizer-skill | https://github.com/Aboudjem/humanizer-skill | 43 паттерна, 5 voice profiles |
-| Humanize (research) | https://github.com/harshaneel/humanize | 9 levers, академические источники |
+| Humanize (research) | https://github.com/harshaneel/humanize | 9 base levers, академические источники |
+| Russian laconic prose | `web-fetches/laconic-prose/` | Шкловский, Лотман, Гаспаров, Аверинцев для Lever 12 |
 | MASH paper | https://github.com/githigher/MASH | ACL 2026, SOTA-обход |
 | Binoculars | https://github.com/ahans30/Binoculars | zero-shot detector |
 | Lynote-ai | https://github.com/lynote-ai/humanize-text | humanizer с большой базой |
