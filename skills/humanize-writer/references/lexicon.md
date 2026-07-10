@@ -1,6 +1,6 @@
 # Banned Lexicon — Comprehensive v2
 
-Quick reference for `humanize-writer` and `humanize-editor`. v2 includes 43-pattern catalogue from Aboudjem, 9 levers from harshaneel, and Russian-specific patterns from Wikipedia RU.
+Quick reference for `humanize-writer` and `humanize-editor`. v2 includes **43-pattern catalogue from Aboudjem**, **9 levers from harshaneel**, and **Russian-specific patterns from Wikipedia RU**.
 
 ## Sentence starters (high-confidence AI markers)
 
@@ -100,7 +100,7 @@ Quick reference for `humanize-writer` and `humanize-editor`. v2 includes 43-patt
 
 ## Structural markers
 
-- Em-dashes (—) more than ~1 per 300 words. AI tell.
+- Em-dashes (—) more than ~1 per 300 words — AI tell.
 - Identical sentence length in adjacent sentences.
 - Bullet lists of exactly 3 grammatically-parallel items.
 - Closing sentence in every paragraph that summarizes the paragraph.
@@ -146,9 +146,9 @@ Limit: ≤1 деепричастие на абзац.
 **EN:** "I hope this helps!", "Certainly!", "Great question!", "That's an excellent point!"
 **RU:** «С удовольствием помогу!», «Конечно!», «Прекрасный вопрос!», «Надеюсь, это пригодится!», «Позвольте мне объяснить…»
 
-## Negative parallelisms (P9). HIGHEST LEVERAGE
+## Negative parallelisms (P9) — **HIGHEST LEVERAGE**
 
-The #1 AI marker across languages. Washington Post (2024): 43% GPT outputs vs 3% human. Density in AI: 5–15 per 1000 words; in human: 0–1.
+**The #1 AI marker across languages.** Washington Post (2024): 43% GPT outputs vs 3% human. Density in AI: 5–15 per 1000 words; in human: 0–1.
 
 | Banned EN | Banned RU |
 |---|---|
@@ -160,15 +160,20 @@ The #1 AI marker across languages. Washington Post (2024): 43% GPT outputs vs 3%
 | "Not only X, but also Y" | «Это не только X, но и Y» |
 | "It's not merely X. It's Y" | «Это не просто X. Это Y» |
 
-Replacement rules:
+**Replacement rules:**
 
-1. If X and Y are genuinely mutually exclusive (монорепо vs polyrepo), keep, add concrete details.
-2. If X and Y are both abstract labels, replace with concrete facts.
-3. If construction adds nothing, delete it entirely.
+1. If X and Y are genuinely mutually exclusive (монорепо vs polyrepo) → keep, add concrete details.
+2. If X and Y are both abstract labels → replace with concrete facts.
+3. If construction adds nothing → delete it entirely.
 
-Density target: <1 per 1000 words.
+Examples:
+- ❌ «Это не баг, а фича.» → ✅ «Метод возвращает `null` для не-ASCII; документировано в README.»
+- ❌ «MathCodingFractal — это не „ещё одна методология". Это инфраструктура...» → ✅ «MathCodingFractal — это инфраструктура: роутинг, авторизация, observability из коробки.»
+- ❌ «It's not just a meme, it's a celebration» → ✅ «The meme spread through grassroots car culture forums in 2019; see this Wired piece for context.»
 
-Full methodology: `knowledge/01-Patterns/rhetorical/negative-parallelisms.md`.
+Density target: **<1 per 1000 words.**
+
+Full methodology: `~/Desktop/AgentWritingBase/01-Patterns/rhetorical/negative-parallelisms.md`
 
 ## Rule of three (P10)
 
@@ -185,7 +190,7 @@ Vary: 2, 3, 4, 1.
 ## Title case headings (P16)
 
 - ❌ «Стратегические Партнёрства И Глобальное Расширение»
-- ✅ «Стратегические партнёрства и глобальное расширение» (в русском одна заглавная)
+- ✅ «Стратегические партнёрства и глобальное расширение» (в русском — одна заглавная)
 
 ## Synonym cycling (P11)
 
@@ -194,16 +199,116 @@ Vary: 2, 3, 4, 1.
 
 ## Detection impact
 
-Heuristic detectors (ZeroGPT, simple GPTZero): surface patterns still matter. Statistical detectors (Binoculars, perplexity-based): surface patterns contribute but aren't sufficient. Learned classifiers (Pangram, modern GPTZero, Grammarly): surface patterns don't reliably defeat them (MASH, ACL 2026).
+**Important caveat:** The "detection impact" of surface patterns is **inversely correlated with detector sophistication**:
 
-For writing that reads as human to humans: aim for zero matches in normal prose. For writing that passes commercial detectors: surface rewriting alone is insufficient.
+- **Heuristic detectors** (ZeroGPT, simple GPTZero): surface patterns still matter; "2–3 in 200 words" → flagged
+- **Statistical detectors** (Binoculars, perplexity-based): surface patterns contribute but aren't sufficient
+- **Learned classifiers** (Pangram, modern GPTZero, Grammarly): **surface patterns don't reliably defeat them** (MASH, ACL 2026)
 
-See `knowledge/05-References/limits-and-self-critique.md`.
+For writing that **reads as human** to humans: aim for zero matches in normal prose; allow one in technical docs that genuinely need it.
+
+For writing that **passes commercial detectors**: surface rewriting alone is insufficient. Need hybrid approach (rule + base-model paraphrase + iterative refinement).
+
+See `~/Desktop/AgentWritingBase/05-References/limits-and-self-critique.md` for full discussion.
+
+## Over-generation patterns (NEW, 2026-07)
+
+> [!important] Не лечится запретом отдельных слов
+> Это структурный дефект LLM (YapBench, arXiv 2601.00624, январь 2026). Лечится положительным принципом: Grice submaxim 2 + Strunk cut-test. См. `02-Techniques/sufficiency-and-underspecification.md` и `01-Patterns/structural/over-generation.md`.
+
+### Bridging phrases (P-NEW-3)
+
+| Banned EN | Banned RU |
+|---|---|
+| As mentioned above | Как упоминалось выше |
+| As we discussed | Как мы уже обсудили |
+| This brings us to | Это подводит нас к |
+| Now let's turn to | Теперь перейдём к |
+| In the next section | В следующем разделе |
+| Having covered X | Рассмотрев X |
+| Building on this | На основе этого |
+| With that in mind | С учётом этого |
+
+### Antithetical recaps (P-NEW-7)
+
+| Banned EN | Banned RU |
+|---|---|
+| In conclusion | В заключение |
+| To summarize | Подводя итог |
+| To wrap things up | Подводя итог |
+| All in all | В целом |
+| In summary | Итак |
+| We've covered | Мы рассмотрели |
+| As we've seen | Как мы увидели |
+
+### Vacuum-filling openers (P-NEW-1)
+
+| Banned EN | Banned RU |
+|---|---|
+| It's worth noting that | Стоит отметить, что |
+| It's important to mention | Важно упомянуть |
+| Let me explain | Позвольте объяснить |
+| I should mention | Следует упомянуть |
+| Generally speaking | Вообще говоря |
+| As you may know | Как вы знаете |
+| Obviously | Очевидно (без последующей конкретики) |
+| Needless to say | Само собой разумеется |
+
+### Over-explanation markers (P-NEW-4)
+
+| Banned EN | Banned RU |
+|---|---|
+| In other words | Другими словами |
+| That is to say | То есть |
+| To put it differently | Иными словами |
+| What this means is | Это означает, что |
+| Essentially | По сути |
+| Basically | В общем-то |
+| Put simply | Проще говоря |
+| Simply put | Проще говоря |
+
+### Balanced framing crutches (P-NEW-6)
+
+| Banned EN | Banned RU |
+|---|---|
+| On the one hand ... on the other | С одной стороны ... с другой |
+| There are pros and cons | Есть плюсы и минусы |
+| Each approach has its merits | У каждого подхода свои достоинства |
+| It depends on your needs | Зависит от ваших потребностей |
+| Your mileage may vary | Результат может отличаться (как отговорка) |
+
+### Hedging + over-generation combo (P-NEW-5)
+
+| Banned EN | Banned RU |
+|---|---|
+| It might be worth considering | Возможно, стоит рассмотреть |
+| You may want to think about | Возможно, стоит подумать |
+| One thing to keep in mind is | Стоит иметь в виду, что |
+| It's generally a good idea | Обычно хорошая идея |
+| In some cases | В некоторых случаях (без указания каких) |
+
+### Strunk cut-test (механическое применение)
+
+Удалите любое предложение в вашем тексте. Если смысл не потерялся — удалите навсегда. Применяйте последовательно ко всем предложениям.
+
+Williams 6 операций (финальный проход):
+
+1. **Delete words that mean little or nothing:** «in order to» → «to», «the fact that» → удалить, «a number of» → «several»/«many»
+2. **Delete words that repeat the meaning of other words:** «they are both alike» → «they are alike», «the reason is because» → «because»
+3. **Delete words implied by other words:** «his six-year-old son» → «his son» (если возраст не нужен)
+4. **Replace a phrase with a word:** «the way in which» → «how», «is able to» → «can», «has the ability to» → «can»
+5. **Change negatives to affirmatives:** «did not remember» → «forgot», «not unlike» → «like», «not many» → «few»
+6. **Delete useless adjectives and adverbs:** «absolutely essential», «completely unanimous», «totally unique», «very really»
 
 ## Sources
 
-- Aboudjem/humanizer-skill (43-pattern catalogue). MIT
-- harshaneel/humanize (9 levers). MIT
-- Wikipedia RU: Признаки сгенерированности текста. CC BY-SA
-- Wikipedia EN: Signs of AI writing. CC BY-SA
-- harshaneel Lever 9 (RLHF strip). arXiv 2605.19516 "Base Models Look Human"
+- Aboudjem/humanizer-skill (43-pattern catalogue) — MIT
+- harshaneel/humanize (9 levers) — MIT
+- Wikipedia RU: Признаки сгенерированности текста — CC BY-SA
+- Wikipedia EN: Signs of AI writing — CC BY-SA
+- harshaneel Lever 9 (RLHF strip) — arXiv 2605.19516 «Base Models Look Human»
+- **Borisov et al.** YapBench — arXiv 2601.00624 (2026) — empirical basis for over-generation patterns
+- **Grice, H. P.** *Logic and Conversation* (1975) — theoretical basis for sufficiency
+- **Hemingway, E.** *Death in the Afternoon* (1932) — iceberg theory
+- **Strunk & White** *The Elements of Style* (1918, 1959) — omit needless words
+- **Williams, J. M.** *Style: Lessons in Clarity and Grace* — six operations of concision

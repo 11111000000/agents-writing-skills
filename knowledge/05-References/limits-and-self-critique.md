@@ -24,6 +24,7 @@ related: [how-detectors-work, negative-parallelisms, public-detectors, russian-d
 | **Watermarking** (arXiv 2301.10226, ICML 2023) | Green/red token watermarking, >99% AUROC. Требует доступа к модели. |
 | **MASH** (arXiv 2601.08564, ACL Findings 2026) | Static surface rewriting достигает ceiling 92% ASR на старых детекторах. На новых (Pangram, GPTZero) почти не работает. |
 | **DetectGPT** (Mitchell et al. 2023) | Perturbation-based zero-shot detection. AUROC 0.80–0.90 в clean conditions. |
+| **YapBench** (arXiv 2601.00624, январь 2026) | Over-generation в 76 LLM. Порядок величин разброса. Vacuum-filling, explanation overhead. **Подтверждает, что length bias — структурное свойство preference tuning, не стилистический артефакт.** |
 
 Где используем каждое: Binoculars и Watermarking описаны в `03-Detection/how-detectors-work.md`, MASH в `02-Techniques/perplexity-and-burstiness.md`, DetectGPT там же.
 
@@ -71,19 +72,22 @@ related: [how-detectors-work, negative-parallelisms, public-detectors, russian-d
 
 ### Корреляции (безопасно утверждать)
 
-AI-тексты содержат больше em-dash, больше деепричастий (в RU), больше антитезисов. У AI-текстов ниже burstiness.
+AI-тексты содержат больше em-dash, больше деепричастий (в RU), больше антитезисов. У AI-текстов ниже burstiness. **AI-тексты длиннее, чем нужно для цели** (YapBench, arXiv 2601.00624, январь 2026: 76 LLM, порядок величин по over-generation). Это структурное свойство, не стилистическая случайность.
 
 ### Гипотезы (требуют осторожности)
 
 - Это потому что LLM тренируется на официальных и академических корпусах. Правдоподобно, не доказано.
-- Это потому что RLHF-фингерпринт делает тексты «гладкими». Из одной непроверенной статьи.
+- Это потому что RLHF-фингерпринт делает тексты «гладкими». Подтверждается YapBench (preference tuning length bias), но единичная работа.
 - Это потому что sampling temperature стремится к среднему. Правдоподобно, не доказано.
+- **Lever 10 (Sufficiency, Grice submaxim 2) и Lever 11 (Iceberg, Hemingway) — положительные принципы, не запреты. Они учат, что писать, а не только что не писать. Гипотеза: комбинация negative rules (1–9) + positive principles (10–11) даёт более устойчивый эффект, чем только negative rules. Не валидировано на blinded study.**
 
 ### Ложные утверждения (избегаем)
 
 - «Антитезис = AI». Нет, это нормальная фигура речи.
 - «Деепричастие = AI». Нет, в академическом русском это норма.
 - «Burstiness < 3 = AI». Нет, есть жанры с низкой burstiness.
+- «Длинный текст = AI». Нет, есть жанры, где длинные тексты уместны (диссертации, годовые отчёты). YapScore работает только как сравнение с baseline, не как абсолютная метрика.
+- «Underspecification всегда хорошо». Нет, в technical reference, legal text, onboarding — пропущенная информация ломает смысл. См. [[../02-Techniques/sufficiency-and-underspecification]] раздел 6 «Когда недосказанность НЕ работает».
 
 ## Где наши skill'ы работают
 

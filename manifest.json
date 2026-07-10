@@ -1,45 +1,49 @@
 {
   "name": "agents-writing-skills",
-  "version": "1.0.0",
-  "description": "Skills and prompts for agents that write text without sounding like AI",
+  "version": "1.1.0",
+  "description": "Skills and prompts for agents that write text without sounding like AI (v1.1: sufficiency / iceberg)",
   "repository": "https://github.com/11111000000/agents-writing-skills",
   "license": "MIT",
   "skills": [
     {
       "name": "humanize-writer",
-      "version": "2.0.0",
+      "version": "3.0.0",
       "path": "skills/humanize-writer/SKILL.md",
-      "description": "Write new prose without AI tells",
+      "description": "Write new prose without AI tells (incl. Sufficiency / iceberg)",
       "use_when": "User asks to write documentation, README, blog post, email, or any narrative text",
       "companion_skills": ["humanize-editor", "anti-ai-auditor"],
-      "references": ["skills/humanize-writer/references/lexicon.md"]
+      "references": ["skills/humanize-writer/references/lexicon.md"],
+      "changelog": "v3: added Lever 10 (Sufficiency / Grice), Lever 11 (Trust the reader / iceberg), over-generation patterns P-NEW-1…7, 7-step workflow with Tighten & Reader-fill passes, \"Когда молчать\" table"
     },
     {
       "name": "humanize-editor",
-      "version": "2.0.0",
+      "version": "3.0.0",
       "path": "skills/humanize-editor/SKILL.md",
-      "description": "Rewrite existing text to read human",
-      "use_when": "User asks to humanize, de-AI, or rewrite AI-generated text",
+      "description": "Rewrite existing text to read human (incl. Tighten pass)",
+      "use_when": "User asks to humanize, de-AI, rewrite AI-generated text, or shorten verbose text",
       "companion_skills": ["anti-ai-auditor", "ai-pattern-rewriter"],
-      "references": []
+      "references": [],
+      "changelog": "v3: added Step 4 Tighten pass (8 scans: vacuum-filling, restatement, bridging, over-explanation, hedging, balanced framing, antithetical recap, Strunk cut-test), Step 5 Trust-the-reader pass, voice profile 'laconic'"
     },
     {
       "name": "anti-ai-auditor",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "skills/anti-ai-auditor/SKILL.md",
-      "description": "Diagnose AI patterns without rewriting",
-      "use_when": "User asks to check if text sounds like AI, or wants a diagnosis only",
+      "description": "Diagnose AI patterns without rewriting (incl. over-generation metrics)",
+      "use_when": "User asks to check if text sounds like AI, asks 'is this too long?', or wants a diagnosis only",
       "companion_skills": ["humanize-editor", "ai-pattern-rewriter"],
-      "references": []
+      "references": [],
+      "changelog": "v2: added YapScore / Sufficiency estimate (per YapBench 2026), Cut-test pass, Reader-fill test, new 'Over-generation' report section, Sufficiency verdict"
     },
     {
       "name": "ai-pattern-rewriter",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "path": "skills/ai-pattern-rewriter/SKILL.md",
-      "description": "Fix specific AI-pattern phrases surgically",
-      "use_when": "User identifies specific phrases that sound too AI and wants targeted fixes",
+      "description": "Fix specific AI-pattern phrases surgically (incl. over-generation spans)",
+      "use_when": "User identifies specific phrases that sound too AI or 'too long' and wants targeted fixes",
       "companion_skills": ["humanize-editor", "anti-ai-auditor"],
-      "references": []
+      "references": [],
+      "changelog": "v2: added 'Over-generation spans' section with 10 rewrites (vacuum-filling, restatement, bridging, over-explanation, hedging, balanced framing, antithetical recap, etc.) + Williams 6 operations"
     }
   ],
   "prompts": [

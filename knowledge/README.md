@@ -55,7 +55,16 @@ templates/            — шаблоны заметок
 - [[02-Techniques/voice-and-tone]] — как найти голос
 - [[02-Techniques/voice-russian-specifics]] — особенности голоса в русском
 - [[02-Techniques/show-dont-tell]] — конкретика вместо абстракций
+- [[02-Techniques/sufficiency-and-underspecification]] — **NEW**: когда сказать меньше, чем знаешь (Grice, Hemingway, Chekhov, Williams)
 - [[02-Techniques/agent-writing-workflow]] — алгоритм Pre-flight → Write → Audit
+
+### Структурные паттерны
+
+- [[01-Patterns/structural/three-part-lists]] — rule of three
+- [[01-Patterns/structural/parallelism]] — симметрия и параллелизм
+- [[01-Patterns/structural/parallel-clauses]] — парные синонимы в русском
+- [[01-Patterns/structural/em-dash]] — em-dash как главный AI-маркер пунктуации
+- [[01-Patterns/structural/over-generation]] — **NEW**: пере-говорение (P-NEW-1…P-NEW-7), vacuum-filling, restatement chains, bridging, over-explanation, anticipatory hedging, balanced framing, antithetical recap
 
 ### Детекторы
 
@@ -90,14 +99,14 @@ templates/            — шаблоны заметок
 - Структура создана
 - MOC и индекс на месте
 - Лексические паттерны заполнены (RU + EN, v1 + v2)
-- Структурные паттерны заполнены (rule of three, parallelism, em-dash, parallel-clauses)
+- Структурные паттерны заполнены (rule of three, parallelism, em-dash, parallel-clauses, **over-generation 2026-07**)
 - Риторические паттерны заполнены (hedging, impersonality, deeprichastnye)
-- Каталог 43 паттернов готов (P1–P43)
-- Техники замены описаны (voice, perplexity, show-dont-tell)
+- Каталог 43 паттернов готов (P1–P43) + новый класс P-NEW (over-generation)
+- Техники замены описаны (voice, perplexity, show-dont-tell, **sufficiency/underspecification 2026-07**)
 - Примеры до/после собраны (RU базовые + расширенные, EN)
 - Первоисточники скачаны и описаны (Fabric, Anthropic, Pi skills, Aboudjem, harshaneel, lynote-ai, Wikipedia RU)
-- Skill'и для opencode установлены
-- Skill'и и prompt-templates для pi установлены
+- Skill'ы для opencode установлены (v2 → обновляются до v3 в 2026-07 с Lever 10/11 на sufficiency)
+- Skill'ы и prompt-templates для pi установлены
 - Регулярный аудит при обновлении upstream (Aboudjem и harshaneel активно развиваются)
 
 ## Ключевые выводы исследования
@@ -115,8 +124,12 @@ Lever 9 (Strip RLHF voice) — самое важное открытие 2025–2
 
 ### Из Wikipedia RU
 
-Поверхностный анализ с деепричастиями особенно остро стоит в русском. Парные синонимы через «и» («цели и задачи») — паттерн, для которого нет английского аналога. Канцелярит и отглагольные существительные остаются главными стилистическими маркерами.
+Поверхностный анализ с деепричастиями особенно остро стоит в русском. Парные синонимы через «и» («цели и задачи») — паттерн, для которого нет английского аналога. Канцелярит и отглагольные существительные остаются главными стилистическими маркерами. **Литота** — русская традиция преуменьшения, отсутствующая в LLM.
 
 ### Из академии
 
-Binoculars (arXiv 2401.12070) — лучший zero-shot детектор (90%+ accuracy). Watermarking (arXiv 2301.10226) даёт >99% AUROC, но требует доступа к модели. MASH (arXiv 2601.08564, ACL 2026) показал ceiling 92% ASR на старых детекторах через static surface rewriting, против новых почти не работает.
+Binoculars (arXiv 2401.12070) — лучший zero-shot детектор (90%+ accuracy). Watermarking (arXiv 2301.10226) даёт >99% AUROC, но требует доступа к модели. MASH (arXiv 2601.08564, ACL 2026) показал ceiling 92% ASR на старых детекторах через static surface rewriting, против новых почти не работает. **YapBench** (arXiv 2601.00624, январь 2026) — эмпирически подтвердил length bias в 76 LLM. Не лечится списком запрещённых слов, требует положительного принципа суффицентности.
+
+### Из литературной теории (Grice, Hemingway, Chekhov, Pascal, Williams)
+
+Существующие skill'ы в основном запрещают (negative rules). Дополняющий положительный принцип — **суффицентность**: сказать ровно столько, сколько нужно. Gricean Maxim of Quantity submaxim 2: «Do not make your contribution more informative than is required». Hemingway's iceberg: «If a writer of prose knows enough of what he is writing about he may omit things that he knows». Chekhov's gun: «Remove everything that has no relevance to the story». Strunk & White: «every word tell». Williams: шесть операций сокращения. Подробнее: [[02-Techniques/sufficiency-and-underspecification]] и [[01-Patterns/structural/over-generation]].
