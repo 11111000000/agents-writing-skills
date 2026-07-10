@@ -58,6 +58,7 @@ templates/            — шаблоны заметок
 - [[02-Techniques/sufficiency-and-underspecification]] — **NEW**: когда сказать меньше, чем знаешь (Grice, Hemingway, Chekhov, Williams)
 - [[02-Techniques/length-bias-research]] — **NEW**: академический обзор length bias в RLHF (Park, Shen, Zhang, Lamparth, Huang)
 - [[02-Techniques/russian-brevity-grammar]] — **NEW**: парцелляция, эллипсис, литота как русские грамматические инструменты краткости
+- [[02-Techniques/laconic-prose-models]] — **NEW**: Толстой, Довлатов, Шкловский, Бунин как эталонные модели русской краткости
 - [[02-Techniques/agent-writing-workflow]] — алгоритм Pre-flight → Write → Audit
 
 ### Структурные паттерны

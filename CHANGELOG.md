@@ -7,6 +7,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added (v6 — current)
+- **Шкловский «остранение»** as theoretical foundation for Lever 12 (Russian brevity grammar). New source-note `06-Sources/web-fetches/laconic-prose/shklovsky-wikipedia.md` documents his 1917 essay "Art as Technique", the defamiliarization concept, and his analysis of Tolstoy's literary technique.
+- **Laconic prose models** synthesis note `02-Techniques/laconic-prose-models.md` — Tolstoy, Dovlatov, Shklovsky, Bunin as exemplars of Russian laconic prose. Extracts principles (concreteness > abstraction, short sentence > long, detail > general) rather than styles to copy.
+- **Tolstoy Kholstomer example** `04-Examples/russian-grammar/06-shklovsky-tolstoy-kholstomer.md` — concrete demonstration of defamiliarization through form. Bug fix post transformed into Tolstoy-style prose showing 90% word reduction with full fact preservation.
+- **Benchmark smoke tests** `scripts/test-benchmark.sh` — runs benchmark-skill.sh on two test fixtures (AI-typical + human), checks exit codes, validates required metrics present. Auto-runs as part of `validate-skills.sh`.
+
+### Changed (v6)
+- `validate-skills.sh` now also runs benchmark smoke tests (gates commit on both structural validation and runtime behavior).
+
+### Notes (v6)
+- **Dialectic v5→v6**: v5 was structural clarity (3-pass, 4 phases). v6 adds **literary foundations** — knowledge base now has the theoretical lineage from Sklovsky → Tolstoy → modern Russian brevity grammar (Lever 12).
+- **Why Shklovsky matters**: Without his theoretical framework, Lever 12 looks like ad-hoc tricks (shorten sentences, remove words). With Sklovsky, it's the **Russian tradition of defamiliarization through form**, applied systematically by Soviet and post-Soviet writers.
+- **Why Tolstoy matters**: His prose models are PROOF that laconic writing works. Not "Shklovsky's theory" — actual millions of readers prefer Tolstoy over LLM-style text.
+
+## [v5 — released]
+
 ### Added (v5 — current)
 - **3-pass architecture** across all 4 skills (humanize-writer, humanize-editor, anti-ai-auditor, ai-pattern-rewriter). Each skill now has explicit Pass 1 (Audit/Surface/Identify) → Pass 2 (Rewrite) → Pass 3 (Verify) flow.
 - **4-phase lever groups** in humanize-writer & humanize-editor: **STRIP** (Levers 1-9) → **TIGHTEN** (Lever 10) → **RELY** (Lever 11) → **REBUILD** (Lever 12, RU only).

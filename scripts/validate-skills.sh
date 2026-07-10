@@ -78,6 +78,8 @@ check_prompt_file() {
   fi
 }
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 main() {
   echo "=== Validating skills ==="
   if [[ -d "$SKILLS_DIR" ]]; then
@@ -99,6 +101,16 @@ main() {
     for prompt_file in "$PROMPTS_DIR"/*.md; do
       check_prompt_file "$prompt_file"
     done
+  fi
+
+  echo ""
+  echo "=== Validating benchmark script ==="
+  if [[ -x "$SCRIPT_DIR/test-benchmark.sh" ]]; then
+    if bash "$SCRIPT_DIR/test-benchmark.sh" > /tmp/test-benchmark.log 2>&1; then
+      ok "benchmark smoke tests passed"
+    else
+      err "benchmark smoke tests failed (see /tmp/test-benchmark.log)"
+    fi
   fi
 
   echo ""
