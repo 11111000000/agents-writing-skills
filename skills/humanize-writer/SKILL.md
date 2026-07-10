@@ -11,13 +11,23 @@ metadata:
 
 # Humanize-Writer (v4)
 
-Write text that reads like a human wrote it. Bundles the operating instructions from `~/Desktop/AgentWritingBase/` (v4: adds Lever 12 Russian brevity grammar + length bias research integration). Apply by default for non-trivial prose.
+Write text that reads like a human wrote it. Bundles the operating instructions from `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/` (v4: adds Lever 12 Russian brevity grammar + length bias research integration). Apply by default for non-trivial prose.
+
+> [!info] Knowledge base access
+> All references in this skill are GitHub URLs to the public repo [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). They resolve via the GitHub web UI / API. **No local file dependencies** — works on any machine with internet access.
+>
+> For **offline use**, clone the knowledge base locally:
+> ```bash
+> ./scripts/install-knowledge.sh           # clones to ~/.cache/agents-writing-skills-knowledge
+> export KNOWLEDGE_PATH="$HOME/.cache/agents-writing-skills-knowledge/knowledge"
+> ```
+> Then replace `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/` with `$KNOWLEDGE_PATH/` in this file.
 
 > [!warning] Что этот skill МОЖЕТ и чего НЕ МОЖЕТ
 > **Может:** сделать текст, который читается как человеческий для среднестатистического читателя.
 > **Не может:** гарантировать прохождение GPTZero, Pangram, Grammarly. Против обученных детекторов **статические правила имеют ceiling** (MASH, ACL 2026).
 > **Не предназначен для:** обхода академической проверки, сдачи AI-текста как своего. Используйте, чтобы **писать лучше**, не чтобы **скрывать**.
-> См. `~/Desktop/AgentWritingBase/05-References/limits-and-self-critique.md`.
+> См. `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md`.
 
 > [!warning] Length bias caveat (v4)
 > YapBench (Borisov et al., 2026) и Park et al. (2024) показали, что length bias — структурное свойство RLHF preference tuning. **Tighten pass может привести к bias substitution** (Lamparth et al., 2026): сокращение длины → перенос bias на другие proxies (confidence, factual depth). Tighten pass должен сохранять плотность фактов, не только сокращать слова.
@@ -217,7 +227,7 @@ LLM систематически нарушает это из-за RLHF preferen
 - Научные методы/результаты (полнота обязательна)
 - Tutorial для новичков (базовые шаги нужны)
 
-Подробнее: `~/Desktop/AgentWritingBase/02-Techniques/sufficiency-and-underspecification.md`, `~/Desktop/AgentWritingBase/01-Patterns/structural/over-generation.md`.
+Подробнее: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/sufficiency-and-underspecification.md`, `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/structural/over-generation.md`.
 
 ### Lever 11: Trust the reader (iceberg) — Hemingway
 
@@ -314,7 +324,7 @@ LLM систематически нарушает это из-за RLHF preferen
 - Научный регистр (частично — допустимо в обзорной части)
 - Перевод с другого языка, где сохранение оригинальной структуры обязательно
 
-Подробнее: `~/Desktop/AgentWritingBase/02-Techniques/russian-brevity-grammar.md`.
+Подробнее: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md`.
 
 ## Russian-specific extensions (Wikipedia RU + own research)
 
@@ -344,7 +354,7 @@ Examples:
 
 Density target: **<1 per 1000 words.** Anything >3 = AI.
 
-Full methodology: `~/Desktop/AgentWritingBase/01-Patterns/rhetorical/negative-parallelisms.md`
+Full methodology: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/rhetorical/negative-parallelisms.md`
 
 ### R-1: Strip deeprichastnye chains
 
@@ -371,7 +381,7 @@ Russian em-dash even more diagnostic than EN. **≤1 per 300 words.** Often hide
 
 ### R-4: Voice in Russian
 
-Use «я» for personal content, «мы» (team) for collaborative, безличное for instructions. Don't switch between them. See `~/Desktop/AgentWritingBase/02-Techniques/voice-russian-specifics.md`.
+Use «я» for personal content, «мы» (team) for collaborative, безличное for instructions. Don't switch between them. See `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/voice-russian-specifics.md`.
 
 ### R-5: Concrete with Russian flavor
 
@@ -504,6 +514,6 @@ Always output **only the final text**. No preamble, no "Here's a draft:", no apo
 
 ## See also
 
-- Obsidian vault: `~/Desktop/AgentWritingBase/`
+- Obsidian vault: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/`
 - Especially: `02-Techniques/perplexity-and-burstiness.md`, `02-Techniques/voice-russian-specifics.md`, `02-Techniques/show-dont-tell.md`, `02-Techniques/sufficiency-and-underspecification.md`, `02-Techniques/length-bias-research.md` (NEW v4), `02-Techniques/russian-brevity-grammar.md` (NEW v4), `01-Patterns/43-patterns-catalogue.md`, `01-Patterns/structural/over-generation.md`.
 - External: [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill), [harshaneel/humanize](https://github.com/harshaneel/humanize), [YapBench paper](https://arxiv.org/abs/2601.00624), [HC3 dataset](https://huggingface.co/datasets/Hello-SimpleAI/HC3), [RAID dataset](https://huggingface.co/datasets/liamdugan/raid).

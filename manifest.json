@@ -102,10 +102,30 @@
       "target_agents": ["pi"]
     }
   ],
+  "knowledge_base": {
+    "repository": "https://github.com/11111000000/agents-writing-skills",
+    "path_in_repo": "knowledge/",
+    "branch": "main",
+    "description": "Obsidian-format knowledge vault. All SKILL.md files reference this repo via GitHub URLs (github.com/.../blob/main/knowledge/...). For offline use, install via scripts/install-knowledge.sh.",
+    "structure": {
+      "01-Patterns/": "43-pattern catalogue + new structural/rhetorical patterns",
+      "02-Techniques/": "Lever definitions, voice, brevity, show-don't-tell",
+      "03-Detection/": "How AI detectors work",
+      "04-Examples/": "Before/after rewrites",
+      "05-References/": "Limits, ethics, self-critique",
+      "06-Sources/": "Raw research papers and web fetches used to build the knowledge"
+    }
+  },
   "install_instructions": {
-    "opencode": "Copy each skill directory to ~/.config/opencode/skills/. Each skill is a single SKILL.md file with optional references/ subdirectory.",
-    "pi": "Copy each skill directory to ~/.pi/agent/skills/. Copy prompts to ~/.pi/agent/prompts/.",
-    "claude_code": "Copy each skill directory to ~/.claude/skills/ or use the /install-skill command.",
-    "generic": "Read this manifest, identify which skills you want, and copy the SKILL.md files to your agent's skill directory."
+    "opencode": "Copy each skill directory to ~/.config/opencode/skills/. Each skill is a single SKILL.md file with optional references/ subdirectory. Knowledge base references resolve via GitHub URLs by default. For offline use: ./scripts/install-knowledge.sh.",
+    "pi": "Copy each skill directory to ~/.pi/agent/skills/. Copy prompts to ~/.pi/agent/prompts/. Knowledge base references resolve via GitHub URLs by default. For offline use: ./scripts/install-knowledge.sh.",
+    "claude_code": "Copy each skill directory to ~/.claude/skills/ or use the /install-skill command. Knowledge base references resolve via GitHub URLs by default. For offline use: ./scripts/install-knowledge.sh.",
+    "generic": "Read this manifest, identify which skills you want, and copy the SKILL.md files to your agent's skill directory. Knowledge base references are GitHub URLs (https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/...). For offline use, run scripts/install-knowledge.sh to clone the knowledge base locally.",
+    "offline_knowledge_setup": {
+      "default_path": "~/.cache/agents-writing-skills-knowledge",
+      "command": "./scripts/install-knowledge.sh",
+      "update_command": "./scripts/install-knowledge.sh --update",
+      "env_var": "KNOWLEDGE_PATH"
+    }
   }
 }

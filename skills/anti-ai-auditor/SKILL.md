@@ -13,6 +13,9 @@ metadata:
 
 Audit an existing text for AI-pattern probability. **Do not rewrite** — only diagnose. v3 adds length bias academic grounding (Park 2024, Lamparth 2026, Zhang 2024), format bias detection (lists/bold/emojis), and bias substitution warnings.
 
+> [!info] Knowledge base access
+> All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/). For offline: `./scripts/install-knowledge.sh`.
+
 ## When to load
 
 - User pastes text and asks "is this too AI?"
@@ -200,7 +203,7 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 
 ## See also
 
-- Obsidian: `~/Desktop/AgentWritingBase/03-Detection/how-detectors-work.md`
-- Obsidian: `~/Desktop/AgentWritingBase/02-Techniques/sufficiency-and-underspecification.md` (NEW)
-- Obsidian: `~/Desktop/AgentWritingBase/01-Patterns/structural/over-generation.md` (NEW)
+- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/03-Detection/how-detectors-work.md`
+- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/sufficiency-and-underspecification.md` (NEW)
+- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/structural/over-generation.md` (NEW)
 - External: [YapBench paper](https://arxiv.org/abs/2601.00624)

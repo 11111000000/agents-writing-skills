@@ -13,6 +13,9 @@ metadata:
 
 Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v3 adds **Russian brevity grammar spans (Lever 12)** and **length bias bias-substitution warnings**.
 
+> [!info] Knowledge base access
+> All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/). For offline: `./scripts/install-knowledge.sh`.
+
 ## When to load
 
 - User says "перепиши только это предложение" / "fix just this paragraph"
@@ -134,7 +137,7 @@ Surgical, span-level rewriting. **Only** rewrite the specific phrases the user f
 ## Russian brevity grammar spans (NEW v3, Lever 12)
 
 > [!info] Активные инструменты, не запреты
-> Эти переписывания применяют русские грамматические приёмы краткости. Подробнее: `~/Desktop/AgentWritingBase/02-Techniques/russian-brevity-grammar.md`.
+> Эти переписывания применяют русские грамматические приёмы краткости. Подробнее: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md`.
 
 ### Парцелляция (расщепление)
 
@@ -228,6 +231,6 @@ If the user asked for alternatives (they will say so), provide 2–3 options.
 
 ## See also
 
-- Obsidian: `~/Desktop/AgentWritingBase/04-Examples/before-after.md`
-- Obsidian: `~/Desktop/AgentWritingBase/02-Techniques/sufficiency-and-underspecification.md` (NEW)
-- Obsidian: `~/Desktop/AgentWritingBase/01-Patterns/structural/over-generation.md` (NEW)
+- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after.md`
+- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/sufficiency-and-underspecification.md` (NEW)
+- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/structural/over-generation.md` (NEW)

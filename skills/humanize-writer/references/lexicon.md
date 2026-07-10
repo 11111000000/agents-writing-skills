@@ -173,7 +173,7 @@ Examples:
 
 Density target: **<1 per 1000 words.**
 
-Full methodology: `~/Desktop/AgentWritingBase/01-Patterns/rhetorical/negative-parallelisms.md`
+Full methodology: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/rhetorical/negative-parallelisms.md`
 
 ## Rule of three (P10)
 
@@ -209,7 +209,7 @@ For writing that **reads as human** to humans: aim for zero matches in normal pr
 
 For writing that **passes commercial detectors**: surface rewriting alone is insufficient. Need hybrid approach (rule + base-model paraphrase + iterative refinement).
 
-See `~/Desktop/AgentWritingBase/05-References/limits-and-self-critique.md` for full discussion.
+See `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md` for full discussion.
 
 ## Over-generation patterns (NEW, 2026-07)
 

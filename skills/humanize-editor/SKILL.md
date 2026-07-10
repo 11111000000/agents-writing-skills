@@ -13,6 +13,11 @@ metadata:
 
 Rewrite existing text so it stops reading like LLM output. **Post-hoc** — input already exists, preserve meaning, kill AI tells. v4 integrates **11 levers** (1–11, добавив Lever 12 = Russian brevity grammar), **43-pattern catalogue from Aboudjem**, **Russian-specific patterns from Wikipedia RU**, **length bias research (Park, Shen, Zhang, Lamparth, Huang)**, и **HC3 + RAID datasets для валидации**.
 
+> [!info] Knowledge base access
+> All references in this skill are GitHub URLs to the public repo [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). **No local file dependencies** — works on any machine with internet access.
+>
+> For offline use: `./scripts/install-knowledge.sh` clones the knowledge base to `~/.cache/agents-writing-skills-knowledge/`.
+
 ## When to load
 
 - User pastes AI-generated text and wants it rewritten for human feel
@@ -46,7 +51,7 @@ Rewrite existing text so it stops reading like LLM output. **Post-hoc** — inpu
 > 13. **Sufficiency (Lever 10)** — cut-test, удалить всё, что больше нужного. Grice submaxim 2.
 > 14. **Trust the reader (Lever 11)** — iceberg-пробелы, удалить over-explanation.
 > 15. **Strip over-generation (P-NEW-1…P-NEW-7)** — vacuum-filling, restatement chains, bridging, antithetical recap.
-> 16. **Russian brevity grammar (Lever 12)** — NEW v4: парцелляция, эллипсис, литота, нулевая связка как русские грамматические инструменты краткости. См. `~/Desktop/AgentWritingBase/02-Techniques/russian-brevity-grammar.md`.
+> 16. **Russian brevity grammar (Lever 12)** — NEW v4: парцелляция, эллипсис, литота, нулевая связка как русские грамматические инструменты краткости. См. `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md`.
 
 ## Workflow
 
@@ -203,7 +208,7 @@ This skill helps you **rewrite your own text** with voice. It is NOT:
 
 Use it to **write better**, not to **deceive**.
 
-For full discussion of limits, see `~/Desktop/AgentWritingBase/05-References/limits-and-self-critique.md`.
+For full discussion of limits, see `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md`.
 
 ## Companion skills
 
@@ -213,6 +218,6 @@ For full discussion of limits, see `~/Desktop/AgentWritingBase/05-References/lim
 
 ## See also
 
-- Obsidian: `~/Desktop/AgentWritingBase/04-Examples/before-after.md` and `04-Examples/before-after-ru-advanced.md`.
+- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after.md` and `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after-ru-advanced.md`.
 - `humanize-writer/references/lexicon.md` — full banned lexicon (RU+EN).
 - External: [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill), [harshaneel/humanize](https://github.com/harshaneel/humanize), [Wikipedia RU: Признаки сгенерированности текста](https://ru.wikipedia.org/wiki/Википедия:Признаки_сгенерированности_текста).

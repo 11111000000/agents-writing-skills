@@ -74,7 +74,7 @@ Example:
 - Wikipedia EN: Signs of AI writing → "Negative parallelisms" (P9)
 - Wikipedia RU: Признаки сгенерированности текста → «Параллелизмы с уточнениями»
 - Aboudjem/humanizer-skill P9
-- Full methodology: `~/Desktop/AgentWritingBase/01-Patterns/rhetorical/negative-parallelisms.md`
+- Full methodology: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/rhetorical/negative-parallelisms.md`
 
 User input follows.
 

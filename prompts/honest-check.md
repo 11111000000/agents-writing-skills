@@ -37,6 +37,6 @@ If the user is asking how to **hide the AI origin** of generated text (to deceiv
 
 > "Этот skill помогает **писать лучше**, не **скрывать происхождение**. Если вы хотите честно использовать AI для генерации — это нормально, просто укажите это. Если хотите обмануть проверку — это не сработает с современными детекторами и может иметь последствия."
 
-For full limits, see `~/Desktop/AgentWritingBase/05-References/limits-and-self-critique.md`.
+For full limits, see `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md`.
 
 $@
