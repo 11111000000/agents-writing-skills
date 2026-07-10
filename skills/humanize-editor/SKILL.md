@@ -6,218 +6,360 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-rewriting
-  version: 4
+  version: 5
 ---
 
-# Humanize-Editor (v4)
+# Humanize-Editor (v5)
 
-Rewrite existing text so it stops reading like LLM output. **Post-hoc** — input already exists, preserve meaning, kill AI tells. v4 integrates **11 levers** (1–11, добавив Lever 12 = Russian brevity grammar), **43-pattern catalogue from Aboudjem**, **Russian-specific patterns from Wikipedia RU**, **length bias research (Park, Shen, Zhang, Lamparth, Huang)**, и **HC3 + RAID datasets для валидации**.
+Rewrite existing text so it stops reading like LLM output. v5 introduces **3-pass architecture** matching `humanize-writer`, with explicit bias substitution check (Lamparth et al. 2026) and Russian grammar pass as separate phases.
 
 > [!info] Knowledge base access
-> All references in this skill are GitHub URLs to the public repo [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). **No local file dependencies** — works on any machine with internet access.
->
-> For offline use: `./scripts/install-knowledge.sh` clones the knowledge base to `~/.cache/agents-writing-skills-knowledge/`.
+> All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.
+
+> [!warning] Bias substitution (Lamparth et al. 2026)
+> Single-axis сокращение может перенести bias на factual depth. **Tighten pass сохраняет плотность фактов, не только сокращает слова.**
+
+## Архитектура: 3-pass workflow
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ PASS 1: AUDIT (diagnose what to fix)                           │
+│   Output: список проблем + выбор voice profile                │
+└────────────────────────────────────────────────────────────────┘
+                            ↓
+┌────────────────────────────────────────────────────────────────┐
+│ PASS 2: REWRITE                                                │
+│   Step 3: voice profile selection                              │
+│   Step 4: STRIP phase (Levers 1-9)                             │
+│   Step 4.5: TIGHTEN phase (Lever 10 + bias substitution check)  │
+│   Step 5: RELY phase (Lever 11)                                │
+│   Step 5.5: REBUILD phase (Lever 12, RU only)                  │
+│   Step 6: rupture / silence                                    │
+└────────────────────────────────────────────────────────────────┘
+                            ↓
+┌────────────────────────────────────────────────────────────────┐
+│ PASS 3: VERIFY (bias substitution, density, read aloud)        │
+└────────────────────────────────────────────────────────────────┘
+```
 
 ## When to load
 
-- User pastes AI-generated text and wants it rewritten for human feel
-- Sub-agent's first draft is too smooth
-- **Text is too long / verbose** — applies Tighten pass (Lever 10)
-- **Russian text needs русские грамматические приёмы** (парцелляция, эллипсис, литота) — v4
+- AI-generated text needs to read human
+- Sub-agent's draft too smooth / too long
+- Russian text needs русские грамматические приёмы
 - User wants to clean up a draft before publishing
 
 ## Hard rules
 
 > [!warning] Meaning preservation
-> - **Preserve factual content** — names, numbers, dates, claims, citations. Don't drop or invent. **Especially in Tighten pass** — сохраняйте плотность фактов, не только сокращайте слова (Lamparth et al. 2026: bias substitution).
+> - **Preserve factual content** — names, numbers, dates, claims, citations. Don't drop or invent. **Especially в Tighten pass** — сохраняйте плотность фактов (Lamparth et al. 2026).
 > - **Preserve language** — input in RU stays RU, input in EN stays EN. Don't translate.
-> - **Length change allowed**: Tighten pass может сократить на 15–30%, потому что LLM обычно выдаёт в 1.5–2× больше нужного (YapBench, arXiv 2601.00624). Если пользователь явно сказал «не сокращай» — не сокращай.
+> - **Length change allowed** — Tighten pass может сократить на 15–30%, потому что LLM выдаёт в 1.5–2× больше нужного (YapBench, arXiv 2601.00624).
 
 > [!warning] Style overhaul
-> Apply **12 levers** + Russian extensions:
+> Apply **12 levers** + Russian extensions, organized in 4 phases:
 >
-> 1. **Banned lexicon** — `references/lexicon.md` (RU+EN, 43 patterns + 7 over-generation patterns + Russian brevity grammar examples).
-> 2. **Burstiness** — vary sentence lengths.
-> 3. **Strip RLHF voice** (Lever 9) — remove polite hedging, balanced tradeoffs, "I hope this helps", "Надеюсь, это пригодится".
-> 4. **Strip negative parallelisms** (P9) — `это не X, а Y` / `it's not X, it's Y` / `это не просто X` — **HIGHEST LEVERAGE**, #1 AI marker.
-> 5. **Strip hedging** — kill `можно сказать`, `it could be argued`, etc.
-> 6. **Strip pairing** (RU) — "цели и задачи" → pick one.
-> 7. **Strip деепричастия** (RU) — keep ≤1 per paragraph.
-> 8. **Em-dash discipline** — ≤1 per 300 words.
-> 9. **Concrete** — replace abstract claims with numbers.
-> 10. **First person** — add `я`/`мы`/`I`/`we` once if missing.
-> 11. **No closing cliché** — drop `таким образом`, `in conclusion`.
-> 12. **Structural flatten** — convert bullet lists to prose where 2–3 sentences would do.
-> 13. **Sufficiency (Lever 10)** — cut-test, удалить всё, что больше нужного. Grice submaxim 2.
-> 14. **Trust the reader (Lever 11)** — iceberg-пробелы, удалить over-explanation.
-> 15. **Strip over-generation (P-NEW-1…P-NEW-7)** — vacuum-filling, restatement chains, bridging, antithetical recap.
-> 16. **Russian brevity grammar (Lever 12)** — NEW v4: парцелляция, эллипсис, литота, нулевая связка как русские грамматические инструменты краткости. См. `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md`.
+> **STRIP phase (Levers 1-9):**
+> 1. Banned lexicon — `references/lexicon.md`
+> 2. Burstiness — vary sentence lengths
+> 3. Strip RLHF voice (Lever 9) — polite hedging, balanced tradeoffs
+> 4. Strip negative parallelisms (P9)
+> 5. Strip hedging
+> 6. Strip pairing (RU) — "цели и задачи" → pick one
+> 7. Strip деепричастия (RU) — ≤1 per paragraph
+> 8. Em-dash discipline — ≤1 per 300 words
+>
+> **TIGHTEN phase (Lever 10):**
+> 9. Concrete — replace abstract claims with numbers
+> 10. First person — add `я`/`мы`/`I`/`we` once if missing
+> 11. No closing cliché — drop `таким образом`, `in conclusion`
+> 12. Structural flatten — convert bullet lists to prose
+> 13. Sufficiency (Lever 10) — Strunk cut-test + Williams 6 operations
+>
+> **RELY phase (Lever 11):**
+> 14. Trust the reader — iceberg-пробелы, удалить over-explanation
+>
+> **REBUILD phase (Lever 12, RU only):**
+> 15. Russian brevity grammar — парцелляция, эллипсис, литота, нулевая связка
+>
+> **Antipatterns (cross-phase):**
+> 16. Strip over-generation (P-NEW-1…P-NEW-7) — vacuum-filling, restatement chains, bridging, antithetical recap
 
-## Workflow
+---
+
+## PASS 1 — AUDIT (Step 1-2)
 
 ### Step 1 — Audit the input
 
-Scan for 43-pattern hits. Report 3–6 bullets to user with:
-- **Negative parallelism density** (P9) — count, replace if AP > 3
-- **Over-generation density** (P-NEW-1…P-NEW-7) — count bridging, restatement chains, vacuum-filling, antithetical recaps. NEW in v3.
-- **YapScore estimate** — длина / минимально достаточный baseline. Если >1.5× — флаг «слишком длинный». NEW in v3.
-- Hits per category (lexical / structural / rhetorical / punctuation)
-- Burstiness estimate (std-dev of sentence length, sample of 10)
-- Specificity (concrete facts per paragraph)
-- Voice signals (first person, opinion, context references)
+Scan for 43-pattern hits + over-generation + length bias. Report 3–6 bullets:
 
-### Step 2 — Pick voice profile (if not specified)
+```yaml
+audit:
+  negative_parallelism_density: 5.2      # AP — flag if > 3
+  yap_score_estimate: 1.8                 # 1.5–2.0 = flag, 2.0+ = critical
+  vacuum_filling_count: 3
+  restatement_chains: 1
+  bridging_phrases_at_para_starts: 2
+  antithetical_recaps: 1
+  format_bias:
+    emojis: 4
+    bold_pct: 8
+    triple_parallel_lists: 2
+  burstiness:
+    mean_sentence_length: 18
+    std: 2.4                              # low if < 3
+  specificity:
+    concrete_facts_per_para: 0.4         # low if < 0.5
+  voice:
+    first_person: false
+    opinion: false
+  recommendations:
+    - run_tighten_pass: true
+    - run_rebuild_pass_ru: false        # not Russian
+    - estimated_reduction: "30-40%"
+```
 
-Choose from:
-- **casual**: contractions, first person, fragments, "And" starters (blog, social, community)
-- **professional**: selective contractions, dry wit, concrete examples (business, formal)
-- **technical**: precise terms, code-like clarity, deadpan humor (API docs, READMEs)
-- **warm**: "we/our", empathy, shorter paragraphs (tutorials, support)
-- **blunt**: shortest sentences, no hedging, active voice only (reviews, internal comms)
-- **laconic** (NEW in v3): minimal, trust-the-reader, iceberg. Hemingway / Чехов / Шкловский. Для опытных читателей.
+### Step 2 — Pick voice profile
 
-### Step 3 — Rewrite paragraph by paragraph
+| Profile | Когда | Примеры |
+|---|---|---|
+| `casual` | blog, social, community | contractions, fragments, "And" starters |
+| `professional` | business, formal | dry wit, concrete examples |
+| `technical` | API docs, READMEs | precise terms, deadpan humor |
+| `warm` | tutorials, support | "we/our", empathy |
+| `blunt` | reviews, internal comms | shortest sentences, no hedging |
+| `laconic` | expert readers, internal | minimal, trust-the-reader |
 
-For each paragraph:
-1. Read once for meaning.
-2. Write a replacement that preserves meaning but breaks the patterns.
-3. Apply levers 1–11 above.
-4. If paragraph is "clean" already, leave it (or lightly polish).
+---
 
-### Step 4 — Tighten pass (Lever 10 / Strunk)
+## PASS 2 — REWRITE (Step 3-6)
 
-> [!info] Это самая частая операция в v3
-> LLM-текст в 1.5–2× длиннее нужного. Tighten pass сокращает на 15–30% без потери смысла.
+### Step 3 — Voice profile application
 
-Применяйте последовательно:
+Применить выбранный voice profile. Не менять смысл, только тон.
 
-1. **Vacuum-filling scan (P-NEW-1):** найдите вводные предложения без информации. Удалите.
-2. **Restatement scan (P-NEW-2):** найдите 2+ предложения с одинаковым содержанием. Оставьте одно самое конкретное.
-3. **Bridging scan (P-NEW-3):** найдите «как упоминалось выше», «это подводит нас к». Удалите. Начните новый абзац с содержания.
-4. **Over-explanation scan (P-NEW-4):** найдите объяснения очевидного. Удалите. Оставьте команду/факт.
-5. **Anticipatory hedging scan (P-NEW-5):** найдите «возможно, в некоторых случаях». Замените на конкретное условие или удалите.
-6. **Balanced framing scan (P-NEW-6):** найдите «с одной стороны, с другой». Замените на мнение.
-7. **Antithetical recap scan (P-NEW-7):** найдите «итак, мы рассмотрели». Удалите целиком.
-8. **Strunk cut-test:** пройдите по каждому предложению: «Если я это уберу, что исчезнет?» Если ничего нового — удалите.
-9. **Williams 6 операций:** финальный проход. См. `references/lexicon.md` раздел «Strunk cut-test».
+### Step 4 — STRIP phase + TIGHTEN phase
 
-Цель: сокращение 15–30% без потери информации. Если сокращение >40% — возможно, вы удалили содержание. Проверьте смысл.
+#### 4.1. STRIP scans
 
-### Step 5 — Trust-the-reader pass (Lever 11)
+Применить Levers 1-9. Не добавлять ничего, только удалять.
 
-Reader-fill test:
-- Прочитайте текст. Для каждого абзаца спросите: «Если я уберу 1–2 предложения, читатель всё поймёт?»
-- Если да — удалите. Это iceberg.
-- Условие: вы **знаете** то, что не говорите. Если не знаете — оставьте.
+#### 4.2. TIGHTEN scans (8 проходов)
 
-Distinctive-word test:
-- Если в предложении нет ни одного слова, добавляющего информацию, — удалите его.
+```python
+TIGHTEN_SCANS = [
+    "vacuum_filling",       # P-NEW-1
+    "restatement",          # P-NEW-2
+    "bridging",             # P-NEW-3
+    "over_explanation",     # P-NEW-4
+    "anticipatory_hedging", # P-NEW-5
+    "balanced_framing",     # P-NEW-6
+    "antithetical_recap",   # P-NEW-7
+    "strunk_cut_test",      # удали любое предложение, смысл выжил?
+]
+```
 
-Stop at the turn:
-- Если в абзаце есть «поворотный момент» — остановитесь на нём. Не объясняйте, что это значит. Точка.
+После каждого сканирования — конкретное действие. Не «оставить», а удалить.
 
-### Step 5.5 — Russian grammar pass (Lever 12, RU only)
+#### 4.3. Williams 6 operations (финальный проход TIGHTEN)
 
-**Только для русского текста.** Применяйте 4 русских грамматических инструмента краткости:
+```python
+def williams_6(text):
+    return text \
+        .delete_meaningless("in order to", "the fact that", "absolutely essential") \
+        .delete_redundant("they are both alike" → "they are alike") \
+        .delete_implied(no need for "absolutely" before "essential") \
+        .phrase_to_word("is able to" → "can", "has the ability to" → "can") \
+        .negatives_to_affirm("did not remember" → "forgot") \
+        .delete_useless_adj("absolutely essential", "completely unanimous")
+```
 
-#### 12.1. Парцелляция
+#### 4.4. Bias substitution check (НОВОЕ v5)
 
-Найдите сложное предложение с деепричастиями или несколькими однородными сказуемыми. Разбейте на 2–5 коротких.
+> [!warning] Critical (Lamparth et al. 2026)
+> После TIGHTEN phase проверяем, что **не потеряли факты**.
 
-> ❌ «Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.»
-> ✅ «Город стоит на реке. Отсюда — водоснабжение и полив.»
+```python
+import re
 
-#### 12.2. Эллипсис
+def extract_facts(text):
+    """Числа, имена собственные, команды, пути, даты."""
+    return set(
+        re.findall(r'\b\d+(?:\.\d+)?(?:[%kmсx]?)\b', text) |           # 14, 30%, 5k, 14ms
+        re.findall(r'`[^`]+`', text) |                                 # `pip install`
+        re.findall(r'[/~][\w./\-]+', text) |                          # ~/Desktop/foo.md
+        re.findall(r'\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)+\b', text) |       # Stripe, PostgreSQL
+        re.findall(r'\b\d{4}\b', text)                                # 2024
+    )
 
-Найдите повтор глагола/существительного во второй части сложносочинённого предложения. Опустите.
+def check_bias_substitution(original, rewritten):
+    orig_facts = extract_facts(original)
+    new_facts = extract_facts(rewritten)
+    lost = orig_facts - new_facts
+    loss_pct = len(lost) / max(len(orig_facts), 1) * 100
 
-> ❌ «Я говорю по-английски, а он говорит по-немецки.»
-> ✅ «Я говорю по-английски, а он — по-немецки.»
+    return {
+        "status": "FAIL" if loss_pct > 10 else "PASS",
+        "loss_pct": loss_pct,
+        "lost_facts": list(lost)[:10],  # для отчёта
+        "action": "Restore lost facts" if loss_pct > 10 else "Proceed"
+    }
+```
 
-#### 12.3. Литота
+Если `status == "FAIL"` — восстановить потерянные факты, пересмотреть сокращение.
 
-Найдите абстрактные преуменьшения («совсем немного», «практически нет», «очень маленький»). Замените готовой формулой литоты.
+### Step 5 — RELY phase (Lever 11)
 
-> ❌ «У нас совсем немного пользователей.»
-> ✅ «У нас пользователей — кот наплакал.»
+#### 5.1. Reader-fill test
 
-Готовые формулы: «черепашьи темпы», «рукой подать», «кот наплакал», «с ноготок», «с овчинку», «не более напёрстка», «девочка-дюймовочка».
+Удалите абзац. Читатель может продолжить мысль без него? Если да — удалите.
 
-#### 12.4. Нулевая связка
+#### 5.2. Distinctive-word test
 
-В разговорном/постовом регистре: опустите личное местоимение в начале предложения, если это не меняет смысл.
+Если в предложении нет ни одного слова, добавляющего новую информацию, — удалите его.
 
-> ❌ «Я пошёл в магазин, чтобы купить хлеб.»
-> ✅ «Пошёл в магазин. Хлеб.»
+#### 5.3. Stop at the turn
 
-**Условие применения Lever 12:**
-- Разговорный, постовый, беллетристический регистр — да.
-- Официально-деловой, дипломатический, юридический — нет.
+Если в абзаце есть «поворотный момент» — остановитесь на нём. Точка.
 
-### Step 6 — Add rupture sentences
+### Step 5.5 — REBUILD phase (Lever 12, RU only)
+
+> [!warning] Только для русского текста
+> В разговорном, постовом, беллетристическом регистрах. НЕ в официально-деловом, юридическом, дипломатическом.
+
+#### 5.5.1. Парцелляция (расщепление)
+
+Найти сложные предложения с деепричастиями или 3+ однородными сказуемыми. Разбить на 2-5 коротких.
+
+```diff
+- Город стоит на реке, обеспечивая водоснабжение, способствуя развитию
+- сельского хозяйства и формируя микроклимат.
++ Город стоит на реке. Отсюда — водоснабжение и полив.
+```
+
+#### 5.5.2. Эллипсис (гэппинг, стриппинг, фрагментирование)
+
+Найти повтор глагола/существительного во второй части сложносочинённого предложения. Опустить.
+
+```diff
+- Я говорю по-английски, а он говорит по-немецки.
++ Я говорю по-английски, а он — по-немецки.
+```
+
+#### 5.5.3. Литота (преуменьшение)
+
+Найти абстрактные преуменьшения. Заменить готовой формулой.
+
+```diff
+- У нас совсем немного пользователей.
++ У нас пользователей — кот наплакал.
+```
+
+#### 5.5.4. Нулевая связка (разговорный/постовый регистр)
+
+```diff
+- Я пошёл в магазин, чтобы купить хлеб.
++ Пошёл в магазин. Хлеб.
+```
+
+### Step 6 — Rupture / silence (Pass 2 завершение)
 
 If rewritten text still flows too smoothly, insert rupture:
-- a one-line aside
-- a question
-- a blunt opinion
-- a concrete number not in original
-- **silence** — иногда правильный rupture = ничего не писать (Lever 11)
+- one-line aside
+- question
+- blunt opinion
+- concrete number
+- **silence** (Lever 11 — sometimes the right move is nothing)
 
-### Step 7 — Final read
+---
 
-Read aloud mentally. If anything sounds like a press release, LinkedIn post, marketing landing page, or Wikipedia article, fix.
+## PASS 3 — VERIFY (Step 7)
 
-Specific checks:
-- [ ] YapScore ≤1.5× от минимально достаточного
-- [ ] 0 bridging phrases («как упоминалось», «это подводит нас»)
-- [ ] 0 antithetical recaps («итак, мы рассмотрели»)
-- [ ] No paragraph starts with «Стоит отметить», «It's worth noting»
-- [ ] No «с одной стороны, с другой стороны»
-- [ ] Each paragraph: удаление любого предложения не теряет смысл → удалить
+### Step 7 — Final verification
+
+```yaml
+final_check:
+  bias_substitution:
+    status: PASS  # или FAIL
+    loss_pct: 5.2
+    lost_facts: []
+  density:
+    AP: 0.8
+    D: 4.2
+    E: 1.1
+    YapScore: 1.3
+    V: 2.0
+    R: 5.0
+    B: 0
+  voice:
+    first_person: true
+    opinion: true
+    concrete_facts: 12
+  read_aloud:
+    verdict: PASS
+    issues: []
+```
+
+**Read aloud mental check:**
+- Если звучит как пресс-релиз, LinkedIn, marketing landing — fix.
+- Если звучит как normal human speech / post / email — OK.
+
+**If VERIFY не проходит:**
+```yaml
+verify_failure:
+  issue: YapScore 2.3
+  location: para_3
+  action: return_to_pass_2_phase_TIGHTEN
+```
+
+Не начинайте с нуля — найдите конкретную проблему.
+
+---
+
+## When NOT to rewrite
+
+- Code, configs, schemas — uniformity is fine
+- Mathematical proofs, formal definitions — precision > voice
+- Legal text — clarity > style; only soften if explicitly asked
+- Academic text — expected scientific register shares patterns with AI
+- Political/diplomatic text in Russian — официально-деловой стиль legitimately uses em-dash, деепричастия, канцелярит
+- Text that legitimately uses an antithesis as rhetoric — keep it. Antithesis is a 2000-year-old figure.
+- User said "leave it as is"
+
+---
 
 ## Output format
 
 Two-block output:
 
-```
+```markdown
 ## Audit
-- 3–6 bullets diagnosis
+- 3-6 bullets diagnosis (Pass 1)
 
 ## Rewritten
-<the text>
+<the text>  (Pass 2 + Pass 3)
 ```
 
 If user only wants the rewritten text, give only that.
 
-## When NOT to rewrite
-
-- **Code, configs, schemas** — uniformity is fine.
-- **Mathematical proofs, formal definitions** — precision > voice.
-- **Legal text** — clarity > style; only soften if explicitly asked.
-- **Academic text** — expected scientific register shares patterns with AI; forcing change makes it worse.
-- **Political/diplomatic text in Russian** — официально-деловой стиль legitimately uses em-dash, деепричастия, канцелярит.
-- **The user said "leave it as is"** — confirm before editing.
-- **Text that legitimately uses an antithesis as rhetoric** — keep it. Antithesis is a 2000-year-old figure. Don't remove when it actually adds meaning.
-
-### Ethical scope
-
-This skill helps you **rewrite your own text** with voice. It is NOT:
-- A tool for academic fraud (cheating on papers).
-- A reliable bypass of modern AI detectors.
-- A way to hide the AI origin of generated text.
-
-Use it to **write better**, not to **deceive**.
-
-For full discussion of limits, see `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md`.
+---
 
 ## Companion skills
 
-- `anti-ai-auditor` — if user only wants the diagnosis, no rewrite.
-- `ai-pattern-rewriter` — for surgical fixes.
-- `humanize-writer` — for greenfield writing rules.
+- `humanize-writer` — for greenfield writing (3-pass)
+- `anti-ai-auditor` — for diagnosis without rewriting (3-pass metrics)
+- `ai-pattern-rewriter` — for surgical span fixes (3-pass surgical)
+
+---
 
 ## See also
 
-- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after.md` and `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after-ru-advanced.md`.
-- `humanize-writer/references/lexicon.md` — full banned lexicon (RU+EN).
-- External: [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill), [harshaneel/humanize](https://github.com/harshaneel/humanize), [Wikipedia RU: Признаки сгенерированности текста](https://ru.wikipedia.org/wiki/Википедия:Признаки_сгенерированности_текста).
+- Knowledge base:
+  - [`02-Techniques/sufficiency-and-underspecification.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/sufficiency-and-underspecification.md)
+  - [`02-Techniques/length-bias-research.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/length-bias-research.md)
+  - [`02-Techniques/russian-brevity-grammar.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md)
+  - [`01-Patterns/rhetorical/negative-parallelisms.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/rhetorical/negative-parallelisms.md)
+  - [`01-Patterns/structural/over-generation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/structural/over-generation.md)
+  - [`04-Examples/before-after.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after.md) and [`before-after-ru-advanced.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after-ru-advanced.md)
+- [`05-References/limits-and-self-critique.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md)
+- [`references/lexicon.md`](https://github.com/11111000000/agents-writing-skills/blob/main/skills/humanize-writer/references/lexicon.md)

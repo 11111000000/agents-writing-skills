@@ -6,29 +6,50 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: surgical-edit
-  version: 3
+  version: 5
 ---
 
-# AI-Pattern Rewriter (v3)
+# AI-Pattern Rewriter (v5)
 
-Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v3 adds **Russian brevity grammar spans (Lever 12)** and **length bias bias-substitution warnings**.
+Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v5 adds **3-pass surgical architecture**: Identify → Rewrite → Verify, with bias substitution check.
 
 > [!info] Knowledge base access
-> All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/). For offline: `./scripts/install-knowledge.sh`.
+> All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.
+
+## Архитектура: 3-pass surgical
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ PASS 1: IDENTIFY (find the specific span)                     │
+│   Output: exactly which lines need rewording                  │
+└────────────────────────────────────────────────────────────────┘
+                            ↓
+┌────────────────────────────────────────────────────────────────┐
+│ PASS 2: REWRITE (apply minimal-change fix)                     │
+│   Output: 1 alternative per span, no commentary               │
+└────────────────────────────────────────────────────────────────┘
+                            ↓
+┌────────────────────────────────────────────────────────────────┐
+│ PASS 3: VERIFY (bias substitution check + length sanity)       │
+│   Output: confirmed span change                               │
+└────────────────────────────────────────────────────────────────┘
+```
 
 ## When to load
 
 - User says "перепиши только это предложение" / "fix just this paragraph"
-- User has marked specific spans with `>>` or `!!!` in the text
+- User has marked specific spans with `>>` or `!!!`
 - User is editing themselves and just wants targeted suggestions
 - User wants to keep the rest exactly as is
-- **User asks "сократи вот это" / "это слишком длинно"** (new in v2)
+- User asks "сократи вот это" / "это слишком длинно"
 
 ## When NOT to load
 
 - User wants a full rewrite → use `humanize-editor`
 - User wants only diagnosis → use `anti-ai-auditor`
 - User wants greenfield writing → use `humanize-writer`
+
+---
 
 ## Hard rules
 
@@ -37,161 +58,227 @@ Surgical, span-level rewriting. **Only** rewrite the specific phrases the user f
 3. **Preserve surrounding tone** — don't make the rewritten span either more or less formal than its neighbors.
 4. **Single rewrite per span** — show one alternative, not three. If the user wants options, they will ask.
 5. **No commentary outside the rewrite** unless asked. Don't explain the change unless asked.
-6. **NEW in v2**: When applying over-generation rewrites, it's OK to **delete** rather than rewrite — that's often the right answer.
+6. **NEW v5**: When applying over-generation rewrites, it's OK to **delete** rather than rewrite — that's often the right answer.
 
-## Common spans and how to rewrite them
+## Bias substitution warning (NEW v5)
 
-### "X is important" / "стоит отметить"
-> Before: "It's important to note that the API has rate limits."
-> After: "The API has rate limits — 100 req/min on the free tier."
+> [!warning] Critical (Lamparth et al. 2026)
+> При сокращении span'а проверьте, что **не потеряли факты внутри span'а** (числа, имена, команды, пути).
 
-### "Delve into"
-> Before: "Let's delve into the architecture."
-> After: "Architecture: 3 services, Kafka between them."
+Перед применением tight-rewrite:
 
-### "Более того"
-> Before: "Система быстрая. Более того, она масштабируемая."
-> After: "Система быстрая — p99 14 мс. И масштабируется: гоняли на 5k RPS, не упала."
+```python
+def check_span_bias_substitution(original_span, rewritten_span):
+    orig_facts = extract_facts(original_span)
+    new_facts = extract_facts(rewritten_span)
+    lost = orig_facts - new_facts
+    return {
+        "lost_facts": list(lost),
+        "verdict": "FAIL" if lost else "PASS"
+    }
+```
 
-### Triple-parallel list
-> Before: "- Fast\n- Reliable\n- Secure"
-> After: "- 14 мс p99.\n- 99.99% uptime за квартал.\n- Тесты на каждом merge."
+Если `verdict == "FAIL"` — restore facts, choose alternative rewrite or partial deletion.
 
-### Abstract adjective + noun
-> Before: "Это эффективное решение."
-> After: "Это решение сократило время обработки с 4 сек до 200 мс."
+---
 
-### Hedging
-> Before: "Возможно, стоит рассмотреть использование кеширования."
-> After: "Нужен кеш — без него каждый запрос лезет в Postgres, и под нагрузкой мы получим 2k req/s вместо 5k."
+## PASS 1 — IDENTIFY
 
-### Closing cliché
-> Before: "Таким образом, мы рассмотрели три подхода."
-> After: (cut entirely, or "Из всех трёх я бы выбрал B — но A проще, если у вас уже есть Redis.")
+### Step 1 — Find the span
 
-### Impersonal "считается"
-> Before: "Считается, что TDD улучшает качество кода."
-> After: "Я за TDD — у нас в команде покрытие тестами выросло с 30% до 80% за полгода, багов стало заметно меньше."
+Три способа:
 
-## Over-generation spans (NEW in v2)
+**A. User-flagged:** user прямо указал span (`>>это предложение<<` или «вот это»).
+
+**B. Pattern-flagged:** scan against known patterns:
+
+```python
+PATTERNS = {
+    "delve_into": r"\b(delve into|delve deeper|dive deep(?:er)? into)\b",
+    "negative_parallelism_ru": r"это\s+не\s+[А-Яа-я]+,?\s+(?:а|это|скорее)\s+[А-Яа-я]+",
+    "vacuum_filling_ru": r"^(У нас в команде|В текущей работе|Стоит отметить|Необходимо подчеркнуть)",
+    "bridging_ru": r"^(Как упоминалось выше|Это подводит нас к|В свою очередь)",
+    "antithetical_recap": r"^(Итак, мы рассмотрели|Таким образом|Let's summarize)",
+}
+```
+
+**C. Self-flag:** если пользователь говорит «перепиши только эти абзацы» — flagged.
+
+---
+
+## PASS 2 — REWRITE
+
+### Step 2 — Apply minimal fix
+
+#### Common AI patterns and how to rewrite
+
+##### Lexical cliches
+
+```diff
+# delve into
+- "Let's delve into the architecture."
++ "Architecture: 3 services, Kafka between them."
+
+# leverage
+- "We leverage modern technologies to ensure robust performance."
++ "We use modern tech. Performance: p99 14ms."
+
+# "стоит отметить"
+- "Стоит отметить, что API имеет rate limits."
++ "API: 100 req/min на free tier."
+
+# "Более того"
+- "Система быстрая. Более того, она масштабируемая."
++ "Система быстрая — p99 14 мс. Масштабируется: 5k RPS."
+```
+
+##### Structural patterns
+
+```diff
+# Triple-parallel list
+- "- Fast
+   - Reliable
+   - Secure"
++ "- 14 ms p99.
+   - 99.99% uptime за квартал.
+   - Тесты на каждом merge."
+
+# Abstract adjective + noun
+- "Это эффективное решение."
++ "Это решение сократило время обработки с 4 сек до 200 мс."
+
+# Hedging
+- "Возможно, стоит рассмотреть использование кеширования."
++ "Нужен кеш — без него каждый запрос лезет в Postgres, 2k req/s вместо 5k."
+```
+
+##### Closing cliches
+
+```diff
+# "Таким образом, мы рассмотрели три подхода."
+- (cliche closing)
++ (cut entirely, or "Из всех трёх я бы выбрал B — но A проще, если у вас уже есть Redis.")
+
+# "I hope this helps!"
+- (chatbot artifact)
++ (cut entirely)
+```
+
+#### Over-generation spans (NEW v5)
 
 > [!info] Для каждого паттерна: часто правильный ответ — **удалить**, а не переписать.
 
-### Vacuum-filling opener (P-NEW-1)
-> Before: "У нас в команде возник вопрос по дедлайну. После обсуждения мы пришли к выводу, что дедлайн нужно перенести."
-> After: "Дедлайн нереальный. Сдвигаем."
+```diff
+# Vacuum-filling opener (P-NEW-1)
+- "У нас в команде возник вопрос по дедлайну. После обсуждения мы пришли к выводу, что дедлайн нужно перенести."
++ "Дедлайн нереальный. Сдвигаем."
 
-или просто удалить первое предложение, если второе самостоятельно.
+# Restatement chain (P-NEW-2)
+- "API стал работать быстрее. Оптимизация позволила сократить время отклика. Производительность улучшилась значительно."
++ "API стал отвечать за 14 мс вместо 380."
 
-### Restatement chain (P-NEW-2)
-> Before: "API стал работать быстрее. Оптимизация позволила сократить время отклика. Производительность улучшилась значительно."
-> After: "API стал отвечать за 14 мс вместо 380."
+# Bridging phrase (P-NEW-3)
+- "Как упоминалось выше, кеш важен. Это подводит нас к следующей теме — инвалидации кеша."
++ "Кеш важен. Инвалидация — TTL 60 сек, плюс ручной cache.del(key)."
 
-### Bridging phrase (P-NEW-3)
-> Before: "Как упоминалось выше, кеш важен. Это подводит нас к следующей теме — инвалидации кеша."
-> After: "Кеш важен. Инвалидация — TTL 60 сек, плюс ручной `cache.del(key)`."
+# Over-explanation (P-NEW-4)
+- "Чтобы установить библиотеку, вам нужно выполнить команду pip install. Команда pip install — это стандартный способ установки Python-пакетов."
++ "pip install foo"
+# или удалить объяснение "Команда pip install — это..."
 
-### Over-explanation (P-NEW-4)
-> Before: "Чтобы установить библиотеку, вам нужно выполнить команду pip install. Команда pip install — это стандартный способ установки Python-пакетов."
-> After: "`pip install foo`"
+# Anticipatory hedging (P-NEW-5)
+- "Возможно, в некоторых случаях может быть полезно рассмотреть использование кеширования, хотя это зависит от конкретной ситуации."
++ "Нужен кеш. Без него каждый запрос лезет в Postgres."
 
-или удалить объяснение «команды pip install».
+# Balanced framing (P-NEW-6)
+- "У PostgreSQL есть преимущества и недостатки. С одной стороны, он зрелый и проверенный. С другой стороны, его сложнее масштабировать горизонтально. Каждый проект индивидуален."
++ "PostgreSQL хорош, пока не упрётесь в single-writer. У нас упёрлись при 8k req/s."
 
-### Anticipatory hedging (P-NEW-5)
-> Before: "Возможно, в некоторых случаях может быть полезно рассмотреть использование кеширования, хотя это зависит от конкретной ситуации."
-> After: "Нужен кеш. Без него каждый запрос лезет в Postgres."
+# Antithetical recap (P-NEW-7)
+- "Итак, мы рассмотрели три подхода: A, B, C. Каждый имеет свои плюсы и минусы. Выбор зависит от контекста проекта. Надеюсь, это поможет вам принять решение!"
++ (cut entirely)
 
-### Balanced framing (P-NEW-6)
-> Before: "У PostgreSQL есть преимущества и недостатки. С одной стороны, он зрелый и проверенный. С другой стороны, его сложнее масштабировать горизонтально. Каждый проект индивидуален."
-> After: "PostgreSQL хорош, пока не упрётесь в single-writer. У нас упёрлись при 8k req/s."
+# Restated examples
+- "Stripe, Datadog и PlanetScale используют этот подход."
++ "Stripe использует этот подход."
 
-### Antithetical recap (P-NEW-7)
-> Before: "Итак, мы рассмотрели три подхода: A, B, C. Каждый имеет свои плюсы и минусы. Выбор зависит от контекста проекта."
-> After: (cut entirely)
+# Obvious consequence
+- "Мы переписали кеш. Теперь API отвечает быстрее."
++ "Мы переписали кеш."
+```
 
-или заменить на действие/вопрос: «Из трёх я бы выбрал B — но A проще, если у вас уже есть Redis.»
+#### Russian brevity grammar spans (Lever 12)
 
-### Bridging closer
-> Before: "В заключение хотелось бы отметить, что мы достигли значительных результатов. Команда проделала большую работу. Мы готовы к следующему этапу."
-> After: (cut entirely. Точка.)
+```diff
+# Парцелляция
+- "Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат."
++ "Город стоит на реке. Отсюда — водоснабжение и полив."
 
-### Удаление restated-примеров
-> Before: "Stripe, Datadog и PlanetScale используют этот подход."
-> After: "Stripe использует этот подход." (если Stripe — канонический пример)
+# Эллипсис (гэппинг)
+- "Я говорю по-английски, а он говорит по-немецки."
++ "Я говорю по-английски, а он — по-немецки."
 
-### Удаление obvious-следствия
-> Before: "Мы переписали кеш. Теперь API отвечает быстрее."
-> After: "Мы переписали кеш." (или добавить число: «API отвечает за 14 мс»)
+# Литота
+- "У нас совсем немного пользователей, практически никто не пользуется."
++ "У нас пользователей — кот наплакал."
 
-### Williams 6 операций (финальный проход)
+# Нулевая связка (разговорный регистр)
+- "Я пошёл в магазин, чтобы купить хлеб."
++ "Пошёл в магазин. Хлеб."
+```
 
-Применяйте к любому span:
+#### Williams 6 operations
 
-1. **Delete words that mean little or nothing:** «in order to» → «to», «the fact that» → удалить
-2. **Delete words that repeat the meaning of other words:** «they are both alike» → «they are alike»
-3. **Delete words implied by other words:** удалить «absolutely» перед «essential»
-4. **Replace a phrase with a word:** «is able to» → «can», «has the ability to» → «can»
-5. **Change negatives to affirmatives:** «did not remember» → «forgot»
-6. **Delete useless adjectives and adverbs:** «absolutely essential», «completely unanimous»
+```diff
+# 1. Meaningless
+- "in order to install"
++ "to install"
 
-## Russian brevity grammar spans (NEW v3, Lever 12)
+# 2. Redundant
+- "they are both alike"
++ "they are alike"
 
-> [!info] Активные инструменты, не запреты
-> Эти переписывания применяют русские грамматические приёмы краткости. Подробнее: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md`.
+# 3. Implied
+- "absolutely essential"
++ "essential"
 
-### Парцелляция (расщепление)
+# 4. Phrase → word
+- "is able to"
++ "can"
 
-> Before: «Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.»
-> After: «Город стоит на реке. Отсюда — водоснабжение и полив.»
+# 5. Negative → affirmative
+- "did not remember"
++ "forgot"
 
-> Before: «Я пошёл в магазин, потому что мне нужно было купить хлеб, а потом вернулся домой.»
-> After: «Пошёл в магазин. Хлеб. Вернулся.»
+# 6. Useless adj
+- "completely unanimous"
++ "unanimous"
+```
 
-### Эллипсис (гэппинг, стриппинг, фрагментирование)
+---
 
-> Before: «Я говорю по-английски, а он говорит по-немецки.»
-> After: «Я говорю по-английски, а он — по-немецки.»
+## PASS 3 — VERIFY
 
-> Before: «Он прочитал "Войну и мир", а она прочитала "Мастера и Маргариту".»
-> After: «Он прочитал "Войну и мир", а она — "Мастера".»
+### Step 3 — Verify the rewrite
 
-> Before: «Я пошёл в магазин, чтобы купить хлеб.»
-> After: «Пошёл в магазин. Хлеб.»
+```yaml
+verify:
+  bias_substitution:
+    status: PASS              # or FAIL
+    lost_facts: []
+  length_sanity:
+    reduction_pct: 30         # or whatever
+    still_meaningful: true
+  tone_match:
+    same_register: true
+    same_formality: true
+  diff_size:
+    acceptable: true          # < 50% of span length changed
+```
 
-### Литота (преуменьшение)
+If `bias_substitution.status == "FAIL"` — restore facts or choose alternative rewrite.
 
-> Before: «У нас совсем немного пользователей, практически никто не пользуется.»
-> After: «У нас пользователей — кот наплакал.»
-
-> Before: «Это совсем маленький дом.»
-> After: «Дом — с ноготок.»
-
-> Before: «Нам осталось совсем немного времени.»
-> After: «Времени — рукой подать.»
-
-### Нулевая связка (только разговорный/постовый регистр)
-
-> Before: «Я пошёл в магазин, чтобы купить хлеб.»
-> After: «Пошёл в магазин. Хлеб.»
-
-> Before: «Мне стало грустно, и я задумался о жизни.»
-> After: «Стало грустно. Задумался.»
-
-**Условие применения:** разговорный, постовый, беллетристический регистр. НЕ применять в официально-деловом, юридическом, дипломатическом.
-
-## Bias substitution warning (NEW v3)
-
-> [!warning] При Tighten pass
-> Lamparth et al. (arXiv 2605.27996, 2026) показали, что single-axis сокращение может перенести bias на factual depth. **Не удаляйте конкретные факты при сокращении.**
-
-Проверьте, что после переписывания сохранены:
-- Числа (p99 14 мс, 30%, +200 тыс.)
-- Имена (Stripe, Андрей)
-- Команды (`pip install`, `kubectl apply`)
-- Пути (`~/.config/...`, `~/Desktop/`)
-- Даты (2024, 15.06.2026)
-
-Если при сокращении факты потеряны — это плохой rewrite, верните их.
+---
 
 ## Output format
 
@@ -215,22 +302,31 @@ Original: "..."
 Action: deleted
 ```
 
-If the user asked for alternatives (they will say so), provide 2–3 options.
+If the user asked for alternatives (they will say so), provide 2-3 options.
+
+---
 
 ## Constraints to honor
 
-- **Length** — don't expand unless asked. Default: keep new span within ±20% of old span's length. **NEW in v2**: for over-generation rewrites, **deletion is preferred over compression** — if 50% of the span can be cut, cut it.
+- **Length** — don't expand unless asked. Default: keep new span within ±20% of old span's length. **NEW v5**: for over-generation rewrites, **deletion is preferred over compression** — if 50% of the span can be cut, cut it.
 - **Tone** — match neighbors. If surrounding text is formal, rewrite formally. If informal, match.
 - **Domain vocabulary** — keep domain terms. Don't `Python` → `язык Python` or similar.
+- **Bias substitution check** — don't lose facts when shortening.
+
+---
 
 ## Companion skills
 
-- `humanize-writer` — for greenfield.
-- `humanize-editor` — for full rewrites.
-- `anti-ai-auditor` — if user is unsure what to flag.
+- `humanize-writer` — for greenfield (3-pass)
+- `humanize-editor` — for full rewrites (3-pass + bias substitution)
+- `anti-ai-auditor` — if user is unsure what to flag (3-pass audit)
+
+---
 
 ## See also
 
-- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after.md`
-- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/sufficiency-and-underspecification.md` (NEW)
-- Obsidian: `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/structural/over-generation.md` (NEW)
+- Knowledge base:
+  - [`04-Examples/before-after.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/04-Examples/before-after.md)
+  - [`02-Techniques/sufficiency-and-underspecification.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/sufficiency-and-underspecification.md)
+  - [`01-Patterns/structural/over-generation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/structural/over-generation.md)
+  - [`02-Techniques/russian-brevity-grammar.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md)

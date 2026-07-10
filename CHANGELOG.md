@@ -7,7 +7,39 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Added (v4 — current)
+### Added (v5 — current)
+- **3-pass architecture** across all 4 skills (humanize-writer, humanize-editor, anti-ai-auditor, ai-pattern-rewriter). Each skill now has explicit Pass 1 (Audit/Surface/Identify) → Pass 2 (Rewrite) → Pass 3 (Verify) flow.
+- **4-phase lever groups** in humanize-writer & humanize-editor: **STRIP** (Levers 1-9) → **TIGHTEN** (Lever 10) → **RELY** (Lever 11) → **REBUILD** (Lever 12, RU only).
+- **Bias substitution algorithm** in humanize-editor Step 4.4 + ai-pattern-rewriter: extract facts (numbers, names, paths, dates), compare before/after Tighten, FAIL if loss >10%. Inspired by Lamparth et al. (arXiv 2605.27996, 2026).
+- **13 worked examples** across 3 new directories:
+  - `04-Examples/tightening/README.md` — 5 examples (README, email, blog, marketing, status)
+  - `04-Examples/iceberg/README.md` — 3 examples (architecture, bug fix, code review)
+  - `04-Examples/russian-grammar/README.md` — 5 examples (парцелляция, эллипсис, литота, нулевая связка, комбинация)
+- **`scripts/benchmark-skill.sh`** — measures AP, D, E, V, B, YapScore, burstiness, specificity, format bias, voice on input text. Returns PASS/FAIL with recommendations.
+- **Code-block examples** throughout skills (instead of bullet lists) — better readability and copy-paste utility.
+- **Decision trees** for voice profile selection and applicability boundaries.
+- **Multi-language support table** in humanize-writer.
+
+### Changed (v5)
+- `humanize-writer` v4 → v5: 3-pass, 4 phases, 11 workflow steps.
+- `humanize-editor` v4 → v5: 3-pass, bias substitution algo, voice profile `laconic`.
+- `anti-ai-auditor` v3 → v4: 3-pass audit (Surface/Deep/Synthesis).
+- `ai-pattern-rewriter` v3 → v4: 3-pass surgical (Identify/Rewrite/Verify), per-span bias check.
+- `references/lexicon.md` (updated separately).
+- Manifest 1.2.0 → 1.3.0.
+
+### Notes (v5)
+- **Dialectic v2→v3→v4→v5**: each version adds a layer.
+  - v2: catalogue patterns (43 patterns)
+  - v3: positive principles (Sufficiency, Iceberg)
+  - v4: language-specific tools (Lever 12 RU grammar), empirical grounding
+  - v5: 3-pass architecture, examples, benchmarks, bias substitution check
+- **Bias substitution alert (Lamparth 2026) is the most important new safety check.** Tighten pass now requires fact-level verification.
+- **Reference data** — 13 examples with measurable before/after metrics. Future benchmarks can use these as ground truth.
+
+## [v4 — released]
+
+### Added (v4 — released as v4 here)
 - **Lever 12: Russian brevity grammar** — парцелляция, эллипсис, литота, нулевая связка как русские грамматические инструменты краткости. LLM их почти не использует. Добавлено в `humanize-writer`, `humanize-editor`, `anti-ai-auditor`, `ai-pattern-rewriter`.
 - **Length bias academic integration**: 5 source-notes из arXiv (Park 2024, Shen 2023, Zhang 2024, Lamparth 2026, Huang 2024) + synthesis заметка `02-Techniques/length-bias-research.md`. Подтверждает, что length bias — структурное свойство preference tuning.
 - **Bias substitution warning** (Lamparth et al. 2026): single-axis сокращение может перенести bias на factual depth. Tighten pass должен сохранять плотность фактов.
