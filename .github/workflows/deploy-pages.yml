@@ -1,14 +1,16 @@
 name: Deploy GitHub Pages
 
-on:
-  push:
-    branches: [main, master]
-    paths:
-      - 'knowledge/**'
-      - 'docs/**'
-      - 'scripts/build-site.sh'
-      - '.github/workflows/deploy-pages.yml'
-  workflow_dispatch:
+  on:
+    push:
+      branches: [main, master]
+      paths:
+        - 'knowledge/**'
+        - 'docs/**'
+        - 'scripts/**'
+        - 'manifest.json'
+        - '.gitignore'
+        - '.github/workflows/deploy-pages.yml'
+    workflow_dispatch:
 
 permissions:
   contents: read
@@ -30,13 +32,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: '.nvmrc'
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v30
-        with:
-          nix_path: /nix/var/nix/profiles/default/bin
 
       - name: Setup Pages
         id: pages
