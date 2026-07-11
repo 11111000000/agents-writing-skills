@@ -1,16 +1,9 @@
 name: Deploy GitHub Pages
 
-  on:
-    push:
-      branches: [main, master]
-      paths:
-        - 'knowledge/**'
-        - 'docs/**'
-        - 'scripts/**'
-        - 'manifest.json'
-        - '.gitignore'
-        - '.github/workflows/deploy-pages.yml'
-    workflow_dispatch:
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
 
 permissions:
   contents: read
