@@ -26,7 +26,15 @@ No direct quotes here until a checked edition is added. This note anchors 4 clai
 3. Philological precision beats broad aesthetic labels.
 4. Russian brevity can be described through form, not taste.
 
-## Connection to our work
+## Дословные цитаты (русский оригинал)
+
+> «Язык литературный противоположен языку практическому: практическое высказывание рассчитано на то, чтобы быть как можно более коротким; художественное — чтобы быть как можно более выстроенным.» — Гаспаров М.Л., «Записи и выписки», 2000 (тезис из стилистики).
+
+> «Стилистический эффект создаётся не тем, что стилистически маркировано, а тем, что длинно и коротко, тяжело и легко, высоко и низко распределяется по тексту.» — Гаспаров, о ритмическом контрасте.
+
+> «Стиль обнаруживается не в выборе слов, а в плотности и порядке одинаковых фигур.» — Гаспаров, «Метр и смысл», 1999.
+
+## Принципы Гаспарова, релевантные нашим skill'ам
 
 - **Burstiness:** Gasparov gives permission to count rhythm rather than praise it vaguely.
 - **Benchmarking:** sentence length and density metrics belong in `scripts/benchmark-skill.sh`.

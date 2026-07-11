@@ -34,7 +34,7 @@ run_exit_test() {
     local output
     local exit_code
 
-    output=$("$BENCH" "$fixture" 2>/dev/null)
+    output=$(bash "$BENCH" "$fixture" 2>/dev/null)
     exit_code=$?
 
     echo ""
@@ -59,7 +59,7 @@ run_no_crash_file() {
     local output
     local exit_code
 
-    output=$("$BENCH" "$fixture" 2>/dev/null)
+    output=$(bash "$BENCH" "$fixture" 2>/dev/null)
     exit_code=$?
 
     echo ""
@@ -78,7 +78,7 @@ run_no_crash_stdin() {
     local output
     local exit_code
 
-    output=$(printf "%s" "$input" | "$BENCH" --stdin 2>/dev/null)
+    output=$(printf "%s" "$input" | bash "$BENCH" --stdin 2>/dev/null)
     exit_code=$?
 
     echo ""
@@ -96,7 +96,7 @@ require_metrics() {
     local output
     local missed=0
 
-    output=$("$BENCH" "$fixture" 2>/dev/null)
+    output=$(bash "$BENCH" "$fixture" 2>/dev/null)
 
     echo ""
     echo "Test: report contains required metrics"
@@ -121,7 +121,7 @@ json_assert() {
     local expr="$3"
     local json
 
-    json=$("$BENCH" "$fixture" --json 2>/dev/null)
+    json=$(bash "$BENCH" "$fixture" --json 2>/dev/null)
 
     echo ""
     echo "Test: $desc"
@@ -164,7 +164,7 @@ fi
 
 run_no_crash_stdin "empty stdin" ""
 
-output=$("$BENCH" missing-file.txt 2>/dev/null)
+output=$(bash "$BENCH" missing-file.txt 2>/dev/null)
 exit_code=$?
 echo ""
 echo "Test: missing file exits 2"

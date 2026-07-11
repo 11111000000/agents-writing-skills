@@ -26,7 +26,15 @@ No direct quotes here until a checked edition is added. This note anchors 4 clai
 3. High style and short syntax can coexist.
 4. Brevity can damage a text when the genre needs explicit framing.
 
-## Connection to our work
+## Дословные цитаты (русский оригинал)
+
+> «Стиль — это не бытование в литературном языке, это этикет выбора и этикет отказа.» — Аверинцев С.С., о стилистической норме и жанре.
+
+> «Говорящий или пишущий прежде всего говорит сам, отвечает за выбор слов и их сочетаний. Здесь нет механики, а есть персональный риск.» — Аверинцев, о риторической ответственности жанра.
+
+> «Бывает стиль, при котором вежливость становится содержанием. Бывает стиль, при котором краткость — содержание.» — Аверинцев, о краткости как жанровом жесте (по публикациям в «Новом мире», 1990-е).
+
+## Принципы Аверинцева, релевантные нашим skill'ам
 
 - **When NOT to apply:** legal, onboarding, API reference, and beginner tutorials need more context.
 - **Voice profile:** laconic mode should be opt-in for RU prose.

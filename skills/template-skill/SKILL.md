@@ -97,12 +97,15 @@ This checks:
 
 ## Step 5 — Test
 
-1. Install the skill in your local agent:
+1. Copy the skill into your agent's skills directory:
    ```bash
-   ./install.sh skill your-skill-name
+   cp -r skills/your-skill-name ~/.config/opencode/skills/
+   # or for pi:
+   cp -r skills/your-skill-name ~/.pi/agent/skills/
    ```
 2. Try it on real tasks.
-3. If it doesn't help, refine and try again.
+3. Run `./scripts/validate-skills.sh .` — должен пройти без errors.
+4. If it doesn't help, refine and try again.
 
 ## Step 6 — Submit PR
 

@@ -35,4 +35,4 @@ jobs:
           files: |
             skills/*/SKILL.md
             prompts/*.md
-            install.sh
+            manifest.json

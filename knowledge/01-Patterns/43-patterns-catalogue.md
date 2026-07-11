@@ -254,9 +254,21 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 | Filler (наполнители) | P22, P23, P24, P25, P26, P27, P28, P29, P30 |
 | Emerging (новые, 2025–2026) | P31, P32, P33, P34, P35, P36, P37, P38, P39, P40, P41, P42, P43 |
 
+## Open-ended: P-NEW-8…P-NEW-12
+
+Каталог P43 закрыт в 2026-07; нижеприведённые паттерны выявлены в академической литературе 2023-2026 и продолжают пополняться. Это **формат-bias** и **RLHF-fingerprint**. Лечатся не запретами, а перестройкой каркаса и выбором языкового режима (RU/EN). Подробнее: [[../structural/format-and-rlhf-bias]] и [[../structural/over-generation]].
+
+| ID | Маркер | Решение |
+|---|---|---|
+| P-NEW-8 | List-bloat | Сократить bullet до 3–5; вынести детали в текст |
+| P-NEW-9 | Polite-hedge bleed | Удалить «Great question»/«Happy to help» обёртку |
+| P-NEW-10 | Biased hedge | Заменить «might be worth considering» на действие |
+| P-NEW-11 | Format-uniformity block | Формат выбирать под жанр (RFC/incident/email) |
+| P-NEW-12 | Mixed-language bleed | Сверить с `lexicon-ru-v2.md`; заменить английский термин |
+
 ## Метрика
 
-> **P = (число активных паттернов / 43) × 100**
+> **P = (число активных паттернов / (43 + N_new)) × 100**, где N_new — количество задокументированных P-NEW
 
 - 0–3 паттерна: вероятно, человек
 - 4–8: смешанный

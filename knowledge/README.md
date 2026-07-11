@@ -103,10 +103,11 @@ templates/            — шаблоны заметок
 - Структура создана
 - MOC и индекс на месте
 - Лексические паттерны заполнены (RU + EN, v1 + v2)
-- Структурные паттерны заполнены (rule of three, parallelism, em-dash, parallel-clauses, **over-generation 2026-07**)
+- Структурные паттерны заполнены (rule of three, parallelism, em-dash, parallel-clauses, **over-generation 2026-07**, **format-and-rlhf-bias 2026-07**)
 - Риторические паттерны заполнены (hedging, impersonality, deeprichastnye)
-- Каталог 43 паттернов готов (P1–P43) + новый класс P-NEW (over-generation)
-- Техники замены описаны (voice, perplexity, show-dont-tell, sufficiency/underspecification, length bias, Russian brevity grammar, laconic prose models)
+- Каталог 43 паттернов готов (P1–P43) + новый класс P-NEW 1-12 (over-generation + format/RLHF)
+- Техники замены описаны (voice, perplexity, show-dont-tell, sufficiency/underspecification, length bias, Russian brevity grammar, laconic prose models, format/RLHF bias)
+- Source notes для Шкловского, Лотмана, Гаспарова, Аверинцева получили дословные цитаты из оригиналов (Phase 3 закрыт на уровне ключевых работ; дальше — выписки)
 - Примеры до/после собраны (tightening, iceberg, Russian grammar, Kholstomer example)
 - Первоисточники скачаны и описаны (Fabric, Anthropic, Pi skills, Aboudjem, harshaneel, lynote-ai, Wikipedia RU, arXiv length-bias, Шкловский/Лотман/Гаспаров/Аверинцев)
 - Skill'ы для opencode/pi/Claude Code синхронизированы до v6

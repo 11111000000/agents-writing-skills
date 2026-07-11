@@ -1,464 +1,639 @@
 ---
 title: Agents Writing Skills
-description: Skills and prompts for agents that write text without sounding like AI. Research-grounded. Open source. Bilingual EN/RU.
-tags: [home, getting-started]
+description: Skills, prompts, and a knowledge base for agents that edit prose with measurable AI-pattern checks.
+tags: [home, landing]
 ---
 
-> [!info] **Language / Язык**
->
-> 🇬🇧 **[English](#en-home)** · current page
->
-> 🇷🇺 **[Русский](#ru-home)** · перейти на русскую версию
+<style>
+.aws-landing {
+  --ink: #221b16;
+  --muted: #756b62;
+  --paper: #fff8ef;
+  --paper-2: #f4eadc;
+  --line: rgba(47, 35, 27, 0.16);
+  --accent: #8f4a2f;
+  --accent-2: #3a5f55;
+  --dark: #201814;
+  --dark-2: #2a211c;
+  --code: #15110e;
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: -1rem auto 0;
+  max-width: 1180px;
+}
 
----
+.aws-landing input[name="aws-lang"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
 
-<a id="en-home"></a>
+.aws-shell {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(143, 74, 47, 0.18), transparent 32rem),
+    radial-gradient(circle at 88% 12%, rgba(58, 95, 85, 0.16), transparent 30rem),
+    linear-gradient(180deg, var(--paper), #fffdf8 46%, var(--paper-2));
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: 0 24px 70px rgba(42, 33, 28, 0.12);
+  overflow: hidden;
+}
 
-# 🖋 Agents Writing Skills
+.aws-topbar {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1rem clamp(1rem, 4vw, 3rem);
+}
 
-> **Skills and prompts that make AI-generated text read like a human wrote it.**
->
-> Research-grounded. Open source. Works with opencode, pi, Claude Code, and any [Agent Skills-compatible](https://agentskills.io) agent.
+.aws-brand {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
 
-<br>
+.aws-mark {
+  background: var(--dark);
+  border-radius: 12px;
+  color: #f4eadc;
+  display: grid;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  height: 2.25rem;
+  place-items: center;
+  width: 2.25rem;
+}
 
-<div align="center">
+.aws-lang-switch {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: flex;
+  padding: 0.25rem;
+}
 
-```bash
-# Tell your agent, in any language:
-Clone https://github.com/11111000000/agents-writing-skills
-and install the skills from manifest.json
-```
+.aws-lang-switch label {
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.55rem 0.85rem;
+  transition: background 0.16s ease, color 0.16s ease;
+}
 
-No shell scripts. No hardcoded paths. Any agent, any OS.
+#aws-en:checked ~ .aws-shell label[for="aws-en"],
+#aws-ru:checked ~ .aws-shell label[for="aws-ru"] {
+  background: var(--dark);
+  color: #fff8ef;
+}
 
-</div>
+.aws-panel {
+  display: none;
+}
 
-<br>
+#aws-en:checked ~ .aws-shell .aws-panel-en,
+#aws-ru:checked ~ .aws-shell .aws-panel-ru {
+  display: block;
+}
 
----
+.aws-hero {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+  padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem);
+}
 
-## 🎯 The problem
+.aws-kicker {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+}
 
-AI text has tells. Every LLM uses the same repertoire: em-dashes everywhere, rule-of-three, hedging, negative parallelisms («это не X, а Y»), "it could be argued that…". Readers spot it. Detectors flag it. Your agent's output gets prefixed with `>` and labeled "AI-written" in seconds.
+.aws-hero h1 {
+  color: var(--ink);
+  font-size: clamp(3rem, 8vw, 6.8rem);
+  letter-spacing: -0.08em;
+  line-height: 0.88;
+  margin: 0;
+  max-width: 10ch;
+}
 
-## ✨ The solution
+.aws-hero h1 span {
+  color: var(--accent-2);
+  display: block;
+}
 
-Four research-grounded skills that build on **12 humanization levers**, **43 pattern categories**, and **academic literature on length bias, defamiliarization, and iceberg theory**.
+.aws-lead {
+  color: var(--muted);
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.55;
+  margin: 1.4rem 0 0;
+  max-width: 42rem;
+}
 
-| Skill | What it does | When to load |
-|---|---|---|
-| 🖊 **`humanize-writer`** | Write new prose without AI tells | "Help me write a README/blog/email" |
-| ✏ **`humanize-editor`** | Rewrite existing text to read human | "Rewrite my draft" |
-| 🔍 **`anti-ai-auditor`** | Diagnose without rewriting | "Is this too AI?" |
-| 🩹 **`ai-pattern-rewriter`** | Fix specific phrases surgically | "Fix just this paragraph" |
+.aws-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.7rem;
+}
 
-Plus **9 prompt templates** for pi (`/humanize`, `/audit-ai`, `/audit-43`, `/clean-draft`, `/rewrite-ai`, etc.).
+.aws-button {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0 1.15rem;
+  text-decoration: none;
+}
 
----
+.aws-button-primary {
+  background: var(--dark);
+  color: #fff8ef;
+}
 
-## 🏗 How it works (3-pass architecture)
+.aws-button-secondary {
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
 
-Every skill uses a **3-pass workflow** with clear inputs/outputs:
+.aws-button:hover {
+  transform: translateY(-1px);
+}
 
-```mermaid
-flowchart TB
-    A["<b>PASS 1: AUDIT</b><br/><i>identify</i><br/>metrics, locations, severity"] --> B["<b>PASS 2: REWRITE</b><br/><i>apply 12 levers</i><br/>STRIP → TIGHTEN → RELY → REBUILD"]
-    B --> C["<b>PASS 3: VERIFY</b><br/><i>final checks</i><br/>density, bias substitution, read aloud"]
-```
+.aws-terminal {
+  align-self: stretch;
+  background: linear-gradient(180deg, var(--dark), var(--dark-2));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(32, 24, 20, 0.28);
+  color: #f6eadf;
+  display: flex;
+  flex-direction: column;
+  min-height: 28rem;
+  overflow: hidden;
+}
 
-**12 levers organized in 4 phases:**
+.aws-terminal-head {
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #bba99a;
+  display: flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+  gap: 0.45rem;
+  padding: 0.9rem 1rem;
+}
 
-| Phase | Levers | What they do |
-|---|---|---|
-| 🧹 **STRIP** | 1-9 | Remove AI tells (delve, leverage, hedging, em-dash, etc.) |
-| 📐 **TIGHTEN** | 10 | Sufficiency — cut-test, Williams 6 operations |
-| 🧊 **RELY** | 11 | Iceberg — leave gaps the reader fills |
-| 🇷🇺 **REBUILD** | 12 | Russian grammar — парцелляция, эллипсис, литота (RU only) |
+.aws-dot {
+  border-radius: 999px;
+  height: 0.68rem;
+  width: 0.68rem;
+}
 
-> [!warning] Bias substitution (Lamparth et al., 2026)
-> After TIGHTEN pass, **check for fact loss**. Single-axis length reduction can shift bias to confidence calibration. Skill v6 keeps automatic fact-extraction verification.
+.aws-dot:nth-child(1) { background: #c96b4f; }
+.aws-dot:nth-child(2) { background: #c7a652; }
+.aws-dot:nth-child(3) { background: #6da071; }
 
----
+.aws-code {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.3rem;
+}
 
-## 📚 Knowledge base
+.aws-code-line {
+  align-items: start;
+  display: grid;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(0.82rem, 1.3vw, 0.95rem);
+  gap: 0.8rem;
+  grid-template-columns: 5.6rem 1fr;
+  line-height: 1.45;
+}
 
-41+ Obsidian-format notes in [`knowledge/`](https://github.com/11111000000/agents-writing-skills/tree/main/knowledge), browsable here or in Obsidian. Browse the [Knowledge Base tour →](knowledge-base)
+.aws-code-line strong {
+  color: #d7b28b;
+  font-weight: 700;
+}
 
-<details>
-<summary><b>📑 Browse categories</b></summary>
+.aws-code-line span:last-child {
+  color: #f6eadf;
+}
 
-### Patterns (43 categories)
+.aws-code-bad span:last-child {
+  color: #ffb5a3;
+}
 
-- **P1-P10** Lexical & structural (delve, em-dash, hedging, rule-of-three, etc.)
-- **P11-P20** Voice & format (impersonality, balancеd framing, lists)
-- **P21-P30** Interaction & content (chatbots, hallucinations, generic conclusions)
-- **P31-P43** Emerging 2024-2026 (graceful hedging, treadmill effect, etc.)
-- **P-NEW-1…7** Over-generation patterns (vacuum-filling, restatement chains, bridging, etc.)
-- **🇷🇺 Russian-specific** (деепричастия, парные синонимы, канцелярит)
-- See [43-patterns-catalogue](01-patterns/43-patterns-catalogue) for full listing
+.aws-code-good span:last-child {
+  color: #b8e0c2;
+}
 
-### Techniques
+.aws-meter {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding: 1.15rem 1.3rem 1.35rem;
+}
 
-- [`perplexity-and-burstiness`](02-techniques/perplexity-and-burstiness) — fundamental metrics
-- [`voice-and-tone`](02-techniques/voice-and-tone) — finding voice
-- [`show-dont-tell`](02-techniques/show-dont-tell) — concreteness vs abstraction
-- [`sufficiency-and-underspecification`](02-techniques/sufficiency-and-underspecification) — Grice + Hemingway iceberg
-- [`length-bias-research`](02-techniques/length-bias-research) — 5 academic papers
-- [`russian-brevity-grammar`](02-techniques/russian-brevity-grammar) — Lever 12 deep dive
-- [`laconic-prose-models`](02-techniques/laconic-prose-models) — Tolstoy, Dovlatov, Shklovsky, Bunin
+.aws-meter-row {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 5rem 1fr 3.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+}
 
-### Sources (raw research)
+.aws-bar {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
 
-- `06-Sources/research-papers/length-bias/` — Park, Shen, Zhang, Lamparth, Huang
-- `06-Sources/web-fetches/russian-grammar/` — Парцелляция, эллипсис, литота
-- `06-Sources/web-fetches/laconic-prose/` — Шкловский
+.aws-bar i {
+  background: linear-gradient(90deg, #c96b4f, #d7b28b, #6da071);
+  display: block;
+  height: 100%;
+}
 
-### Examples (worked cases with metrics)
+.aws-section {
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem);
+}
 
-- `04-Examples/tightening/` — 5 README/email/blog/marketing/status rewrites
-- `04-Examples/iceberg/` — 3 architecture/bugfix/codereview
-- `04-Examples/russian-grammar/` — 5 Lever 12 transformations (incl. Shklovsky/Tolstoy)
+.aws-section-dark {
+  background: var(--dark);
+  color: #fff8ef;
+}
 
-</details>
+.aws-section h2 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+  margin: 0 0 1rem;
+  max-width: 14ch;
+}
 
----
+.aws-section p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 48rem;
+}
 
-## 🚀 Install
+.aws-section-dark p {
+  color: #cbbcaf;
+}
 
-### For opencode / pi / Claude Code / any Agent Skills-compatible agent
+.aws-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1.8rem;
+}
 
-```bash
-# 1. Tell your agent:
-#    "Clone https://github.com/11111000000/agents-writing-skills and
-#     install the skills from manifest.json"
+.aws-card {
+  background: rgba(255, 255, 255, 0.64);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 1.15rem;
+}
 
-# 2. Or, manual install:
-git clone https://github.com/11111000000/agents-writing-skills.git
+.aws-section-dark .aws-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.aws-card h3 {
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.65rem;
+}
+
+.aws-card p {
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.aws-flow {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1.8rem;
+}
+
+.aws-step {
+  background: #fff8ef;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 1.35rem;
+  position: relative;
+}
+
+.aws-step small {
+  color: var(--accent);
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.aws-step h3 {
+  font-size: 1.35rem;
+  letter-spacing: -0.04em;
+  margin: 0 0 0.55rem;
+}
+
+.aws-step p {
+  font-size: 0.94rem;
+  margin: 0;
+}
+
+.aws-stats {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1.8rem;
+}
+
+.aws-stat {
+  border-left: 1px solid var(--line);
+  padding-left: 1rem;
+}
+
+.aws-stat strong {
+  display: block;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: -0.07em;
+  line-height: 1;
+}
+
+.aws-stat span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.aws-install {
+  background: #11100f;
+  border-radius: 22px;
+  color: #f6eadf;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: 1.6;
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  padding: 1.25rem;
+}
+
+.aws-docs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.3rem;
+}
+
+.aws-docs a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-weight: 800;
+  padding: 0.65rem 0.9rem;
+  text-decoration: none;
+}
+
+.aws-footer {
+  align-items: center;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: space-between;
+  padding: 1.2rem clamp(1rem, 4vw, 3rem);
+}
+
+.aws-footer a {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .aws-hero,
+  .aws-grid,
+  .aws-flow,
+  .aws-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .aws-terminal {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .aws-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .aws-lang-switch {
+    width: 100%;
+  }
+
+  .aws-lang-switch label {
+    flex: 1;
+    text-align: center;
+  }
+
+  .aws-code-line,
+  .aws-meter-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<div class="aws-landing">
+  <input id="aws-en" name="aws-lang" type="radio" checked>
+  <input id="aws-ru" name="aws-lang" type="radio">
+  <div class="aws-shell">
+    <div class="aws-topbar">
+      <div class="aws-brand"><span class="aws-mark">A</span><span>agents-writing-skills</span></div>
+      <div class="aws-lang-switch" aria-label="Language switcher">
+        <label for="aws-en">English</label>
+        <label for="aws-ru">Русский</label>
+      </div>
+    </div>
+
+    <section class="aws-panel aws-panel-en">
+      <div class="aws-hero">
+        <div>
+          <div class="aws-kicker">Agent skills for prose</div>
+          <h1>Write less <span>like a model.</span></h1>
+          <p class="aws-lead">Four skills, 9 pi prompts, and a 41-note knowledge base for agents that write, rewrite, and audit prose with measurable AI-pattern checks.</p>
+          <div class="aws-actions">
+            <a class="aws-button aws-button-primary" href="getting-started">Install skills</a>
+            <a class="aws-button aws-button-secondary" href="knowledge-base">Browse knowledge</a>
+          </div>
+        </div>
+        <div class="aws-terminal" aria-label="Example audit panel">
+          <div class="aws-terminal-head"><span class="aws-dot"></span><span class="aws-dot"></span><span class="aws-dot"></span><span>benchmark-skill.sh</span></div>
+          <div class="aws-code">
+            <div class="aws-code-line aws-code-bad"><strong>before</strong><span>It is worth noting that this comprehensive solution plays a crucial role in improving productivity.</span></div>
+            <div class="aws-code-line aws-code-good"><strong>after</strong><span>47 tasks. Three projects. One config in ~/.config/genium/tasks.toml.</span></div>
+            <div class="aws-code-line"><strong>check</strong><span>AP, D, E, YapScore, burstiness, specificity, format bias, voice.</span></div>
+          </div>
+          <div class="aws-meter">
+            <div class="aws-meter-row"><span>YapScore</span><span class="aws-bar"><i style="width: 72%"></i></span><span>1.18</span></div>
+            <div class="aws-meter-row"><span>Facts</span><span class="aws-bar"><i style="width: 88%"></i></span><span>4/para</span></div>
+            <div class="aws-meter-row"><span>Voice</span><span class="aws-bar"><i style="width: 64%"></i></span><span>human</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="aws-section">
+        <h2>The system</h2>
+        <p>The repository packages a writing workflow agents can load on demand: greenfield writing, full rewrite, diagnostic audit, and surgical line edits.</p>
+        <div class="aws-grid">
+          <div class="aws-card"><h3>humanize-writer</h3><p>Drafts README sections, emails, posts, and announcements with voice, facts, and density checks.</p></div>
+          <div class="aws-card"><h3>humanize-editor</h3><p>Rewrites AI-sounding drafts while preserving names, dates, numbers, commands, and claims.</p></div>
+          <div class="aws-card"><h3>anti-ai-auditor</h3><p>Returns a diagnosis only: pattern hits, risk score, metrics, and concrete priorities.</p></div>
+          <div class="aws-card"><h3>ai-pattern-rewriter</h3><p>Fixes one phrase or paragraph without reshaping the whole document.</p></div>
+        </div>
+      </div>
+
+      <div class="aws-section aws-section-dark">
+        <h2>How it works</h2>
+        <p>Every skill follows the same operating loop. Count first. Rewrite second. Verify facts last.</p>
+        <div class="aws-flow">
+          <div class="aws-step"><small>Pass 1</small><h3>Audit</h3><p>Find em-dashes, hedging, rule-of-three, negative parallelisms, low burstiness, weak specificity.</p></div>
+          <div class="aws-step"><small>Pass 2</small><h3>Rewrite</h3><p>Apply 12 levers: STRIP, TIGHTEN, RELY, REBUILD. Russian text gets парцелляция, эллипсис, литота.</p></div>
+          <div class="aws-step"><small>Pass 3</small><h3>Verify</h3><p>Check fact loss, YapScore, density, and whether the result reads like a person had a reason to write it.</p></div>
+        </div>
+      </div>
+
+      <div class="aws-section">
+        <h2>Research-grounded</h2>
+        <p>The rules come from Aboudjem's 43-pattern catalogue, harshaneel's 9 base levers, YapBench, MASH, Binoculars, Lamparth 2026, Hemingway, Grice, Shklovsky, Tolstoy, Dovlatov, and Russian brevity grammar.</p>
+        <div class="aws-stats">
+          <div class="aws-stat"><strong>4</strong><span>agent skills</span></div>
+          <div class="aws-stat"><strong>9</strong><span>pi prompt templates</span></div>
+          <div class="aws-stat"><strong>12</strong><span>writing levers</span></div>
+          <div class="aws-stat"><strong>41+</strong><span>knowledge notes</span></div>
+        </div>
+      </div>
+
+      <div class="aws-section">
+        <h2>Install</h2>
+        <p>Tell an agent to read the manifest, or copy the directories yourself.</p>
+        <pre class="aws-install">git clone https://github.com/11111000000/agents-writing-skills.git
 cd agents-writing-skills
-
-# Install specific skill:
-cp -r skills/humanize-writer/ ~/.config/opencode/skills/
-cp -r skills/humanize-editor/ ~/.config/opencode/skills/
-cp -r skills/anti-ai-auditor/ ~/.config/opencode/skills/
-cp -r skills/ai-pattern-rewriter/ ~/.config/opencode/skills/
-
-# For pi agents, also copy prompts:
-cp prompts/*.md ~/.pi/agent/prompts/
-```
-
-> [!tip] Skills reference knowledge via GitHub URLs
-> All skill references use `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/...` — no local file dependencies. For **offline** access, run `./scripts/install-knowledge.sh`.
-
-### Offline (no internet during agent runs)
-
-```bash
-./scripts/install-knowledge.sh
-# Clones knowledge base to ~/.cache/agents-writing-skills-knowledge
-# Then set KNOWLEDGE_PATH for offline resolution
-```
-
----
-
-## 🧪 Validation & testing
-
-The skill suite is **self-validating**:
-
-```bash
-bash scripts/validate-skills.sh   # checks frontmatter, structure
-bash scripts/validate-manifest.sh # checks paths in manifest.json
-bash scripts/test-benchmark.sh    # smoke-tests benchmark-skill.sh
-bash scripts/benchmark-skill.sh file.txt  # measure YOUR text
-```
-
-A real benchmark run on AI-typical text returns:
-
-```
-╔════════════════════════════════════════════════════════════════╗
-║              SKILL BENCHMARK REPORT                             ║
-╚════════════════════════════════════════════════════════════════╝
-
-Volume:
-  Words:       56
-  Sentences:   4
-  Paragraphs:  1
-
-Density metrics:
-  AP (negative parallelism):  0.00  per 1000 words   [target <1]
-  D  (RU деепричастия):       0.0   per 1000 words   [target <7]
-  E  (em-dash):               0.0   per 300 words     [target <3]
-  V  (vacuum-filling):        0.0%                   [target <5%]
-  B  (bridging):              0.0%  of paragraphs    [target <5%]
-  YapScore:                   1.67                   [target 1.0-1.5]
-
-Burstiness:
-  Mean sentence length:       12.5 words
-  Std deviation:              5.7             [target >5]
-```
-
----
-
-## 📊 Build on research
-
-We aggregate **5 peer-reviewed/arXiv papers** (2023–2026) documenting that LLM length-bias is **structural**, not stylistic:
-
-| Paper | Year | Finding |
-|---|---|---|
-| [Shen et al. "Loose Lips Sink Ships"](https://arxiv.org/abs/2310.05199) | 2023 | RM assumes humans prefer longer |
-| [Park et al.](https://arxiv.org/abs/2403.19159) | 2024 | DPO exploits length bias; GPT-4 judge has verbosity bias |
-| [Zhang et al.](https://arxiv.org/abs/2409.11704) | 2024 | Format bias (lists, bold, emojis); <1% biased data injects bias |
-| [Huang et al.](https://arxiv.org/abs/2409.17407) | 2024 (ICLR 2025) | Post-hoc calibration without retraining |
-| [Lamparth et al.](https://arxiv.org/abs/2605.27996) | 2026 (Stanford) | **Critical:** single-axis mitigation → bias substitution; factual accuracy falls |
-
-Plus:
-- Russian formalist [Shklovsky «Art as Technique», 1917](https://en.wikipedia.org/wiki/Viktor_Shklovsky) — defamiliarization through form
-- Tolstoy, Dovlatov, Bunin as exemplars of Russian laconic prose
-
----
-
-## 🔍 What's in the box
-
-```
-agents-writing-skills/
-├── skills/                    # 4 SKILL.md files + lexicon references
-│   ├── humanize-writer/       # Write prose without AI tells (v6)
-│   ├── humanize-editor/       # Rewrite existing text (v6)
-│   ├── anti-ai-auditor/       # Diagnostic only (v6)
-│   └── ai-pattern-rewriter/   # Surgical span fixes (v6)
-│
-├── prompts/                   # 9 pi/agent prompt templates
-│   ├── humanize.md
-│   ├── audit-ai.md
-│   ├── audit-43.md
-│   └── ...
-│
-├── knowledge/                 # 41+ Obsidian notes
-│   ├── 01-patterns/           # 43-pattern catalogue + Russian extensions
-│   ├── 02-techniques/         # Levers, voice, brevity grammar
-│   ├── 03-detection/          # How detectors work
-│   ├── 04-examples/           # Worked before/after cases
-│   ├── 05-references/         # Limits, self-critique
-│   └── 06-sources/            # Raw research papers + web fetches
-│
-├── scripts/                   # Build, validate, benchmark, test
-│   ├── build-site.sh          # Quartz v5 site builder
-│   ├── validate-skills.sh     # CI validation gate
-│   ├── benchmark-skill.sh     # Measure AI-pattern density
-│   └── test-benchmark.sh      # Smoke tests
-│
-├── manifest.json              # Machine-readable skill catalog
-├── docs/                       # This Quartz site content
-└── tests/fixtures/             # AI-typical + human text samples
-```
-
----
-
-## 📚 Documentation
-
-- [Getting Started](getting-started) — install + first use
-- [Skills Overview](skills-overview) — 4 skills, 4 phases, 12 levers
-- [Knowledge Base](knowledge-base) — tour of 41+ notes
-- [Limitations](limitations) — what these skills can and cannot do
-- [Contributing](contributing) — add new skills, prompts, notes
-
----
-
-## 📜 License
-
-- **Skills & prompts:** [MIT](https://github.com/11111000000/agents-writing-skills/blob/main/LICENSE)
-- **Knowledge base notes:** [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-- **Sources academic papers:** as per respective publishers (arXiv, Wikipedia)
-
-## ⚖ Honest summary
-
-> [!warning] What these skills DO
-> - Make text read as human-written to **human readers**
-> - Reduce density of measurable AI tells (em-dash, hedging, rule-of-three)
-> - Apply **cultural traditions** (Russian brevity grammar)
-> - Provide **measurable metrics** (YapScore, AP, D, E)
-> - Surface **structural risks** (bias substitution per Lamparth 2026)
->
-> What they **DO NOT**
-> - ❌ Guarantee passing GPTZero, Pangram, Grammarly
-> - ❌ Bypass detection reliably (MASH, ACL 2026: ceiling at 92% ASR for older detectors)
-> - ❌ Replace human editing for high-stakes content
-> - ❌ Make AI-generated text untraceable as AI-generated
->
-> Use to **write better**, not to **hide**.
-
----
-
-<a id="ru-home"></a>
-
-> 🇷🇺 **Русская версия ниже**
-
----
-
-# 🖋 Agents Writing Skills *(RU)*
-
-> **Скилы и промпты, которые делают AI-текст читаемым как человеческий.**
->
-> На ресёрче. Open source. Работает с opencode, pi, Claude Code и любым агентом с поддержкой [Agent Skills](https://agentskills.io).
-
-<br>
-
-<div align="center">
-
-```bash
-# Скажите агенту по-русски:
-Клонируй https://github.com/11111000000/agents-writing-skills
-и установи скилы из manifest.json
-```
-
-Без shell-скриптов. Без хардкоженных путей. Любой агент, любая ОС.
-
-</div>
-
-<br>
-
----
-
-## 🎯 Проблема
-
-AI-текст имеет маркеры. Каждая LLM использует один и тот же репертуар: em-dash повсюду, rule-of-three, хеджирование, негативные параллелизмы («это не X, а Y»), «можно сказать, что…». Читатель замечает. Детекторы флагат. Ваш агент выдаёт результат, который за секунду маркируется как «написано AI».
-
-## ✨ Решение
-
-Четыре скила на основе **12 рычагов человезации**, **43 категорий паттернов** и **академической литературы** о length bias, остранении Шкловского и iceberg theory Хемингуэя.
-
-| Скил | Что делает | Когда загружать |
-|---|---|---|
-| 🖊 **`humanize-writer`** | Писать новый текст без AI-маркеров | «Помоги написать README/пост/email» |
-| ✏ **`humanize-editor`** | Переписать существующий текст | «Перепиши мой черновик» |
-| 🔍 **`anti-ai-auditor`** | Диагностика без переписывания | «Это слишком AI?» |
-| 🩹 **`ai-pattern-rewriter`** | Хирургические правки specific spans | «Поправь только этот абзац» |
-
-Плюс **9 промптов для pi** (`/humanize`, `/audit-ai`, `/audit-43`, `/clean-draft`, `/rewrite-ai` и др.).
-
----
-
-## 🏗 Как это работает (3-pass архитектура)
-
-Каждый скил использует **3-pass workflow** с явными входами/выходами:
-
-```mermaid
-flowchart TB
-    A["<b>PASS 1: AUDIT</b><br/><i>идентификация</i><br/>метрики, локации, severity"] --> B["<b>PASS 2: REWRITE</b><br/><i>применить 12 рычагов</i><br/>STRIP → TIGHTEN → RELY → REBUILD"]
-    B --> C["<b>PASS 3: VERIFY</b><br/><i>финальные проверки</i><br/>плотность, bias substitution, чтение вслух"]
-```
-
-**12 рычагов в 4 фазах:**
-
-| Фаза | Рычаги | Что делают |
-|---|---|---|
-| 🧹 **STRIP** | 1-9 | Удаляют AI-маркеры (delve, leverage, hedging, em-dash и т.д.) |
-| 📐 **TIGHTEN** | 10 | Суффицентность — cut-test, Williams 6 операций |
-| 🧊 **RELY** | 11 | Iceberg — оставлять пробелы, которые заполняет читатель |
-| 🇷🇺 **REBUILD** | 12 | Русский язык — парцелляция, эллипсис, литота (только RU) |
-
-> [!warning] Bias substitution (Lamparth et al., 2026)
-> После TIGHTEN pass **проверьте потерю фактов**. Одностороннее сокращение длины может перенести bias на factual accuracy. Skill v6 сохраняет автоматическую проверку извлечения фактов.
-
----
-
-## 📚 Knowledge base
-
-41+ Obsidian-format заметок в [`knowledge/`](https://github.com/11111000000/agents-writing-skills/tree/main/knowledge), можно смотреть здесь или в Obsidian. [Тур по базе →](knowledge-base)
-
-<details>
-<summary><b>📑 Категории</b></summary>
-
-### Паттерны (43 категории)
-
-- **P1-P10** Лексика и структура (delve, em-dash, hedging, rule-of-three)
-- **P11-P20** Голос и формат (impersonality, balanced framing, lists)
-- **P21-P30** Взаимодействие и контент (chatbots, hallucinations)
-- **P31-P43** Возникающие 2024-2026
-- **P-NEW-1…7** Over-generation patterns (vacuum-filling, restatement chains, bridging)
-- **🇷🇺 Русские** (деепричастия, парные синонимы, канцелярит)
-- См. полный [43-patterns-catalogue](01-patterns/43-patterns-catalogue)
-
-### Техники
-
-- [`perplexity-and-burstiness`](02-techniques/perplexity-and-burstiness) — фундаментальные метрики
-- [`voice-and-tone`](02-techniques/voice-and-tone) — поиск голоса
-- [`show-dont-tell`](02-techniques/show-dont-tell) — конкретика > абстракция
-- [`sufficiency-and-underspecification`](02-techniques/sufficiency-and-underspecification) — Grice + Hemingway
-- [`length-bias-research`](02-techniques/length-bias-research) — 5 академических работ
-- [`russian-brevity-grammar`](02-techniques/russian-brevity-grammar) — Lever 12 глубокое погружение
-- [`laconic-prose-models`](02-techniques/laconic-prose-models) — Толстой, Довлатов, Шкловский, Бунин
-
-### Примеры (worked cases с метриками)
-
-- `04-Examples/tightening/` — 5 переписываний (README/email/blog/marketing/status)
-- `04-Examples/iceberg/` — 3 архитектура/баг-фикс/код-ревью
-- `04-Examples/russian-grammar/` — 5 трансформаций Lever 12 (вкл. Шкловский/Толстой)
-
-</details>
-
----
-
-## 🚀 Установка
-
-### Для opencode / pi / Claude Code / любого агента с поддержкой Agent Skills
-
-```bash
-# 1. Скажите агенту:
-#    "Клонируй https://github.com/11111000000/agents-writing-skills
-#     и установи скилы из manifest.json"
-
-# 2. Или вручную:
-git clone https://github.com/11111000000/agents-writing-skills.git
+cp -r skills/humanize-writer ~/.config/opencode/skills/
+cp -r skills/humanize-editor ~/.config/opencode/skills/
+cp -r skills/anti-ai-auditor ~/.config/opencode/skills/
+cp -r skills/ai-pattern-rewriter ~/.config/opencode/skills/</pre>
+        <div class="aws-docs">
+          <a href="getting-started">Getting started</a>
+          <a href="skills-overview">Skills overview</a>
+          <a href="limitations">Limits</a>
+          <a href="contributing">Contributing</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="aws-panel aws-panel-ru">
+      <div class="aws-hero">
+        <div>
+          <div class="aws-kicker">Скилы для агентского письма</div>
+          <h1>Пишите меньше <span>как модель.</span></h1>
+          <p class="aws-lead">Четыре скила, 9 pi-промптов и база из 41+ заметок для агентов, которые пишут, редактируют и проверяют прозу по измеримым AI-маркерам.</p>
+          <div class="aws-actions">
+            <a class="aws-button aws-button-primary" href="getting-started">Установить</a>
+            <a class="aws-button aws-button-secondary" href="knowledge-base">Открыть базу</a>
+          </div>
+        </div>
+        <div class="aws-terminal" aria-label="Панель аудита текста">
+          <div class="aws-terminal-head"><span class="aws-dot"></span><span class="aws-dot"></span><span class="aws-dot"></span><span>benchmark-skill.sh</span></div>
+          <div class="aws-code">
+            <div class="aws-code-line aws-code-bad"><strong>до</strong><span>Стоит отметить, что данное комплексное решение играет ключевую роль в повышении эффективности.</span></div>
+            <div class="aws-code-line aws-code-good"><strong>после</strong><span>47 задач. Три проекта. Один конфиг в ~/.config/genium/tasks.toml.</span></div>
+            <div class="aws-code-line"><strong>замер</strong><span>AP, D, E, YapScore, burstiness, конкретика, format bias, голос.</span></div>
+          </div>
+          <div class="aws-meter">
+            <div class="aws-meter-row"><span>YapScore</span><span class="aws-bar"><i style="width: 72%"></i></span><span>1.18</span></div>
+            <div class="aws-meter-row"><span>Факты</span><span class="aws-bar"><i style="width: 88%"></i></span><span>4/абз</span></div>
+            <div class="aws-meter-row"><span>Голос</span><span class="aws-bar"><i style="width: 64%"></i></span><span>живой</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="aws-section">
+        <h2>Система</h2>
+        <p>Репозиторий упаковывает рабочий процесс для агентов: новый текст, полный rewrite, диагностический аудит и точечные правки строк.</p>
+        <div class="aws-grid">
+          <div class="aws-card"><h3>humanize-writer</h3><p>Пишет README, письма, посты и анонсы с голосом, фактами и проверкой плотности.</p></div>
+          <div class="aws-card"><h3>humanize-editor</h3><p>Переписывает AI-черновик, сохраняя имена, даты, числа, команды и claims.</p></div>
+          <div class="aws-card"><h3>anti-ai-auditor</h3><p>Даёт только диагноз: найденные паттерны, риск, метрики и приоритеты правки.</p></div>
+          <div class="aws-card"><h3>ai-pattern-rewriter</h3><p>Правит одну фразу или абзац, не перестраивая весь документ.</p></div>
+        </div>
+      </div>
+
+      <div class="aws-section aws-section-dark">
+        <h2>Как работает</h2>
+        <p>У каждого скила один цикл. Сначала счёт. Потом rewrite. В конце проверка фактов.</p>
+        <div class="aws-flow">
+          <div class="aws-step"><small>Pass 1</small><h3>Audit</h3><p>Ищем em-dash, hedging, rule-of-three, negative parallelisms, низкую burstiness, слабую конкретику.</p></div>
+          <div class="aws-step"><small>Pass 2</small><h3>Rewrite</h3><p>Применяем 12 рычагов: STRIP, TIGHTEN, RELY, REBUILD. Для русского — парцелляция, эллипсис, литота.</p></div>
+          <div class="aws-step"><small>Pass 3</small><h3>Verify</h3><p>Проверяем потерю фактов, YapScore, плотность и ощущение: текст написал человек с причиной.</p></div>
+        </div>
+      </div>
+
+      <div class="aws-section">
+        <h2>Основано на источниках</h2>
+        <p>Правила собраны из 43-pattern catalogue Aboudjem, 9 базовых levers harshaneel, YapBench, MASH, Binoculars, Lamparth 2026, Hemingway, Grice, Шкловского, Толстого, Довлатова и русской грамматики краткости.</p>
+        <div class="aws-stats">
+          <div class="aws-stat"><strong>4</strong><span>agent skill’а</span></div>
+          <div class="aws-stat"><strong>9</strong><span>pi-промптов</span></div>
+          <div class="aws-stat"><strong>12</strong><span>рычагов письма</span></div>
+          <div class="aws-stat"><strong>41+</strong><span>заметка в базе</span></div>
+        </div>
+      </div>
+
+      <div class="aws-section">
+        <h2>Установка</h2>
+        <p>Скажите агенту прочитать manifest или скопируйте директории вручную.</p>
+        <pre class="aws-install">git clone https://github.com/11111000000/agents-writing-skills.git
 cd agents-writing-skills
+cp -r skills/humanize-writer ~/.config/opencode/skills/
+cp -r skills/humanize-editor ~/.config/opencode/skills/
+cp -r skills/anti-ai-auditor ~/.config/opencode/skills/
+cp -r skills/ai-pattern-rewriter ~/.config/opencode/skills/</pre>
+        <div class="aws-docs">
+          <a href="getting-started">Getting started</a>
+          <a href="skills-overview">Skills overview</a>
+          <a href="limitations">Ограничения</a>
+          <a href="contributing">Contributing</a>
+        </div>
+      </div>
+    </section>
 
-cp -r skills/humanize-writer/ ~/.config/opencode/skills/
-cp -r skills/humanize-editor/ ~/.config/opencode/skills/
-cp -r skills/anti-ai-auditor/ ~/.config/opencode/skills/
-cp -r skills/ai-pattern-rewriter/ ~/.config/opencode/skills/
+    <div class="aws-footer">
+      <span>agents-writing-skills v1.4.0</span>
+      <span><a href="https://github.com/11111000000/agents-writing-skills">GitHub</a> · <a href="knowledge-base">Knowledge base</a> · <a href="limitations">Limits</a></span>
+    </div>
 
-cp prompts/*.md ~/.pi/agent/prompts/
-```
-
-> [!tip] Скилы ссылаются на knowledge через GitHub URLs
-> Все ссылки используют `https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/...` — без локальных файловых зависимостей. Для **offline** доступа запустите `./scripts/install-knowledge.sh`.
-
----
-
-## 📚 Документация
-
-- [Getting Started](getting-started) — установка и первое использование
-- [Skills Overview](skills-overview) — 4 скила, 4 фазы, 12 рычагов
-- [Knowledge Base](knowledge-base) — тур по 41+ заметкам
-- [Limitations](limitations) — что скилы могут и не могут
-- [Contributing](contributing) — добавить новый скил
-
----
-
-## ⚖ Честное резюме
-
-> [!warning] Что скилы ДЕЛАЮТ
-> - Делают текст читаемым как человеческий для **человеческих читателей**
-> - Снижают плотность измеримых AI-маркеров (em-dash, hedging, rule-of-three)
-> - Применяют **культурные традиции** (русская грамматическая краткость)
-> - Дают **измеримые метрики** (YapScore, AP, D, E)
-> - Сигналят о **структурных рисках** (bias substitution по Lamparth 2026)
->
-> Чего они **НЕ ДЕЛАЮТ**
-> - ❌ Не гарантируют прохождение GPTZero, Pangram, Grammarly
-> - ❌ Не обходят detection надёжно (MASH, ACL 2026: ceiling 92% ASR на старых детекторах)
-> - ❌ Не заменяют человеческое редактирование для high-stakes
-> - ❌ Не делают AI-текст неотличимым от человеческого для специалистов
->
-> Используйте чтобы **писать лучше**, а не чтобы **скрывать**.
-
-<br>
-
----
-
-<div align="center">
-
-Made with 🤎 by humans, for agents, with humans.
-
-[v1.4.0 on GitHub](https://github.com/11111000000/agents-writing-skills) · [Site source](https://github.com/11111000000/agents-writing-skills/tree/main/docs)
-
+    <noscript>
+      <div class="aws-shell" style="margin:1.5rem auto;padding:1.25rem;">
+        <h2 style="margin-top:0;">Read without JavaScript</h2>
+        <p>This page relies on radio buttons to switch the language. If you have JavaScript off, you can <a href="knowledge-base">browse the knowledge base</a> directly or <a href="https://github.com/11111000000/agents-writing-skills/blob/main/docs/index.md">read the source on GitHub</a>.</p>
+      </div>
+    </noscript>
+  </div>
 </div>

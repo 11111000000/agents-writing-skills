@@ -122,9 +122,27 @@ else
   V="0.0"
 fi
 
-# R: restatement chains (rough heuristic: 3+ similar sentences in a row)
-R=0
-# Not perfect, requires more analysis
+# R: restatement chains (heuristic: trigram overlap between adjacent sentences)
+R=$(LC_ALL=C echo "$INPUT" | awk '
+  BEGIN { FS = ".!?\n"; }
+  {
+    sub(/^\s+|\s+$/, "")
+    if (length($0) == 0) next
+    n = split($0, words, /[[:space:]]+/)
+    delete trie
+    for (i = 1; i <= n - 2; i++) {
+      tri = tolower(words[i] " " words[i+1] " " words[i+2])
+      if (trie[tri]) { restated++; break }
+      trie[tri] = 1
+    }
+    sentences++
+  }
+  END {
+    if (sentences == 0) { print 0; exit }
+    pct = restated * 100 / sentences
+    printf "%.1f\n", pct
+  }
+')
 
 # B: bridging phrases at para starts
 B_RU=$(echo "$INPUT" | grep -coE '^(Как упоминалось выше|Это подводит нас к|В свою очередь|Кроме того)' || true)
@@ -179,12 +197,14 @@ OPINION_PRESENT=$([ $OPINION -gt 0 ] && echo "true" || echo "false")
 AP_INT=$(awk "BEGIN {printf \"%d\", ($AP+0.5)}")
 D_INT=$(awk "BEGIN {printf \"%d\", ($D+0.5)}")
 E_INT=$(awk "BEGIN {printf \"%d\", ($E+0.5)}")
+R_INT=$(awk "BEGIN {printf \"%d\", ($R+0.5)}")
 YAP_X100=$(awk "BEGIN {printf \"%d\", ($YAP*100)}")
 BURST_INT=$(awk "BEGIN {printf \"%d\", ($BURST_STD+0.5)}")
 
 [ "$AP_INT" -gt 1 ] && TARGETS_OK=false
 [ "$D_INT" -gt 7 ] && TARGETS_OK=false
 [ "$E_INT" -gt 3 ] && TARGETS_OK=false
+[ "$R_INT" -gt 10 ] && TARGETS_OK=false
 [ "$YAP_X100" -gt 150 ] && TARGETS_OK=false
 [ "$BURST_INT" -lt 3 ] && TARGETS_OK=false
 
@@ -202,6 +222,7 @@ if [[ "$JSON_MODE" == "true" ]]; then
     "E": $E,
     "V": $V,
     "B": $B,
+    "R": $R,
     "YapScore": $YAP,
     "burstiness": {
       "mean": $BURST_MEAN,
@@ -240,7 +261,9 @@ Density metrics:
   E  (em-dash):               $E   per 300 words     [target <3]
   V  (vacuum-filling):        $V%                   [target <5%]
   B  (bridging):              $B%  of paragraphs    [target <5%]
-  YapScore:                   $YAP                   [target 1.0-1.5]
+  R  (restatement):           $R%  of sentences    [target <10%]
+  YapScore:                   $YAP                   [target 1.0-1.5]"
+
 
 Burstiness:
   Mean sentence length:       $BURST_MEAN words
@@ -272,6 +295,7 @@ EOF
   awk "BEGIN {exit !($SPECIFICITY < 0.5)}" && echo "  • Specificity < 0.5: добавить конкретики (Lever 5)"
   awk "BEGIN {exit !($V > 5)}" && echo "  • V > 5%: удалить vacuum-filling предложения (P-NEW-1)"
   awk "BEGIN {exit !($B > 5)}" && echo "  • B > 5%: убрать bridging phrases (P-NEW-3)"
+  awk "BEGIN {exit !($R > 10)}" && echo "  • R > 10%: убрать restatement chains (P-NEW-2)"
 
   echo ""
   echo "См. также: 04-Examples/tightening/, 04-Examples/iceberg/, 04-Examples/russian-grammar/"

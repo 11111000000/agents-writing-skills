@@ -282,6 +282,24 @@ Word count: 32 → 12 (−63%). Смысл сохранён.
 
 Подробнее: [`02-Techniques/russian-brevity-grammar.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md).
 
+> [!warning] REBUILD guard (ужесточение в v6)
+> **Запускайте Phase REBUILD только если текст действительно русский.** На EN-тексте не срабатывает литота, а псевдо-парцелляция ломает ритм. Проверка:
+>
+> ```python
+> import re
+> def has_cyrillic(text: str, threshold: float = 0.3) -> bool:
+>     cyr = len(re.findall(r"[А-Яа-яЁё]", text))
+>     letters = len(re.findall(r"[A-Za-zА-Яа-яЁё]", text))
+>     if letters == 0:
+>         return False
+>     return cyr / letters >= threshold
+>
+> if not has_cyrillic(draft):
+>     skip_phase("REBUILD")
+> ```
+>
+> На смешанных текстах (code-switching) REBUILD прогонять только по русским фрагментам.
+
 ---
 
 ## PASS 3 — VERIFY (финальные проверки)

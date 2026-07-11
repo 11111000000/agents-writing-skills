@@ -29,6 +29,9 @@ jobs:
       - name: Validate manifest paths
         run: ./scripts/validate-manifest.sh
 
+      - name: Run benchmark smoke tests
+        run: ./scripts/test-benchmark.sh
+
       - name: Check for stray em-dash patterns
         run: |
           echo "Checking for excessive em-dash in skills (limit: 1 per 300 words in descriptions)"

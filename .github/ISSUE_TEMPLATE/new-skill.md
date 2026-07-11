@@ -75,7 +75,7 @@ body:
           required: true
         - label: I ran `./scripts/validate-skills.sh` and it passed
           required: true
-        - label: I tested the skill locally with `./install.sh skill <name>`
+        - label: I tested the skill locally by copying to ~/.config/opencode/skills/
           required: true
 
   - type: markdown

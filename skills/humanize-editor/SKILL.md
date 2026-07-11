@@ -192,17 +192,22 @@ def extract_facts(text):
         re.findall(r'\b\d{4}\b', text)                                # 2024
     )
 
-def check_bias_substitution(original, rewritten):
+def check_bias_substitution(original, rewritten, mode="default"):
+    """Verify Rewrite preserved facts. Mode: "default" (≤10%), "high-stakes" (≤5%), "marketing" (≤20%)."""
     orig_facts = extract_facts(original)
     new_facts = extract_facts(rewritten)
     lost = orig_facts - new_facts
     loss_pct = len(lost) / max(len(orig_facts), 1) * 100
 
+    thresholds = {"default": 10, "high-stakes": 5, "marketing": 20}
+    th = thresholds.get(mode, 10)
     return {
-        "status": "FAIL" if loss_pct > 10 else "PASS",
+        "status": "FAIL" if loss_pct > th else "PASS",
+        "threshold": th,
+        "mode": mode,
         "loss_pct": loss_pct,
-        "lost_facts": list(lost)[:10],  # для отчёта
-        "action": "Restore lost facts" if loss_pct > 10 else "Proceed"
+        "lost_facts": list(lost)[:10],
+        "action": "Restore lost facts" if loss_pct > th else "Proceed",
     }
 ```
 

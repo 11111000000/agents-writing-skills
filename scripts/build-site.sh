@@ -29,10 +29,11 @@ err() { printf '\033[1;31m[err]\033[0m %s\n' "$*" >&2; }
 ok() { printf '\033[1;32m[ok]\033[0m %s\n' "$*"; }
 
 cleanup() {
-  log "Cleaning up temporary files..."
-  rm -rf "$TEMP_QUARTZ"
+  if [[ -n "${TEMP_QUARTZ:-}" && -d "$TEMP_QUARTZ" ]]; then
+    rm -rf "$TEMP_QUARTZ"
+  fi
 }
-trap cleanup EXIT
+trap cleanup EXIT INT TERM
 
 # Check Node.js version
 if ! command -v node >/dev/null 2>&1; then
@@ -80,37 +81,36 @@ if [[ -f "$LANDING_SRC" ]]; then
   ok "Landing page → content/index.md"
 fi
 
-# Initialize Quartz (non-interactive)
-log "Initializing Quartz..."
-(cd "$TEMP_QUARTZ" && npx quartz create \
-  --template obsidian \
-  --strategy copy \
-  --source "$TEMP_QUARTZ/content" \
-  --directory content \
-  --links absolute \
-  --baseUrl "agents-writing-skills" \
-  --no-open 2>&1) || warn "Quartz create may have warnings (non-fatal)"
+log "Quartz content prepared"
 
 # Install plugins from config
 log "Installing plugins..."
 (cd "$TEMP_QUARTZ" && npx quartz plugin install --from-config 2>&1) || warn "Plugin install may have warnings (non-fatal)"
 
-# Install Mermaid plugin (used for 3-pass architecture diagrams)
-log "Installing Mermaid plugin..."
-(cd "$TEMP_QUARTZ" && timeout 60 npx quartz plugin install @jackyzha0/quartz-mermaid 2>&1) || warn "Mermaid plugin install failed (will fall back to ASCII diagrams)"
-
-# Customize Quartz config (site title, etc.)
-log "Customizing Quartz config..."
-if [[ -f "$TEMP_QUARTZ/quartz.config.ts" ]]; then
-  sed -i "s|title: \"Quartz 5\"|title: \"Agents Writing Skills\"|" "$TEMP_QUARTZ/quartz.config.ts"
-  sed -i "s|description:.*|description: \"Skills and prompts for agents that write text without sounding like AI.\"|" "$TEMP_QUARTZ/quartz.config.ts"
-
-  # Add Mermaid plugin to config if not already there
-  if ! grep -q "Mermaid" "$TEMP_QUARTZ/quartz.config.ts"; then
-    # Try to insert Mermaid import and plugin registration
-    sed -i 's|plugins: \[|plugins: [\n    Plugin.Mermaid(),|' "$TEMP_QUARTZ/quartz.config.ts"
+# Install Mermaid support (rendered via obsidian-flavored-markdown in Quartz v5)
+OFM_LINE=$(grep -n "source: github:quartz-community/obsidian-flavored-markdown" "$TEMP_QUARTZ/quartz.config.default.yaml" | head -1 | cut -d: -f1)
+if [[ -n "$OFM_LINE" ]]; then
+  ENABLED_LINE=$((OFM_LINE + 1))
+  if ! grep -q "^      mermaid: true" <(sed -n "${ENABLED_LINE},$((OFM+8))p" "$TEMP_QUARTZ/quartz.config.default.yaml" 2>/dev/null); then
+    OFM_OPT=$((OFM_LINE + 2))
+    if ! grep -q "^    options:" <(sed -n "${OFM_OPT}p" "$TEMP_QUARTZ/quartz.config.default.yaml"); then
+      sed -i "${ENABLED_LINE}a\\    options:\n      mermaid: true" "$TEMP_QUARTZ/quartz.config.default.yaml"
+    else
+      sed -i "${OFM_OPT}a\\      mermaid: true" "$TEMP_QUARTZ/quartz.config.default.yaml"
+    fi
   fi
+fi
 
+# Customize Quartz config (site title, base URL, offline-safe emitters)
+log "Customizing Quartz config..."
+if [[ -f "$TEMP_QUARTZ/quartz.config.default.yaml" ]]; then
+  sed -i "s|pageTitle: Quartz 5|pageTitle: Agents Writing Skills|" "$TEMP_QUARTZ/quartz.config.default.yaml"
+  sed -i "s|baseUrl: quartz.jzhao.xyz|baseUrl: 11111000000.github.io/agents-writing-skills|" "$TEMP_QUARTZ/quartz.config.default.yaml"
+  sed -i "s|fontOrigin: googleFonts|fontOrigin: local|" "$TEMP_QUARTZ/quartz.config.default.yaml"
+  sed -i 's|defaultDateType: modified|defaultDateType: filesystem|' "$TEMP_QUARTZ/quartz.config.default.yaml"
+  sed -i '/source: github:quartz-community\/og-image/{n;s/enabled: true/enabled: false/;}' "$TEMP_QUARTZ/quartz.config.default.yaml"
+  sed -i '/source: github:quartz-community\/encrypted-pages/{n;s/enabled: true/enabled: false/;}' "$TEMP_QUARTZ/quartz.config.default.yaml"
+  sed -i "s|GitHub: https://github.com/jackyzha0/quartz|GitHub: https://github.com/11111000000/agents-writing-skills|" "$TEMP_QUARTZ/quartz.config.default.yaml"
   ok "Quartz config customized"
 fi
 
