@@ -74,11 +74,20 @@ mkdir -p "$TEMP_QUARTZ/content"
 # Copy knowledge base into content
 cp -R "$KNOWLEDGE_DIR/." "$TEMP_QUARTZ/content/"
 
-# Add landing page as index.md
+# Add landing page as index.md (EN)
 if [[ -f "$LANDING_SRC" ]]; then
-  log "Adding landing page..."
+  log "Adding EN landing page..."
   cp "$LANDING_SRC" "$TEMP_QUARTZ/content/index.md"
   ok "Landing page → content/index.md"
+fi
+
+# Add Russian landing page as ru/index.md (under folder-per-route convention)
+RU_LANDING_SRC="$REPO_ROOT/docs/ru/index.md"
+if [[ -f "$RU_LANDING_SRC" ]]; then
+  log "Adding RU landing page..."
+  mkdir -p "$TEMP_QUARTZ/content/ru"
+  cp "$RU_LANDING_SRC" "$TEMP_QUARTZ/content/ru/index.md"
+  ok "RU landing page → content/ru/index.md"
 fi
 
 log "Quartz content prepared"

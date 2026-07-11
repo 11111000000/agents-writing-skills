@@ -1,8 +1,8 @@
 ---
-title: Agents Writing Skills — Write less like a model
-description: Skills, prompts, and an Obsidian knowledge base for agents that write, edit, and audit prose with measurable AI-pattern checks.
-tags: [home, landing]
-lang: en
+title: Agents Writing Skills — Писать меньше, как модель
+description: Skills, prompts и Obsidian-база для агентов, которые пишут, правят и проверяют прозу измеримыми AI-проверками.
+tags: [home, landing, ru]
+lang: ru
 ---
 
 <style>
@@ -68,6 +68,7 @@ lang: en
   position: relative;
 }
 
+/* progress bar */
 .aws-progress {
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
   height: 2px;
@@ -80,6 +81,7 @@ lang: en
   z-index: 5;
 }
 
+/* sticky topbar */
 .aws-topbar {
   align-items: center;
   border-bottom: 1px solid var(--line);
@@ -128,10 +130,10 @@ lang: en
 }
 
 .aws-mark-name {
-  font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: -0.04em;
   transition: transform 0.25s ease;
+  font-size: 1.05rem;
 }
 
 .aws-nav {
@@ -179,6 +181,7 @@ lang: en
   color: var(--paper);
 }
 
+/* hero */
 .aws-hero {
   display: grid;
   gap: clamp(1.5rem, 4vw, 4rem);
@@ -260,8 +263,8 @@ lang: en
 }
 
 .aws-button-primary:hover {
-  box-shadow: 0 20px 28px -10px rgba(26, 20, 12, 0.55);
   transform: translateY(-2px);
+  box-shadow: 0 20px 28px -10px rgba(26, 20, 12, 0.55);
 }
 
 .aws-button-secondary {
@@ -280,11 +283,11 @@ lang: en
   color: var(--muted);
   display: flex;
   flex-wrap: wrap;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.82rem;
   gap: 0.6rem 1.4rem;
   margin: 2.5rem 0 0;
   padding-top: 1.4rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.82rem;
 }
 
 .aws-meta-strip b {
@@ -292,6 +295,7 @@ lang: en
   font-weight: 700;
 }
 
+/* before/after compare */
 .aws-compare {
   align-items: stretch;
   background: rgba(255, 255, 255, 0.55);
@@ -304,7 +308,7 @@ lang: en
 }
 
 .aws-compare h3 {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -392,6 +396,7 @@ lang: en
   height: 1px;
 }
 
+/* sections */
 .aws-section {
   border-top: 1px solid var(--line);
   padding: clamp(2.5rem, 5vw, 4.2rem) clamp(1.5rem, 4vw, 3rem);
@@ -425,8 +430,8 @@ lang: en
 
 .aws-section.dark {
   background: var(--ink);
-  border-top-color: var(--ink);
   color: var(--paper);
+  border-top-color: var(--ink);
 }
 
 .aws-section.dark p {
@@ -437,6 +442,7 @@ lang: en
   color: #d7b28b;
 }
 
+/* why */
 .aws-why {
   display: grid;
   gap: clamp(1.5rem, 4vw, 3rem);
@@ -517,8 +523,8 @@ lang: en
 
 .aws-quote-card blockquote {
   font-family: "Newsreader", serif;
-  font-size: 1.35rem;
   font-style: italic;
+  font-size: 1.35rem;
   line-height: 1.45;
   margin: 0;
   padding-left: 1.6rem;
@@ -536,6 +542,7 @@ lang: en
   content: "— ";
 }
 
+/* cards (skills) */
 .aws-grid {
   display: grid;
   gap: 1rem;
@@ -549,8 +556,6 @@ lang: en
   border-radius: 20px;
   padding: 1.4rem 1.4rem 1.5rem;
   position: relative;
-  text-decoration: none;
-  color: var(--ink);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -596,6 +601,7 @@ lang: en
   margin: 0;
 }
 
+/* 3-pass */
 .aws-pass {
   display: grid;
   gap: 1rem;
@@ -678,6 +684,7 @@ lang: en
   font-size: 0.78rem;
 }
 
+/* research */
 .aws-research {
   display: grid;
   gap: 0.55rem;
@@ -725,6 +732,7 @@ lang: en
   font-size: 0.78rem;
 }
 
+/* install */
 .aws-install {
   background: var(--code);
   border-radius: 22px;
@@ -739,11 +747,11 @@ lang: en
 .aws-install-head {
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: #c2af94;
   display: flex;
   font-size: 0.78rem;
   gap: 0.5rem;
   padding: 0.95rem 1.2rem;
+  color: #c2af94;
 }
 
 .aws-install-head .aws-dot {
@@ -772,6 +780,25 @@ lang: en
   color: #d7b28b;
 }
 
+.aws-install-bullets {
+  color: rgba(231, 217, 192, 0.7);
+  font-family: "Inter", sans-serif;
+  font-size: 0.9rem;
+  margin: 1.2rem 0 0;
+  padding-left: 1.4rem;
+}
+
+.aws-install-bullets li + li {
+  margin-top: 0.35rem;
+}
+
+.aws-install-bullets code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  font-family: inherit;
+  padding: 0.05em 0.4em;
+}
+
 .aws-cta-row {
   align-items: center;
   display: flex;
@@ -790,6 +817,7 @@ lang: en
   transform: translateY(-2px);
 }
 
+/* footer */
 .aws-footer {
   align-items: center;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -811,6 +839,7 @@ lang: en
   font-weight: 700;
 }
 
+/* scroll reveal */
 .aws-reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -836,6 +865,7 @@ lang: en
   }
 }
 
+/* responsive */
 @media (max-width: 880px) {
   .aws-hero,
   .aws-why,
@@ -852,8 +882,12 @@ lang: en
   }
 
   .aws-nav {
-    flex-wrap: wrap;
     width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .aws-compare-divider {
+    transform: rotate(0deg);
   }
 }
 
@@ -869,15 +903,15 @@ lang: en
 </style>
 
 <div class="aws-landing">
-  <div class="aws-shell">
+  <div class="aws-shell" style="--aws-scroll:0;">
     <div class="aws-progress"></div>
 
     <header class="aws-topbar" id="aws-topbar">
       <div class="aws-brand">
         <span class="aws-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5L7.5 16.5C5 14 5 11 7.5 8.5C11 5 16 5 19.5 8.5C22 11 22 14 19.5 16.5L16.5 19.5"/>
-            <path d="M14.2 9.8L9.8 14.2"/>
+            <path d="M4 19.5L7.5 16.5C5 14 5 11 7.5 8.5C11 5 16 5 19.5 8.5C22 11 22 14 19.5 16.5L16.5 19.5" />
+            <path d="M14.2 9.8L9.8 14.2" />
           </svg>
         </span>
         <span class="aws-mark-name">agents-writing-skills</span>
@@ -912,7 +946,7 @@ lang: en
           <span><b>4</b> skills</span>
           <span><b>9</b> prompts</span>
           <span><b>12</b> levers</span>
-          <span><b>41+</b> notes</span>
+          <span><b>41+</b> knowledge notes</span>
           <span><b>MIT</b></span>
         </div>
       </div>
@@ -932,54 +966,54 @@ lang: en
       </div>
     </section>
 
-    <section class="aws-section aws-reveal">
-      <div style="display:grid;gap:clamp(1.5rem,4vw,3rem);grid-template-columns:1.1fr 0.9fr;align-items:start;">
-        <div>
-          <span class="aws-eyebrow">What the rewrite does</span>
-          <h2>AI text has tells. People notice.</h2>
-          <p>Each LLM uses the same repertoire: em-dashes everywhere, the rule-of-three, hedging, negative parallelisms, polite congratulations. Readers spot them at a glance. Detectors flag them in seconds. The four skills collapse that repertoire back into sentences a person would have a reason to write.</p>
-        </div>
-        <div class="aws-tells">
-          <article class="aws-tell">
-            <h4>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 12h18"/><circle cx="12" cy="12" r="3.5"/></svg>
-              Em-dash gravity
-            </h4>
-            <p><span class="aws-strike">This carefully designed system — built on a foundation of rigorous engineering — delivers value.</span></p>
-            <p class="aws-redo">This system ships. p99 14 ms.</p>
-          </article>
-          <article class="aws-tell">
-            <h4>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 18l6-6 4 4 6-10"/></svg>
-              Restatement chain
-            </h4>
-            <p><span class="aws-strike">The new release is fast, efficient, and reliable — three qualities that matter.</span></p>
-            <p class="aws-redo">p99 14 ms. 99.99% uptime. One binary.</p>
-          </article>
-          <article class="aws-tell">
-            <h4>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 12c4 4 12 4 16 0"/><path d="M4 12c4-4 12-4 16 0"/></svg>
-              Polite hedging
-            </h4>
-            <p><span class="aws-strike">Of course, I'd be happy to help with that — let's dive in.</span></p>
-            <p class="aws-redo">Tail latency drove queries into Postgres → 430 ms. We added Redis.</p>
-          </article>
-        </div>
+    <section class="aws-section aws-why aws-reveal">
+      <div>
+        <span class="aws-eyebrow">What the rewrite does</span>
+        <h2>AI text has tells. People notice.</h2>
+        <p>Each LLM uses the same repertoire: em-dashes everywhere, the rule-of-three, hedging, negative parallelisms, polite congratulations. Readers spot them at a glance. Detectors flag them in seconds. The four skills collapse that repertoire back into sentences a person would have a reason to write.</p>
+      </div>
+      <div class="aws-tells">
+        <article class="aws-tell">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12h18"/><circle cx="12" cy="12" r="3.5"/></svg>
+            Em-dash gravity
+          </h4>
+          <p><span class="aws-strike">This carefully designed system — built on a foundation of rigorous engineering — delivers value.</span></p>
+          <p class="aws-redo">This system ships. p99 14 ms.</p>
+        </article>
+        <article class="aws-tell">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 18l6-6 4 4 6-10"/></svg>
+            Restatement chain
+          </h4>
+          <p><span class="aws-strike">The new release is fast, efficient, and reliable — three qualities that matter.</span></p>
+          <p class="aws-redo">p99 14 ms. 99.99% uptime. One binary.</p>
+        </article>
+        <article class="aws-tell">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12c4 4 12 4 16 0"/><path d="M4 12c4-4 12-4 16 0"/></svg>
+            Polite hedging
+          </h4>
+          <p><span class="aws-strike">Of course, I'd be happy to help with that — let's dive in.</span></p>
+          <p class="aws-redo">Tail latency идёт в Postgres → 430 мс. Поставили Redis.</p>
+        </article>
       </div>
     </section>
 
     <section class="aws-section aws-reveal">
-      <div>
-        <span class="aws-eyebrow">From the bench</span>
-        <h2>Write less. Trust the reader.</h2>
-        <p>The Russian formalist Viktor Shklovsky showed in 1917 that form is what an artist uses to make the familiar strange again. Hemingway, Strunk, Williams all built the same lesson from the American side: trust the reader to fill the gaps, delete what is not needed, and stop at the turn. This repository translates that lesson into rules an agent can run on its own draft.</p>
-      </div>
-      <div class="aws-quote-card" style="margin-top:1.6rem;">
-        <blockquote>If a writer of prose knows enough of what he is writing about, he may omit things that he knows, and the reader… will have a feeling of those things as strongly as though the writer had stated them.</blockquote>
-        <cite>Ernest Hemingway, <em>Death in the Afternoon</em>, 1932</cite>
+      <div style="display:grid;gap:clamp(1.5rem,4vw,3rem);grid-template-columns:1.1fr 0.9fr;align-items:start;">
+        <div>
+          <span class="aws-eyebrow">From the bench</span>
+          <h2>Write less. Trust the reader.</h2>
+          <p>The Russian formalist Viktor Shklovsky showed in 1917 that form is what an artist uses to make the familiar strange again. Hemingway, Strunk, Williams all built the same lesson from the American side: trust the reader to fill the gaps, delete what is not needed, and stop at the turn. This repository translates that lesson into rules an agent can run on its own draft.</p>
+        </div>
+        <div class="aws-quote-card">
+          <blockquote>If a writer of prose knows enough of what he is writing about, he may omit things that he knows, and the reader… will have a feeling of those things as strongly as though the writer had stated them.</blockquote>
+          <cite>Ernest Hemingway, <em>Death in the Afternoon</em>, 1932</cite>
+        </div>
       </div>
     </section>
 
@@ -1146,7 +1180,7 @@ lang: en
 </div>
 
 <noscript>
-  <div class="aws-landing" style="margin-top:2rem;max-width:780px;">
+  <div class="aws-landing" style="max-width:780px;margin-top:2rem;">
     <div class="aws-shell" style="padding:1.5rem 1.7rem;">
       <h2 style="font-family:Newsreader,serif;font-size:1.6rem;margin:0 0 0.6rem;">Read without JavaScript</h2>
       <p style="margin:0 0 0.6rem;">This landing relies on a small script for scroll reveals and a progress bar. Without JavaScript it still reads top-down; just without those touches.</p>
@@ -1164,10 +1198,11 @@ lang: en
 
 <script>
 (function () {
-  if (!document.querySelector) return;
+  if (!("IntersectionObserver" in window) && !("requestAnimationFrame" in window)) return;
   var root = document.querySelector(".aws-landing");
   if (!root) return;
 
+  /* scroll progress bar */
   var progress = root.querySelector(".aws-progress");
   var shell = root.querySelector(".aws-shell");
   var topbar = root.querySelector(".aws-topbar");
@@ -1185,14 +1220,14 @@ lang: en
     }
   }
 
-  function rafTick() {
+  window.addEventListener("scroll", function () {
     if ("requestAnimationFrame" in window) requestAnimationFrame(tick);
     else tick();
-  }
-  window.addEventListener("scroll", rafTick);
+  });
   window.addEventListener("resize", tick);
   tick();
 
+  /* scroll reveal */
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
