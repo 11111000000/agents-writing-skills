@@ -74,6 +74,18 @@ mkdir -p "$TEMP_QUARTZ/content"
 # Copy knowledge base into content
 cp -R "$KNOWLEDGE_DIR/." "$TEMP_QUARTZ/content/"
 
+# Install local Quartz components (TSX) into the staging tree as a workspace plugin.
+# We stage into `.quartz/plugins/aws-landing/` (Quartz's local plugin cache) AFTER
+# the upstream `npx quartz plugin install --from-config` runs, which would otherwise
+# wipe our local entry.
+if [[ -d "$REPO_ROOT/components" ]]; then
+  AW_LANDING_PLUGIN_DIR="$TEMP_QUARTZ/.quartz/plugins/aws-landing"
+  log "Staging local plugin aws-landing to $AW_LANDING_PLUGIN_DIR ..."
+  mkdir -p "$AW_LANDING_PLUGIN_DIR"
+  rm -f "$AW_LANDING_PLUGIN_DIR"/*.{ts,tsx,json} 2>/dev/null || true
+  cp "$REPO_ROOT/components"/*.ts "$REPO_ROOT/components"/*.tsx "$REPO_ROOT/components"/*.json "$AW_LANDING_PLUGIN_DIR/" 2>/dev/null || true
+fi
+
 # Add landing page as index.md (EN)
 if [[ -f "$LANDING_SRC" ]]; then
   log "Adding EN landing page..."
@@ -92,9 +104,27 @@ fi
 
 log "Quartz content prepared"
 
+# Re-stage local plugin AFTER upstream plugin install (which clears .quartz/plugins)
+if [[ -d "$REPO_ROOT/components" ]]; then
+  AW_LANDING_PLUGIN_DIR="$TEMP_QUARTZ/.quartz/plugins/aws-landing"
+  mkdir -p "$AW_LANDING_PLUGIN_DIR"
+  rm -f "$AW_LANDING_PLUGIN_DIR"/*.{ts,tsx,json} 2>/dev/null || true
+  cp "$REPO_ROOT/components"/*.ts "$REPO_ROOT/components"/*.tsx "$REPO_ROOT/components"/*.json "$AW_LANDING_PLUGIN_DIR/" 2>/dev/null || true
+  ok "Restaged local plugin aws-landing"
+fi
+
 # Install plugins from config
 log "Installing plugins..."
 (cd "$TEMP_QUARTZ" && npx quartz plugin install --from-config 2>&1) || warn "Plugin install may have warnings (non-fatal)"
+
+# Final re-stage after `npx quartz plugin install --from-config` (which deletes our local entry)
+if [[ -d "$REPO_ROOT/components" ]]; then
+  AW_LANDING_PLUGIN_DIR="$TEMP_QUARTZ/.quartz/plugins/aws-landing"
+  mkdir -p "$AW_LANDING_PLUGIN_DIR"
+  rm -f "$AW_LANDING_PLUGIN_DIR"/*.{ts,tsx,json} 2>/dev/null || true
+  cp "$REPO_ROOT/components"/*.ts "$REPO_ROOT/components"/*.tsx "$REPO_ROOT/components"/*.json "$AW_LANDING_PLUGIN_DIR/" 2>/dev/null || true
+  ok "Final restage of local plugin aws-landing"
+fi
 
 # Install Mermaid support (rendered via obsidian-flavored-markdown in Quartz v5)
 OFM_LINE=$(grep -n "source: github:quartz-community/obsidian-flavored-markdown" "$TEMP_QUARTZ/quartz.config.default.yaml" | head -1 | cut -d: -f1)
@@ -120,6 +150,17 @@ if [[ -f "$TEMP_QUARTZ/quartz.config.default.yaml" ]]; then
   sed -i '/source: github:quartz-community\/og-image/{n;s/enabled: true/enabled: false/;}' "$TEMP_QUARTZ/quartz.config.default.yaml"
   sed -i '/source: github:quartz-community\/encrypted-pages/{n;s/enabled: true/enabled: false/;}' "$TEMP_QUARTZ/quartz.config.default.yaml"
   sed -i "s|GitHub: https://github.com/jackyzha0/quartz|GitHub: https://github.com/11111000000/agents-writing-skills|" "$TEMP_QUARTZ/quartz.config.default.yaml"
+  # Register the local aws-landing plugin (already in plugins via .quartz/plugins) so it loads.
+  if ! grep -q '"source": "aws-landing"' "$TEMP_QUARTZ/plugins.json" 2>/dev/null; then
+    AW_LANDING_URL="file://$TEMP_QUARTZ/.quartz/plugins/aws-landing"
+    if [[ -f "$TEMP_QUARTZ/plugins.json" ]]; then
+      python3 -c "import json; d=json.load(open('$TEMP_QUARTZ/plugins.json')); d.setdefault('plugins', []).append({'source': '$AW_LANDING_URL', 'enabled': True, 'order': 0, 'layout': {'position': 'body', 'priority': 0}}); json.dump(d, open('$TEMP_QUARTZ/plugins.json','w'), indent=2)"
+    else
+      mkdir -p "$TEMP_QUARTZ/.quartz-cache"
+      printf '{"plugins":[{"source":"%s","enabled":true,"order":0,"layout":{"position":"body","priority":0}}]}\n' "$AW_LANDING_URL" > "$TEMP_QUARTZ/plugins.json"
+    fi
+    ok "Registered local aws-landing plugin"
+  fi
   ok "Quartz config customized"
 fi
 
@@ -135,6 +176,19 @@ find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|data-basepath[^>]*>|data-basep
 # Post-process: replace default 'Quartz 5' site title with our title
 log "Replacing default site title..."
 find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|Quartz 5|Agents Writing Skills|g' {} +
+
+# Build and emit the landing pages (EN + RU) directly from the TSX component.
+# This bypasses Quartz's markdown pipeline where inline HTML is sanitized.
+log "Building landing pages from local landing component..."
+LANDING_RUNNER="$REPO_ROOT/components/build-landing.mjs"
+if [[ -f "$LANDING_RUNNER" ]]; then
+  QUARTZ_LANDING_OUT_DIR="$OUTPUT_DIR" \
+  QUARTZ_LANDING_TMP_DIR="$TEMP_QUARTZ" \
+    node "$LANDING_RUNNER" || warn "Landing build skipped (component runner failed)"
+  ok "Landing pages emitted"
+else
+  warn "components/build-landing.mjs not found"
+fi
 
 ok "Site built at $OUTPUT_DIR"
 log "Files: $(find "$OUTPUT_DIR" -type f | wc -l)"

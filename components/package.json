@@ -1,0 +1,17 @@
+{
+  "name": "aws-landing",
+  "type": "module",
+  "main": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./awsLanding": "./awsLanding.tsx",
+    "./manifest": "./manifest.ts"
+  },
+  "quartz": {
+    "name": "aws-landing",
+    "displayName": "AWS Landing",
+    "description": "Landing-page component for agents-writing-skills.",
+    "version": "1.5.2",
+    "category": "component"
+  }
+}
