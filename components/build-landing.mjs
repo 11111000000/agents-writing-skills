@@ -107,7 +107,10 @@ function renderHtml(lang) {
         const component = bundled.default()
         const vnode = component({ fileData: { frontmatter: { lang } } })
         const renderModule = requireFromQuartz()("preact-render-to-string")
-        return resolveProm(renderModule.renderToStaticMarkup(vnode))
+        return resolveProm({
+          html: renderModule.renderToStaticMarkup(vnode),
+          afterDOMLoaded: component.afterDOMLoaded || "",
+        })
       } catch (err) {
         return rejectProm(err)
       }
@@ -143,8 +146,9 @@ const RU = {
 }
 
 async function writeOne(page, baseHref) {
-  const html = await renderHtml(page.lang)
-  const htmlStr = Array.isArray(html) ? html.join("") : String(html)
+  const rendered = await renderHtml(page.lang)
+  const htmlStr = Array.isArray(rendered.html) ? rendered.html.join("") : String(rendered.html)
+  const afterScript = String(rendered.afterDOMLoaded || "")
   const cssMatch = htmlStr.match(/<style>([\s\S]*?)<\/style>/)
   const inlineCss = cssMatch ? cssMatch[1] : ""
   const bodyMatch = htmlStr.match(/<body[^>]*>([\s\S]*?)<\/body>/)
@@ -191,38 +195,7 @@ a { color: inherit; }
 <body data-slug="${page.slug || "index"}" data-landing="${page.lang}">
 ${bodyContent}
 <script>
-\(() => {
-  if (typeof window === "undefined") return;
-  const root = document.querySelector(".aws-landing");
-  if (!root) return;
-  const progress = root.querySelector(".aws-progress");
-  const shell = root.querySelector(".aws-shell");
-  const topbar = root.querySelector(".aws-topbar");
-  function tick() {
-    if (!progress || !shell) return;
-    const rect = shell.getBoundingClientRect();
-    const total = shell.scrollHeight - window.innerHeight;
-    const scrolled = Math.min(Math.max(-rect.top, 0), total);
-    const ratio = total > 0 ? scrolled / total : 0;
-    shell.style.setProperty("--aws-scroll", ratio.toFixed(4));
-    if (topbar) {
-      if (rect.top < -10) topbar.classList.add("scrolled");
-      else topbar.classList.remove("scrolled");
-    }
-  }
-  function raf() { if ("requestAnimationFrame" in window) requestAnimationFrame(tick); else tick(); }
-  window.addEventListener("scroll", raf);
-  window.addEventListener("resize", tick);
-  tick();
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver((es) => {
-      es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); } });
-    }, { rootMargin: "-10% 0px", threshold: 0.08 });
-    root.querySelectorAll(".aws-reveal").forEach((el) => io.observe(el));
-  } else {
-    root.querySelectorAll(".aws-reveal").forEach((el) => el.classList.add("is-in"));
-  }
-})();
+${afterScript}
 </script>
 </body>
 </html>

@@ -43,6 +43,7 @@ const STRINGS = {
     install_b: "Tell your agent the manifest URL, or copy the directories yourself.",
     step: "Step-by-step",
     eyebrow_why: "What the rewrite does",
+    eyebrow_ai_tells: "AI tells",
     tells_h: "AI text has tells. People notice.",
     tells_b: "Each LLM uses the same repertoire: em-dashes everywhere, rule-of-three, hedging, negative parallelisms, polite congratulations. Readers spot it. Detectors flag it. The four skills collapse that repertoire back into sentences a person would have a reason to write.",
     em_h: "Em-dash gravity",
@@ -62,6 +63,48 @@ const STRINGS = {
     contributing: "Contributing",
     prompt_install: "Step-by-step",
     prompt_manifest: "manifest.json",
+    examples_title: "What the rewrite does",
+    examples_sub: "Six patterns. One tap each.",
+    examples_nav_prev: "Previous",
+    examples_nav_next: "Next",
+    examples: [
+      {
+        pattern: "Em-dash gravity",
+        tag: "Lever 8",
+        before: "This carefully designed system — built on a foundation of rigorous engineering — delivers value across the stack.",
+        after: "p99 14 ms. 99.99% uptime. One binary.",
+      },
+      {
+        pattern: "Restatement chain",
+        tag: "P-NEW-2",
+        before: "API is faster. The optimization reduced response time. Performance has improved significantly across the board.",
+        after: "API now responds in 14 ms, down from 380.",
+      },
+      {
+        pattern: "Hedging opener",
+        tag: "Lever 3",
+        before: "Of course, I'd be happy to help with that — let's dive in.",
+        after: "Tail latency spiked to 430 ms. We added Redis.",
+      },
+      {
+        pattern: "Negative parallelism",
+        tag: "Lever 1.4",
+        before: "This is not just a feature, it's a paradigm shift in how teams collaborate.",
+        after: "We moved standups to async. Decisions dropped from 11 to 4 per week.",
+      },
+      {
+        pattern: "Russian brevity",
+        tag: "Lever 12",
+        before: "Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.",
+        after: "Город стоит на реке. Отсюда — водоснабжение и полив.",
+      },
+      {
+        pattern: "Closing cliché",
+        tag: "P-NEW-7",
+        before: "Таким образом, мы рассмотрели три подхода. Каждый имеет свои плюсы и минусы. Надеюсь, это поможет вам принять решение.",
+        after: "(cut)",
+      },
+    ],
   },
   ru: {
     kicker: "Скилы для агентского письма · релиз 2026",
@@ -103,6 +146,7 @@ const STRINGS = {
     install_b: "Скажите агенту прочитать манифест — или скопируйте директории вручную.",
     step: "Шаг за шагом",
     eyebrow_why: "Что делает rewrite",
+    eyebrow_ai_tells: "AI-маркеры",
     tells_h: "У AI-текста есть маркеры. Читатель их замечает.",
     tells_b: "Каждая LLM использует один репертуар: em-dashes везде, rule-of-three, hedging, негативные параллелизмы, вежливые поздравления. Читатель видит, детектор флагает. Четыре скила сворачивают этот репертуар обратно в предложения, которые человек писал бы с причиной.",
     em_h: "Гравитация em-dash",
@@ -122,6 +166,48 @@ const STRINGS = {
     contributing: "Contributing",
     prompt_install: "Шаг за шагом",
     prompt_manifest: "manifest.json",
+    examples_title: "Что делает rewrite",
+    examples_sub: "Шесть паттернов. По тапу.",
+    examples_nav_prev: "Назад",
+    examples_nav_next: "Вперёд",
+    examples: [
+      {
+        pattern: "Гравитация em-dash",
+        tag: "Рычаг 8",
+        before: "Данное тщательно спроектированное решение — построенное на фундаменте строгой инженерии — приносит ценность на всём стеке.",
+        after: "p99 14 мс. 99.99% аптайм. Один бинарь.",
+      },
+      {
+        pattern: "Цепочка restatement",
+        tag: "P-NEW-2",
+        before: "API стал работать быстрее. Оптимизация позволила сократить время отклика. Производительность улучшилась значительно по всем направлениям.",
+        after: "API теперь отвечает за 14 мс, было 380.",
+      },
+      {
+        pattern: "Hedging opener",
+        tag: "Рычаг 3",
+        before: "Конечно, я с радостью помогу с этим — давайте разберёмся.",
+        after: "Хвостовая задержка ушла в 430 мс. Поставили Redis.",
+      },
+      {
+        pattern: "Негативный параллелизм",
+        tag: "Рычаг 1.4",
+        before: "Это не просто функция, это смена парадигмы в том, как команды взаимодействуют.",
+        after: "Перевели стендапы в async. Решений стало 4 в неделю вместо 11.",
+      },
+      {
+        pattern: "Русская краткость",
+        tag: "Рычаг 12",
+        before: "Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.",
+        after: "Город стоит на реке. Отсюда — водоснабжение и полив.",
+      },
+      {
+        pattern: "Закрывающий клише",
+        tag: "P-NEW-7",
+        before: "Таким образом, мы рассмотрели три подхода. Каждый имеет свои плюсы и минусы. Надеюсь, это поможет вам принять решение.",
+        after: "(удалено)",
+      },
+    ],
   },
 } as const
 
@@ -332,9 +418,37 @@ function style(): JSX.Element {
 .aws-footer a{color:var(--paper);font-weight:700}
 .aws-reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
 .aws-reveal.is-in{opacity:1;transform:translateY(0)}
-@media (prefers-reduced-motion: reduce){.aws-reveal{opacity:1;transform:none;transition:none}.aws-button,.aws-card,.aws-source{transition:none !important}}
+.aws-slider{padding:0;overflow:hidden}
+.aws-slider-head{align-items:flex-start;display:flex;gap:.8rem;justify-content:space-between;margin-bottom:1rem}
+.aws-slider-sub{color:var(--muted);font-size:.88rem;margin:.25rem 0 0;max-width:none}
+.aws-slider-nav{align-items:center;display:flex;flex-shrink:0;gap:.35rem}
+.aws-slider-btn{align-items:center;background:rgba(255,255,255,.65);border:1px solid var(--line);border-radius:999px;color:var(--ink);cursor:pointer;display:inline-flex;height:2.4rem;justify-content:center;transition:background .18s,transform .18s;width:2.4rem}
+.aws-slider-btn:hover{background:#fff;transform:translateY(-1px)}
+.aws-slider-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.aws-slider-btn svg{height:1.1rem;width:1.1rem}
+.aws-slider-viewport{margin:0 -.2rem;overflow:hidden;padding:0 .2rem}
+.aws-slider-track{display:flex;list-style:none;margin:0;padding:0;transition:transform .5s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.aws-slider-slide{flex:0 0 100%;min-width:0}
+.aws-slide-meta{align-items:center;display:flex;gap:.6rem;margin-bottom:.8rem}
+.aws-slide-pattern{color:var(--ink);font-family:Newsreader,serif;font-size:1.1rem;font-weight:600;letter-spacing:-.02em}
+.aws-slide-tag{background:rgba(139,58,31,.12);border-radius:999px;color:var(--accent);font-family:JetBrains Mono,ui-monospace,monospace;font-size:.66rem;font-weight:800;letter-spacing:.1em;padding:.25rem .6rem;text-transform:uppercase}
+.aws-slide-panes{display:grid;gap:.6rem}
+.aws-pane{position:relative}
+.aws-pane.before-card{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:18px;padding:1rem 1.1rem 1.2rem}
+.aws-pane.after-card{background:var(--paper);border:1px solid rgba(61,90,64,.18);border-radius:18px;padding:1rem 1.1rem 1.2rem;position:relative}
+.aws-pane .ai-text{font-family:Newsreader,serif;font-size:1.02rem;line-height:1.42;margin:0}
+.aws-pane.before-card .ai-text{color:#7a6750;text-decoration:line-through;text-decoration-color:rgba(139,58,31,.5);text-decoration-thickness:1.5px}
+.aws-pane .ai-trim,.aws-pane .ai-check{font-family:JetBrains Mono,ui-monospace,monospace;font-size:.68rem;font-weight:800;letter-spacing:.14em;position:absolute;text-transform:uppercase}
+.aws-pane .ai-trim{color:var(--accent);right:.9rem;top:.9rem;transform:rotate(-6deg)}
+.aws-pane .ai-check{color:var(--accent-2);right:.9rem;top:.8rem}
+.aws-slider-dots{align-items:center;display:flex;gap:.45rem;justify-content:center;margin-top:1.1rem}
+.aws-slider-dot{background:rgba(26,20,12,.18);border:0;border-radius:999px;cursor:pointer;height:.45rem;padding:0;transition:background .2s,width .25s;width:.45rem}
+.aws-slider-dot:hover{background:rgba(26,20,12,.32)}
+.aws-slider-dot:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.aws-slider-dot.is-active{background:var(--accent);width:1.4rem}
+@media (prefers-reduced-motion: reduce){.aws-reveal{opacity:1;transform:none;transition:none}.aws-button,.aws-card,.aws-source{transition:none !important}.aws-slider-track{transition:none}}
 @media (max-width:880px){.aws-hero,.aws-why,.aws-pass{grid-template-columns:1fr}.aws-pass::before{display:none}.aws-topbar{flex-wrap:wrap}.aws-nav{flex-wrap:wrap;width:100%}}
-@media (max-width:560px){.aws-meta-strip{font-size:.74rem}.aws-quote-card blockquote{font-size:1.15rem}}`}
+@media (max-width:560px){.aws-meta-strip{font-size:.74rem}.aws-quote-card blockquote{font-size:1.15rem}.aws-slide-pattern{font-size:1rem}.aws-slider-head{flex-wrap:wrap;gap:.5rem}}`}
     </style>
   )
 }
@@ -393,17 +507,50 @@ function landing(lang: "en" | "ru") {
               ))}
             </div>
           </div>
-          <div class="aws-compare" aria-label="before and after">
-            <div class="before-card">
-              <span class="ai-trim">{s.trim}</span>
-              <h3 class="before">{lang === "en" ? "Before" : "До"}</h3>
-              <p class="ai-text">{s.em_strike}</p>
+          <div class="aws-compare aws-slider" aria-roledescription="carousel" aria-label={lang === "en" ? "Before and after examples" : "Примеры до и после"}>
+            <div class="aws-slider-head">
+              <div>
+                <span class="aws-eyebrow">{s.examples_title}</span>
+                <p class="aws-slider-sub">{s.examples_sub}</p>
+              </div>
+              <div class="aws-slider-nav" role="group" aria-label={lang === "en" ? "Slide navigation" : "Навигация по слайдам"}>
+                <button class="aws-slider-btn" data-dir="-1" aria-label={s.examples_nav_prev} type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+                </button>
+                <button class="aws-slider-btn" data-dir="1" aria-label={s.examples_nav_next} type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+                </button>
+              </div>
             </div>
-            <div class="aws-compare-divider">{s.divider}</div>
-            <div class="after-card">
-              <span class="ai-check">{s.ok}</span>
-              <h3 class="after">{lang === "en" ? "After" : "После"}</h3>
-              <p class="ai-text">{lang === "en" ? "47 tasks. Three projects. One config in ~/.config/genium/tasks.toml." : "47 задач. Три проекта. Один конфиг в ~/.config/genium/tasks.toml."}</p>
+            <div class="aws-slider-viewport">
+              <ul class="aws-slider-track" data-index="0">
+                {s.examples.map((ex, i) => (
+                  <li class="aws-slider-slide" data-slide={i} aria-roledescription="slide" aria-label={`${i + 1} / ${s.examples.length}`}>
+                    <div class="aws-slide-meta">
+                      <span class="aws-slide-pattern">{ex.pattern}</span>
+                      <span class="aws-slide-tag">{ex.tag}</span>
+                    </div>
+                    <div class="aws-slide-panes">
+                      <div class="aws-pane before-card">
+                        <span class="ai-trim">{s.trim}</span>
+                        <h3 class="before">{lang === "en" ? "Before" : "До"}</h3>
+                        <p class="ai-text">{ex.before}</p>
+                      </div>
+                      <div class="aws-compare-divider">{s.divider}</div>
+                      <div class="aws-pane after-card">
+                        <span class="ai-check">{s.ok}</span>
+                        <h3 class="after">{lang === "en" ? "After" : "После"}</h3>
+                        <p class="ai-text">{ex.after}</p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div class="aws-slider-dots" role="tablist" aria-label={lang === "en" ? "Slide selector" : "Выбор слайда"}>
+              {s.examples.map((ex, i) => (
+                <button class={"aws-slider-dot" + (i === 0 ? " is-active" : "")} data-dot={i} role="tab" aria-selected={i === 0 ? "true" : "false"} aria-label={`${ex.pattern}`} type="button"></button>
+              ))}
             </div>
           </div>
         </section>
@@ -411,7 +558,7 @@ function landing(lang: "en" | "ru") {
         <section class="aws-section aws-reveal">
           <div class="aws-why">
             <div>
-              <span class="aws-eyebrow">{s.eyebrow_why}</span>
+              <span class="aws-eyebrow">{s.eyebrow_ai_tells}</span>
               <h2>{s.tells_h}</h2>
               <p>{s.tells_b}</p>
             </div>
@@ -640,6 +787,48 @@ const afterDOMLoaded = `(() => {
     root.querySelectorAll(".aws-reveal").forEach(function(el){io.observe(el);});
   }else{
     root.querySelectorAll(".aws-reveal").forEach(function(el){el.classList.add("is-in");});
+  }
+  var slider=root.querySelector(".aws-slider");
+  if(slider){
+    var track=slider.querySelector(".aws-slider-track");
+    var slides=slider.querySelectorAll(".aws-slider-slide");
+    var dots=slider.querySelectorAll(".aws-slider-dot");
+    var btns=slider.querySelectorAll(".aws-slider-btn");
+    var total=slides.length;
+    var current=0;
+    var autoMs=6000;
+    var autoTimer=null;
+    var reduceMotion=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function setIndex(i){
+      if(!track||total===0) return;
+      current=(i+total)%total;
+      track.style.transform="translateX("+(-current*100)+"%)";
+      track.setAttribute("data-index",String(current));
+      dots.forEach(function(d,di){
+        var on=di===current;
+        d.classList.toggle("is-active",on);
+        d.setAttribute("aria-selected",on?"true":"false");
+      });
+    }
+    function next(){setIndex(current+1);}
+    function prev(){setIndex(current-1);}
+    function startAuto(){
+      if(reduceMotion||total<=1) return;
+      stopAuto();
+      autoTimer=window.setInterval(next,autoMs);
+    }
+    function stopAuto(){if(autoTimer){window.clearInterval(autoTimer);autoTimer=null;}}
+    dots.forEach(function(d){d.addEventListener("click",function(){var n=parseInt(d.getAttribute("data-dot")||"0",10);setIndex(n);startAuto();});});
+    btns.forEach(function(b){b.addEventListener("click",function(){var dir=parseInt(b.getAttribute("data-dir")||"1",10);if(dir>0)next();else prev();startAuto();});});
+    slider.addEventListener("mouseenter",stopAuto);
+    slider.addEventListener("mouseleave",startAuto);
+    slider.addEventListener("focusin",stopAuto);
+    slider.addEventListener("focusout",startAuto);
+    slider.addEventListener("keydown",function(e){
+      if(e.key==="ArrowRight"){e.preventDefault();next();startAuto();}
+      else if(e.key==="ArrowLeft"){e.preventDefault();prev();startAuto();}
+    });
+    if(total>0) startAuto();
   }
 })();`
 
