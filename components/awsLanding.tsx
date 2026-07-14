@@ -71,38 +71,38 @@ const STRINGS = {
       {
         pattern: "Em-dash gravity",
         tag: "Lever 8",
-        before: "This carefully designed system — built on a foundation of rigorous engineering — delivers value across the stack.",
-        after: "p99 14 ms. 99.99% uptime. One binary.",
+        before: "Our platform — built on a foundation of rigorous engineering — leverages cutting-edge technologies to deliver best-in-class performance — and ensures that every team, from seed to enterprise, can ship with confidence.",
+        after: "Postgres + Redis. p99 14 ms on the dashboard endpoint, 99.99% uptime over the last quarter, one binary deployed via `make ship`. Three engineers, no on-call rotation in 11 weeks.",
       },
       {
         pattern: "Restatement chain",
         tag: "P-NEW-2",
-        before: "API is faster. The optimization reduced response time. Performance has improved significantly across the board.",
-        after: "API now responds in 14 ms, down from 380.",
+        before: "API performance has been improved. The optimization work reduced response times. As a result of these improvements, our service is now significantly faster across the board, which means a better experience for our users.",
+        after: "API: 14 ms p99, down from 380 ms after we added an index on `events(user_id, created_at)`.",
       },
       {
         pattern: "Hedging opener",
         tag: "Lever 3",
-        before: "Of course, I'd be happy to help with that — let's dive in.",
-        after: "Tail latency spiked to 430 ms. We added Redis.",
-      },
-      {
-        pattern: "Negative parallelism",
-        tag: "Lever 1.4",
-        before: "This is not just a feature, it's a paradigm shift in how teams collaborate.",
-        after: "We moved standups to async. Decisions dropped from 11 to 4 per week.",
+        before: "Of course, I'd be happy to help with that — let's dive in. There are a few possible approaches we could consider here, and it really depends on the specific context. Generally speaking, you might want to think about how this fits into the broader strategy, and there are trade-offs to weigh on both sides.",
+        after: "Tail latency spiked to 430 ms at p99 on the checkout path. We added Redis in front of Postgres and dropped it to 18 ms.",
       },
       {
         pattern: "Russian brevity",
         tag: "Lever 12",
-        before: "Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.",
+        before: "Город расположен на берегу реки, обеспечивая тем самым стабильное водоснабжение населения, способствуя развитию прилегающих сельскохозяйственных угодий и формируя особый микроклимат, благоприятный для садоводства и виноделия.",
         after: "Город стоит на реке. Отсюда — водоснабжение и полив.",
+      },
+      {
+        pattern: "Specificity",
+        tag: "Lever 5",
+        before: "We strive to deliver a robust, scalable, and highly performant solution that empowers teams to do their best work. Our commitment to quality and excellence is reflected in everything we do.",
+        after: "1.2k paying teams. 47 onboarded in the last 30 days. Median time from sign-up to first deploy: 11 minutes.",
       },
       {
         pattern: "Closing cliché",
         tag: "P-NEW-7",
-        before: "Таким образом, мы рассмотрели три подхода. Каждый имеет свои плюсы и минусы. Надеюсь, это поможет вам принять решение.",
-        after: "(cut)",
+        before: "Таким образом, мы подробно рассмотрели три возможных подхода к решению данной задачи, и каждый из них, безусловно, имеет как свои преимущества, так и определённые ограничения. Выбор конкретного варианта зависит от специфики вашего проекта и требований бизнеса. Надеюсь, данный обзор поможет вам принять взвешенное решение.",
+        after: "(удалено)",
       },
     ],
   },
@@ -174,37 +174,37 @@ const STRINGS = {
       {
         pattern: "Гравитация em-dash",
         tag: "Рычаг 8",
-        before: "Данное тщательно спроектированное решение — построенное на фундаменте строгой инженерии — приносит ценность на всём стеке.",
-        after: "p99 14 мс. 99.99% аптайм. Один бинарь.",
+        before: "Наша платформа — построенная на фундаменте строгой инженерии — использует передовые технологии — и обеспечивает каждой команде, от стартапа до enterprise, возможность поставлять продукт с уверенностью в качестве.",
+        after: "Postgres + Redis. p99 14 мс на дашборде, 99.99% аптайм за квартал, один бинарь, деплой через `make ship`. Три инженера, ни одного дежурства за 11 недель.",
       },
       {
         pattern: "Цепочка restatement",
         tag: "P-NEW-2",
-        before: "API стал работать быстрее. Оптимизация позволила сократить время отклика. Производительность улучшилась значительно по всем направлениям.",
-        after: "API теперь отвечает за 14 мс, было 380.",
+        before: "Производительность API была улучшена. Оптимизационная работа позволила сократить время отклика. Благодаря этим улучшениям наш сервис теперь значительно быстрее по всем направлениям, что обеспечивает лучший опыт для пользователей.",
+        after: "API: 14 мс p99 вместо 380, после того как добавили индекс на `events(user_id, created_at)`.",
       },
       {
         pattern: "Hedging opener",
         tag: "Рычаг 3",
-        before: "Конечно, я с радостью помогу с этим — давайте разберёмся.",
-        after: "Хвостовая задержка ушла в 430 мс. Поставили Redis.",
-      },
-      {
-        pattern: "Негативный параллелизм",
-        tag: "Рычаг 1.4",
-        before: "Это не просто функция, это смена парадигмы в том, как команды взаимодействуют.",
-        after: "Перевели стендапы в async. Решений стало 4 в неделю вместо 11.",
+        before: "Конечно, я с радостью помогу разобраться с этим вопросом — давайте погрузимся в детали. Существует несколько возможных подходов, которые мы могли бы рассмотреть, и многое действительно зависит от конкретного контекста вашей задачи. В целом, вам стоит подумать о том, как это вписывается в общую стратегию, и здесь есть компромиссы с обеих сторон.",
+        after: "Хвост на checkout-эндпоинте ушёл в 430 мс на p99. Поставили Redis перед Postgres — стало 18 мс.",
       },
       {
         pattern: "Русская краткость",
         tag: "Рычаг 12",
-        before: "Город стоит на реке, обеспечивая водоснабжение, способствуя развитию сельского хозяйства и формируя микроклимат.",
+        before: "Город расположен на берегу реки, обеспечивая тем самым стабильное водоснабжение населения, способствуя развитию прилегающих сельскохозяйственных угодий и формируя особый микроклимат, благоприятный для садоводства и виноделия.",
         after: "Город стоит на реке. Отсюда — водоснабжение и полив.",
+      },
+      {
+        pattern: "Конкретика",
+        tag: "Рычаг 5",
+        before: "Мы стремимся предоставить надёжное, масштабируемое и высокопроизводительное решение, которое позволяет командам делать свою работу наилучшим образом. Наша приверженность качеству отражена во всём, что мы делаем.",
+        after: "1.2k платящих команд. 47 новых за последние 30 дней. Медиана от регистрации до первого деплоя — 11 минут.",
       },
       {
         pattern: "Закрывающий клише",
         tag: "P-NEW-7",
-        before: "Таким образом, мы рассмотрели три подхода. Каждый имеет свои плюсы и минусы. Надеюсь, это поможет вам принять решение.",
+        before: "Таким образом, мы подробно рассмотрели три возможных подхода к решению данной задачи, и каждый из них, безусловно, имеет как свои преимущества, так и определённые ограничения. Выбор конкретного варианта зависит от специфики вашего проекта и требований бизнеса. Надеюсь, данный обзор поможет вам принять взвешенное решение.",
         after: "(удалено)",
       },
     ],
@@ -331,9 +331,9 @@ function style(): JSX.Element {
 .aws-lang{align-items:center;background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:999px;display:flex;margin-left:.4rem;padding:.22rem}
 .aws-lang a{border-radius:999px;color:var(--ink);font-size:.84rem;font-weight:700;letter-spacing:.03em;padding:.45rem .85rem;text-decoration:none}
 .aws-lang a.is-active{background:var(--ink);color:var(--paper)}
-.aws-hero{display:grid;gap:clamp(1.5rem,4vw,4rem);grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);padding:clamp(2.5rem,6vw,5rem) clamp(1.5rem,4vw,3rem) clamp(2rem,4vw,3rem)}
+.aws-hero{display:grid;gap:clamp(1.25rem,2.5vw,2.5rem);grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);padding:clamp(1.5rem,4vw,3rem) clamp(1.5rem,4vw,3rem) clamp(1.5rem,3vw,2.5rem)}
 .aws-kicker{color:var(--accent);font-size:.78rem;font-weight:800;letter-spacing:.18em;margin-bottom:1.5rem;text-transform:uppercase}
-.aws-hero h1{color:var(--ink);font-size:clamp(2.6rem,7vw,5.6rem);font-weight:500;letter-spacing:-.06em;line-height:.95}
+.aws-hero h1{color:var(--ink);font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:500;letter-spacing:-.05em;line-height:.98;max-width:14ch}
 .aws-hero h1 span.aws-pen{background:linear-gradient(135deg,var(--accent),#c85a35);color:transparent;display:inline-block;font-style:italic;font-weight:600;letter-spacing:-.07em;-webkit-background-clip:text;background-clip:text}
 .aws-lead{color:var(--ink-2);font-size:clamp(1.05rem,1.7vw,1.3rem);line-height:1.55;margin:1.6rem 0 0;max-width:38rem}
 .aws-actions{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.8rem 0 0}
@@ -356,7 +356,7 @@ function style(): JSX.Element {
 .aws-compare .ai-check{color:var(--accent-2);font-family:JetBrains Mono,ui-monospace,monospace;font-size:.72rem;font-weight:800;letter-spacing:.14em;position:absolute;right:.9rem;text-transform:uppercase;top:.8rem}
 .aws-compare-divider{align-items:center;align-self:center;color:var(--muted);display:flex;font-family:JetBrains Mono,ui-monospace,monospace;font-size:.74rem;gap:.7rem;justify-content:flex-start;letter-spacing:.18em;text-transform:uppercase}
 .aws-compare-divider::after,.aws-compare-divider::before{background:var(--line);content:"";flex:1;height:1px}
-.aws-section{border-top:1px solid var(--line);padding:clamp(2.5rem,5vw,4.2rem) clamp(1.5rem,4vw,3rem)}
+.aws-section{border-top:1px solid var(--line);padding:clamp(2rem,3.5vw,3rem) clamp(1.5rem,4vw,3rem)}
 .aws-section h2{font-size:clamp(1.7rem,3.5vw,2.6rem);letter-spacing:-.05em;margin:0 0 .8rem;max-width:16ch}
 .aws-section p{color:var(--ink-2);font-size:1.05rem;line-height:1.65;margin:0;max-width:56ch}
 .aws-eyebrow{color:var(--accent);display:block;font-family:JetBrains Mono,ui-monospace,monospace;font-size:.72rem;font-weight:800;letter-spacing:.18em;margin-bottom:.7rem;text-transform:uppercase}
@@ -419,36 +419,41 @@ function style(): JSX.Element {
 .aws-reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
 .aws-reveal.is-in{opacity:1;transform:translateY(0)}
 .aws-slider{padding:0;overflow:hidden}
-.aws-slider-head{align-items:flex-start;display:flex;gap:.8rem;justify-content:space-between;margin-bottom:1rem}
-.aws-slider-sub{color:var(--muted);font-size:.88rem;margin:.25rem 0 0;max-width:none}
-.aws-slider-nav{align-items:center;display:flex;flex-shrink:0;gap:.35rem}
-.aws-slider-btn{align-items:center;background:rgba(255,255,255,.65);border:1px solid var(--line);border-radius:999px;color:var(--ink);cursor:pointer;display:inline-flex;height:2.4rem;justify-content:center;transition:background .18s,transform .18s;width:2.4rem}
-.aws-slider-btn:hover{background:#fff;transform:translateY(-1px)}
+.aws-slider-head{align-items:flex-start;display:flex;flex-wrap:wrap;gap:.6rem 1rem;justify-content:space-between;margin-bottom:.9rem}
+.aws-slider-head .aws-eyebrow{margin-bottom:0;letter-spacing:.14em}
+.aws-slider-sub{color:var(--muted);font-size:.85rem;line-height:1.45;margin:.3rem 0 0;max-width:none}
+.aws-slider-nav{align-items:center;display:flex;flex-shrink:0;gap:.35rem;margin-left:auto}
+.aws-slider-btn{align-items:center;background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:999px;color:var(--ink);cursor:pointer;display:inline-flex;height:2.3rem;justify-content:center;transition:background .18s,transform .18s,border-color .18s;width:2.3rem}
+.aws-slider-btn:hover{background:#fff;border-color:rgba(26,20,12,.28);transform:translateY(-1px)}
 .aws-slider-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.aws-slider-btn svg{height:1.1rem;width:1.1rem}
-.aws-slider-viewport{margin:0 -.2rem;overflow:hidden;padding:0 .2rem}
+.aws-slider-btn svg{height:1.05rem;width:1.05rem}
+.aws-slider-viewport{margin:0 -.15rem;overflow:hidden;padding:0 .15rem}
 .aws-slider-track{display:flex;list-style:none;margin:0;padding:0;transition:transform .5s cubic-bezier(.2,.8,.2,1);will-change:transform}
 .aws-slider-slide{flex:0 0 100%;min-width:0}
-.aws-slide-meta{align-items:center;display:flex;gap:.6rem;margin-bottom:.8rem}
-.aws-slide-pattern{color:var(--ink);font-family:Newsreader,serif;font-size:1.1rem;font-weight:600;letter-spacing:-.02em}
-.aws-slide-tag{background:rgba(139,58,31,.12);border-radius:999px;color:var(--accent);font-family:JetBrains Mono,ui-monospace,monospace;font-size:.66rem;font-weight:800;letter-spacing:.1em;padding:.25rem .6rem;text-transform:uppercase}
-.aws-slide-panes{display:grid;gap:.6rem}
+.aws-slide-meta{align-items:center;display:flex;flex-wrap:wrap;gap:.5rem .7rem;margin-bottom:.85rem}
+.aws-slide-pattern{color:var(--ink);font-family:Newsreader,serif;font-size:1.15rem;font-weight:600;letter-spacing:-.02em}
+.aws-slide-tag{background:rgba(139,58,31,.12);border-radius:999px;color:var(--accent);font-family:JetBrains Mono,ui-monospace,monospace;font-size:.66rem;font-weight:800;letter-spacing:.1em;padding:.28rem .65rem;text-transform:uppercase}
+.aws-slide-panes{display:grid;gap:.55rem}
 .aws-pane{position:relative}
-.aws-pane.before-card{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:18px;padding:1rem 1.1rem 1.2rem}
-.aws-pane.after-card{background:var(--paper);border:1px solid rgba(61,90,64,.18);border-radius:18px;padding:1rem 1.1rem 1.2rem;position:relative}
-.aws-pane .ai-text{font-family:Newsreader,serif;font-size:1.02rem;line-height:1.42;margin:0}
+.aws-pane.before-card{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:18px;padding:1.25rem 1.3rem 1.35rem}
+.aws-pane.after-card{background:var(--paper);border:1px solid rgba(61,90,64,.18);border-radius:18px;padding:1.25rem 1.3rem 1.35rem;position:relative}
+.aws-pane h3{font-family:JetBrains Mono,ui-monospace,monospace;font-size:.7rem;font-weight:800;letter-spacing:.16em;margin:0 0 .5rem;text-transform:uppercase}
+.aws-pane h3.before{color:var(--accent)}
+.aws-pane h3.after{color:var(--accent-2)}
+.aws-pane .ai-text{font-family:Newsreader,serif;font-size:1.04rem;line-height:1.55;margin:0}
 .aws-pane.before-card .ai-text{color:#7a6750;text-decoration:line-through;text-decoration-color:rgba(139,58,31,.5);text-decoration-thickness:1.5px}
-.aws-pane .ai-trim,.aws-pane .ai-check{font-family:JetBrains Mono,ui-monospace,monospace;font-size:.68rem;font-weight:800;letter-spacing:.14em;position:absolute;text-transform:uppercase}
-.aws-pane .ai-trim{color:var(--accent);right:.9rem;top:.9rem;transform:rotate(-6deg)}
-.aws-pane .ai-check{color:var(--accent-2);right:.9rem;top:.8rem}
-.aws-slider-dots{align-items:center;display:flex;gap:.45rem;justify-content:center;margin-top:1.1rem}
-.aws-slider-dot{background:rgba(26,20,12,.18);border:0;border-radius:999px;cursor:pointer;height:.45rem;padding:0;transition:background .2s,width .25s;width:.45rem}
+.aws-pane .ai-trim,.aws-pane .ai-check{font-family:JetBrains Mono,ui-monospace,monospace;font-size:.66rem;font-weight:800;letter-spacing:.14em;position:absolute;right:1rem;text-transform:uppercase}
+.aws-pane .ai-trim{color:var(--accent);top:1.05rem;transform:rotate(-6deg)}
+.aws-pane .ai-check{color:var(--accent-2);top:1.05rem}
+.aws-slider-dots{align-items:center;display:flex;gap:.4rem;justify-content:center;margin-top:1rem}
+.aws-slider-dot{background:rgba(26,20,12,.18);border:0;border-radius:999px;cursor:pointer;height:.42rem;padding:0;transition:background .2s,width .25s;width:.42rem}
 .aws-slider-dot:hover{background:rgba(26,20,12,.32)}
 .aws-slider-dot:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.aws-slider-dot.is-active{background:var(--accent);width:1.4rem}
+.aws-slider-dot.is-active{background:var(--accent);width:1.3rem}
 @media (prefers-reduced-motion: reduce){.aws-reveal{opacity:1;transform:none;transition:none}.aws-button,.aws-card,.aws-source{transition:none !important}.aws-slider-track{transition:none}}
-@media (max-width:880px){.aws-hero,.aws-why,.aws-pass{grid-template-columns:1fr}.aws-pass::before{display:none}.aws-topbar{flex-wrap:wrap}.aws-nav{flex-wrap:wrap;width:100%}}
-@media (max-width:560px){.aws-meta-strip{font-size:.74rem}.aws-quote-card blockquote{font-size:1.15rem}.aws-slide-pattern{font-size:1rem}.aws-slider-head{flex-wrap:wrap;gap:.5rem}}`}
+@media (max-width:1024px){.aws-hero{gap:1.75rem}.aws-hero h1{font-size:clamp(2.4rem,5.5vw,4rem)}.aws-lead{font-size:1.05rem}.aws-pane .ai-text{font-size:1rem}.aws-pane.before-card,.aws-pane.after-card{padding:1.1rem 1.15rem 1.2rem}}
+@media (max-width:880px){.aws-hero,.aws-why,.aws-pass{grid-template-columns:1fr}.aws-pass::before{display:none}.aws-topbar{flex-wrap:wrap}.aws-nav{flex-wrap:wrap;width:100%}.aws-section{padding:1.75rem 1.5rem}.aws-hero h1{font-size:clamp(2.2rem,8vw,3.2rem)}.aws-lead{font-size:1rem}.aws-card-icon{height:2.6rem;width:2.6rem}.aws-card-icon svg{height:1.4rem;width:1.4rem}.aws-pass-step{padding:1.3rem 1.2rem 1.4rem}.aws-quote-card{padding:1.4rem 1.5rem}.aws-quote-card blockquote{font-size:1.2rem}}
+@media (max-width:560px){.aws-meta-strip{font-size:.74rem}.aws-quote-card blockquote{font-size:1.1rem}.aws-slide-pattern{font-size:1.05rem}.aws-pane .ai-text{font-size:.96rem;line-height:1.5}.aws-pane.before-card,.aws-pane.after-card{padding:1rem 1rem 1.1rem}.aws-pane .ai-trim,.aws-pane .ai-check{right:.85rem;top:.9rem;font-size:.6rem}.aws-slider-head{gap:.4rem .8rem}.aws-slider-sub{font-size:.8rem}.aws-section{padding:1.5rem 1.1rem}.aws-hero{padding:1.25rem 1.1rem 1.25rem}.aws-meta-strip{padding-top:1rem;margin-top:1.5rem;gap:.4rem 1rem}.aws-card{padding:1.15rem}.aws-card h3{font-size:1.05rem}.aws-pass-step h3{font-size:1.25rem}.aws-install-body{padding:1.05rem 1.1rem 1.2rem;font-size:.85rem}.aws-install{font-size:.85rem}.aws-section h2{font-size:clamp(1.45rem,6vw,2rem)}.aws-lead{margin-top:1rem}}`}
     </style>
   )
 }
