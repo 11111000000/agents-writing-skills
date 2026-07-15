@@ -74,6 +74,24 @@ mkdir -p "$TEMP_QUARTZ/content"
 # Copy knowledge base into content
 cp -R "$KNOWLEDGE_DIR/." "$TEMP_QUARTZ/content/"
 
+# Copy docs pages (skills-overview, knowledge-base, getting-started,
+# limitations, contributing) into content/ so they ship as routable pages.
+DOCS_DIR="$REPO_ROOT/docs"
+if [[ -d "$DOCS_DIR" ]]; then
+  log "Copying docs pages into content/ ..."
+  for f in "$DOCS_DIR"/*.md; do
+    [[ -e "$f" ]] || continue
+    cp "$f" "$TEMP_QUARTZ/content/"
+  done
+  if [[ -d "$DOCS_DIR/ru" ]]; then
+    mkdir -p "$TEMP_QUARTZ/content/ru"
+    for f in "$DOCS_DIR/ru"/*.md; do
+      [[ -e "$f" ]] || continue
+      cp "$f" "$TEMP_QUARTZ/content/ru/"
+    done
+  fi
+fi
+
 # Install local Quartz components (TSX) into the staging tree as a workspace plugin.
 # We stage into `.quartz/plugins/aws-landing/` (Quartz's local plugin cache) AFTER
 # the upstream `npx quartz plugin install --from-config` runs, which would otherwise
@@ -86,7 +104,7 @@ if [[ -d "$REPO_ROOT/components" ]]; then
   cp "$REPO_ROOT/components"/*.ts "$REPO_ROOT/components"/*.tsx "$REPO_ROOT/components"/*.json "$AW_LANDING_PLUGIN_DIR/" 2>/dev/null || true
 fi
 
-# Add landing page as index.md (EN)
+# Add landing page as index.md (EN) — overwrites docs/index.md if present
 if [[ -f "$LANDING_SRC" ]]; then
   log "Adding EN landing page..."
   cp "$LANDING_SRC" "$TEMP_QUARTZ/content/index.md"
