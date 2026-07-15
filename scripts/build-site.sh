@@ -195,6 +195,18 @@ find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|data-basepath[^>]*>|data-basep
 log "Replacing default site title..."
 find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|Quartz 5|Agents Writing Skills|g' {} +
 
+# Quartz emits <meta name="og:site_name"...> without the `property=`
+# attribute, which social-card scrapers ignore. Fix all HTML pages so
+# og:site_name uses the OpenGraph-correct attribute name. Without this
+# fix, Telegram/Discord/Slack fall back to 'Quartz' as the site name.
+log "Fixing og:site_name attribute..."
+find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|<meta name="og:site_name"|<meta property="og:site_name"|g' {} +
+
+# Quartz also emits og:image:type=image/.png (with stray dot). Some
+# scrapers reject this MIME and skip the preview. Normalize to image/png.
+log "Normalizing og:image MIME type..."
+find "$OUTPUT_DIR" -name "*.html" -exec sed -i 's|content="image/.png"|content="image/png"|g' {} +
+
 # Build and emit the landing pages (EN + RU) directly from the TSX component.
 # This bypasses Quartz's markdown pipeline where inline HTML is sanitized.
 log "Building landing pages from local landing component..."
