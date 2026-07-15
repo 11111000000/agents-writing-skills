@@ -133,3 +133,50 @@ RLHF-COV can't easily fix (Lamparth: bias substitution)
 ## 9. Raw notes
 
 Все 5 source-notes содержат полные abstracts и key quotes. Главные цитаты уже вынесены в эту заметку.
+
+---
+
+## Глубже об источниках
+
+Каждая из 5 статей length-bias стека переработана в отдельную глубокую source-note. Эта заметка — синтез; source-note — это операционализация с методом, экспериментальными данными и ограничениями. Ниже — карта.
+
+### Shen 2023 — [06-Sources/research-papers/length-bias/shen-2023-loose-lips](06-Sources/research-papers/length-bias/shen-2023-loose-lips)
+
+- **Что доказано:** reward model «находит shortcuts», предполагая что humans prefer longer responses. Re-labeling experiment показывает, что shortcut learned, не заложен в данных. Product-of-Experts с bias-focused expert даёт ~30–40% снижение length bias при сохранении intent quality.
+- **Метод:** Product-of-Experts (PoE), `R_total = R_intent · R_length`. Bias-focused expert обучается на perturbed inputs (без semantic content), чтобы не дублировать intent.
+- **Связь со скилами:** основание для всего каталога P-NEW (vacuum-filling, restatement, hedging, over-explanation, balanced framing, antithetical recap). Этот paper — *причина*, по которой эти паттерны существуют.
+- **Ограничения:** English-only; одношаговый PPO (multi-round не тестировали); PoE не используется в production frontier-моделях.
+
+### Park 2024 — [06-Sources/research-papers/length-bias/park-2024-disentangling-length-dpo](06-Sources/research-papers/length-bias/park-2024-disentangling-length-dpo)
+
+- **Что доказано:** length exploitation существует и в DPO (не только в PPO/RLHF); причина — out-of-distribution bootstrapping. Простое hinge-regularization даёт до 20% improvement в length-controlled (LC) win rate, несмотря на verbosity bias GPT-4 judge.
+- **Метод:** hinge penalty `λ · max(0, |y_w| - |y_l| - δ)²` поверх DPO loss. Измерение — LC win rate с trimmed comparison.
+- **Связь со скилами:** протокол измерения. `check_bias_substitution` — это наша реализация Park-протокола для output-level editing. Voice profile `laconic` — аналог Park-regularization.
+- **Ограничения:** DPO-only; 6B–13B; два датасета (summarization, dialogue); GPT-4 judge bias acknowledged, не устранён.
+
+### Zhang 2024 — [06-Sources/research-papers/length-bias/zhang-2024-format-bias](06-Sources/research-papers/length-bias/zhang-2024-format-bias)
+
+- **Что доказано:** format bias шире length bias. Lists, bold, links, emojis — все reward'ятся humans, GPT-4, и top reward models. <1% biased data достаточно, чтобы инжектить bias. **Эксплуатируется через best-of-N sampling и online DPO.**
+- **Метод:** counterfactual tests (формат меняется, контент константен); injection experiment; оценка AlpacaEval и LMSYS Arena.
+- **Связь со скилами:** прямое основание для P9 (negative parallelism), P10 (rule of three), P14 (boldface overuse). Format bias density (lists + bold + emoji per 1000 words) — метрика, которой у нас ещё нет.
+- **Ограничения:** working paper, не peer-reviewed на момент fetched_at. Только 4 формата. MTurk выборка мала. **Нет контрмеры** — это дескриптивная работа, не интервенция.
+
+### Huang 2024 — [06-Sources/research-papers/length-bias/huang-2024-post-hoc-calibration](06-Sources/research-papers/length-bias/huang-2024-post-hoc-calibration)
+
+- **Что доказано:** **3.11 average performance gain across 33 reward models on RewardBench.** Post-hoc калибровка (LWR на length feature) улучшает RM без retraining, без новых данных.
+- **Метод:** Locally Weighted Regression на (response, RM score) парах; calibration set must be representative; bias term вычитается из RM score на inference.
+- **Связь со скилами:** **наш Tighten pass — это output-level аналог Huang's RM-level calibration.** Оба: «post-hoc, no retraining, no new data». Архитектурное соответствие прямое.
+- **Ограничения:** только length (не format, не sycophancy). Calibration dataset size не оптимизирован. Bias substitution side-effect не тестировался (см. Lamparth).
+
+### Lamparth 2026 — [06-Sources/research-papers/length-bias/lamparth-2026-bias-substitution](06-Sources/research-papers/length-bias/lamparth-2026-bias-substitution)
+
+- **Что доказано (CRITICAL):** single-axis mitigation не устраняет bias, а переносит. Length penalty → confidence over-calibration → factual accuracy falls. **«No method we survey reports the evidence needed to certify successful mitigation.»**
+- **Метод:** GRPO с perturbed RM (length term injected); измерение — calibration (Brier, ECE), factual free-form accuracy, win rate.
+- **Связь со скилами:** самый критический paper для нашего дизайна. Tighten pass может переносить bias. Решение: `check_bias_substitution` (факты до/после), honesty о границах в «When NOT to load».
+- **Ограничения:** один модельный класс, синтетический setup. Не тестировали формат, sycophancy, safety. **Нет контрмеры** — заканчивается «need multi-axis, calibrated, post-deployment evaluation».
+
+### Что даёт эта декомпозиция
+
+Когда `humanize-writer` или `humanize-editor` цитирует «Shen 2023», это не «слышал где-то» — это EMNLP-статья с конкретным re-labeling experiment. Когда упоминается «Park 2024 protocol» — это ICLR-cited length-controlled win rate. Когда `humanize-editor` указывает на риск bias substitution, это Lamparth 2026 с формальным аргументом в Appendix D, а не общее «AI может». Каждая ссылка в наших скилах — на конкретный paper, конкретный метод, конкретное число.
+
+Это и есть разница между «AI told me» и «paper says».
