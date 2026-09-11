@@ -1,6 +1,6 @@
 ---
 title: Agents Writing Skills — Писать меньше, как модель
-description: Skills, prompts и Obsidian-база знаний для агентов, которые пишут, правят и проверяют прозу по измеримым AI-маркерам.
+description: Скилы, промпты и Obsidian-база знаний для агентов, которые пишут, правят и проверяют прозу по измеримым AI-маркерам.
 tags: [home, landing, ru]
 lang: ru
 layout: landing
