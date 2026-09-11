@@ -19,7 +19,7 @@ Rewrite existing text so it stops reading like LLM output. v6 keeps the **3-pass
 > [!warning] Bias substitution (Lamparth et al. 2026)
 > Single-axis сокращение может перенести bias на factual depth. **Tighten pass сохраняет плотность фактов, не только сокращает слова.**
 
-## Архитектура: 3-pass workflow
+## Архитектура: 3-проходный процесс
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -62,7 +62,7 @@ Rewrite existing text so it stops reading like LLM output. v6 keeps the **3-pass
 > **STRIP phase (Levers 1-9):**
 > 1. Banned lexicon — `references/lexicon.md`
 > 2. Burstiness — vary sentence lengths
-> 3. Strip RLHF voice (Lever 9) — polite hedging, balanced tradeoffs
+> 3. Strip RLHF voice (Lever 9) — polite hedging, balanced framing (компромиссы)
 > 4. Strip negative parallelisms (P9)
 > 5. Strip hedging
 > 6. Strip pairing (RU) — "цели и задачи" → pick one

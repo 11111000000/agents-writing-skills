@@ -1,6 +1,6 @@
 ---
 name: anti-ai-auditor
-description: Audit an existing text for AI-pattern probability without rewriting it. Returns a structured report: per-paragraph risk score, list of specific AI-tells (lexical, structural, rhetorical, over-generation, length-bias-driven), perplexity/burstiness/YapScore estimates, format-bias density, and concrete suggestions. Use when the user wants feedback only, or wants to compare two drafts, or is unsure whether a text is "AI enough" to bother rewriting.
+description: Audit an existing text for AI-pattern probability without rewriting it. Returns a structured report: per-paragraph risk score, list of specific AI-tells (lexical, structural, rhetorical, over-generation, length-bias-driven), perplexity (непредсказуемость лексики) / burstiness (вариативность длины) / YapScore estimates, format-bias density, and concrete suggestions. Use when the user wants feedback only, or wants to compare two drafts, or is unsure whether a text is "AI enough" to bother rewriting.
 license: MIT
 compatibility: opencode, pi, claude-code
 metadata:
@@ -25,7 +25,7 @@ Audit an existing text for AI-pattern probability. **Do not rewrite** — only d
 └────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────────┐
-│ PASS 2: DEEP ANALYSIS (interpret metrics, compare to baselines)│
+│ PASS 2: DEEP ANALYSIS (interpret metrics, compare to baselines) │
 │   Output: 4-8 patterns identified with risk scores            │
 └────────────────────────────────────────────────────────────────┘
                             ↓
@@ -56,7 +56,7 @@ metrics:
   AP: <число>                        # negative parallelism density (per 1000 words)
   D: <число>                         # RU only: деепричастия per 1000 words
   E: <число>                         # em-dash per 300 words
-  YapScore: <число>                  # длина / baseline
+  YapScore: <число>                  # длина / эталон
   V: <число>                         # vacuum-filling sentences (%)
   R: <число>                         # restatement chains (%)
   B: <число>                         # bridging phrases at para starts (%)
@@ -150,7 +150,7 @@ def estimate_yap_score(text):
 ```
 
 > [!warning] Эвристика
-> YapScore — грубая оценка. Сравните с baseline: человек, решающий ту же задачу, написал бы столько же?
+> YapScore — грубая оценка. Сравните с эталоном: человек, решающий ту же задачу, написал бы столько же?
 
 ### 2.4. Cut-test pass (Strunk / Lever 10)
 
@@ -178,7 +178,7 @@ Count format-level signals that LLMs exploit:
 - **Bold**: чрезмерное `**жирное**` в markdown
 - **Emojis**: 🤖📊💡 и т.п.
 
-Mark **HIGH** if format bias density > baseline.
+Mark **HIGH** if format bias density > эталонной.
 
 ### 2.7. Length bias structural check (Lamparth 2026)
 
@@ -257,7 +257,7 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 - Burstiness std: <число> (target >3; >5 ideal)
 - Concrete facts per para: <число> (target >0.5)
 
-**RU thresholds (literary prose — Tolstoy/Bunin/Chekhov/Turgenev baseline):**
+**RU thresholds (эталон — литературная проза Толстого/Бунина/Чехова/Тургенева):**
 - D: <число> (target <7 для conversational/technical; **14-30 — норма для literary**)
 - E: <число> (**0 em-dash в RU-тексте >200 слов = AI-сигнал**; литературная проза использует 5-23/300)
 - YapScore: <число> (target 1.0-1.5)
@@ -269,7 +269,7 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 > Wikisource + синтетика). Полный отчёт:
 > [`knowledge/02-Techniques/metric-validation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/metric-validation.md).
 > Discrimination: RU-AI 100% catch, RU-human 12.5% FP (1/8, реалистический
-> Тургенев с burstiness 6.8), EN-AI 18.5% catch (concise Q&A hard to detect).
+> Тургенев с вариативностью длины (burstiness) 6.8), EN-AI 18.5% catch (concise Q&A hard to detect).
 
 ### Lexical (X hits)
 - Line 3: "delve" — replace with "look at"
@@ -324,7 +324,7 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 - **Don't claim certainty.** Use "likely", "probably", "consistent with".
 - **Format matters.** Technical docs naturally have less voice; legal text has more hedging. Adjust expectations.
 - **Length matters.** Texts <100 words are unreliable. Note if input is short.
-- **YapScore is rough.** Comparison with an internal baseline is more reliable than absolute number.
+- **YapScore is rough.** Comparison with an internal baseline (эталон) is more reliable than absolute number.
 - **Bias substitution is a real risk** (Lamparth 2026). Don't recommend Tighten pass without checking fact density.
 
 ---

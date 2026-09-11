@@ -48,7 +48,7 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 > - Lever 11 (Trust the reader / Hemingway iceberg)
 > - Over-generation patterns P-NEW-1…P-NEW-7
 
-## Архитектура: 3-pass workflow
+## Архитектура: 3-проходный процесс
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -77,7 +77,7 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 ## PASS 1 — AUDIT (идентификация)
 
 > [!tip] Когда применять
-> Перед написанием длинного текста. Перед редактированием чужого. Когда нужен baseline.
+> Перед написанием длинного текста. Перед редактированием чужого. Когда нужна отправная точка для оценки длины.
 
 ### 1.1. Метрики для подсчёта
 
@@ -88,7 +88,7 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 | **AP** (negative parallelism) | (число антитезисов / слов) × 1000 | <1 | <1 | empirical, n=145 |
 | **D** (деепричастия RU) | (деепричастий / слов) × 1000 | n/a | <12 (soft warning); conversational/technical <7; literary ≤30 OK | empirical + Tolstoy |
 | **E** (em-dash) | (em-dash / слов) × 1000 | <3 | "0 em-dash в RU = AI-signal"; высокий E — норма | empirical |
-| **YapScore** | длина / минимально-достаточный baseline | 1.0–1.5 | 1.0–1.5 | Borisov 2026 |
+| **YapScore** | длина / минимально-достаточный эталон | 1.0–1.5 | 1.0–1.5 | Borisov 2026 |
 | **V** (vacuum-filling sentences) | (вводных предложений / всего предложений) × 100 | <2% | <2% | empirical |
 | **R** (restatement chains) | (повторов смысла / всего предложений) × 100 | <10% | <10% | empirical |
 | **B** (bridging phrases) | (мостиков на границе абзацев) / всего абзацев | <5% | <5% | empirical |
@@ -119,11 +119,11 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 Прочитайте текст вслух. Спросите себя:
 
 - [ ] **Тон одинаковый ровный?** (LLM держит регистр без перепадов)
-- [ ] **Каждое предложение ≈ одинаковой длины?** (low burstiness)
+- [ ] **Каждое предложение ≈ одинаковой длины?** (низкая вариативность / low burstiness)
 - [ ] **Есть ли "let me explain", "стоит отметить", "это важно"?** (RLHF voice)
 - [ ] **Каждый второй абзац заканчивается выводом?** (mini-conclusion)
 - [ ] **Есть ли списки ровно из 3 элементов с одинаковой грамматикой?** (rule of three)
-- [ ] **В тексте больше абстрактных слов, чем чисел?** (low specificity)
+- [ ] **В тексте больше абстрактных слов, чем чисел?** (низкая фактичность / low specificity)
 
 ### 1.3. Audit output
 
@@ -161,7 +161,7 @@ audit_report:
 
 | Lever | Что делает | Когда применять |
 |---|---|---|
-| **1. Perplexity** | Заменить предсказуемые слова на неожиданные | При наличии клише (delve, leverage, robust) |
+| **1. Perplexity** (непредсказуемость) | Заменить предсказуемые слова на неожиданные | При наличии клише (delve, leverage, robust) |
 | **2. Burstiness** | Чередовать длины предложений (5–25+ слов) | Когда std предложений < 3 |
 | **3. Hedge surgery** | Удалить «можно сказать», «it could be argued» | Когда есть hedging |
 | **4. Structural flatten** | Убрать лишние структурные навороты | Когда bullets перегружены |
@@ -407,26 +407,27 @@ verify_failure:
 | README | Levers 1-9 | Levers 1-9 |
 | Marketing | Только Lever 9 (RLHF strip) + P-NEW-13/16/20 strip | Только Lever 9 + P-NEW-13/16/20 |
 | Technical reference | Никакие (нужна точность) | Никакие |
-| Literary prose | Levers 1-9, **сохраняем D 14-30/1000, E >0, burstiness std >10** | n/a |
+| Literary prose | Levers 1-9, **сохраняем D 14-30/1000, E >0, вариативность длины std >10** | n/a |
 
 > [!note] Literary RU — отдельный регистр
 > Если пишете в стиле русской литературной прозы (Бунин, Чехов, Толстой):
 > **не пытайтесь попасть в D < 7**. Эти авторы используют 14-30 деепричастий
-> на 1000 слов и 5-23 em-dash на 300 слов. Целевой профиль — burstiness
-> std >10 (vs AI ~6), деепричастия — да, em-dash — да, RLHF-voice — нет.
+> на 1000 слов и 5-23 em-dash на 300 слов. Целевой профиль — вариативность
+> длины предложений (burstiness) std >10 (vs AI ~6), деепричастия — да,
+> em-dash — да, RLHF-voice — нет.
 
 ---
 
 ## Workflow (legacy — v3-style, оставлен для совместимости)
 
-> [!note] Legacy 7-step workflow
+> [!note] Legacy 7-шаговый процесс
 > Следующие шаги эквивалентны Pass 1-3 архитектуре выше, но описаны линейно.
 
 ### Step 1 — Pre-flight (Pass 1, частично)
 4 вопроса: voice, lead, numbers ready?, sufficiency budget.
 
 ### Step 2 — Draft
-Draft full text, monitor: burstiness, деепричастия, em-dash count, я/мы.
+Draft full text, monitor: вариативность длины, деепричастия, em-dash count, я/мы.
 
 ### Step 3 — Audit pass (Pass 1)
 Per-paragraph checks: concrete detail, sentence length diff, banned lexicon, triple-parallel, abstract sentence.
