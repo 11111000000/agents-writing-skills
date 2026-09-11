@@ -1,0 +1,53 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: mistral
+attack: none
+license: MIT
+---
+
+Italy's hopes of a first Six Nations win since 2015 were dashed as Ireland ran in five tries to win 28-17 in Rome.
+
+The Azzurri led 10-7 at half-time but Ireland scored three tries in the second half to secure a bonus point.
+
+Ireland's first try came from a driving maul, with captain Johnny Sexton converting, before Italy's Tommaso Allan kicked a penalty.
+
+Sexton then scored a try and converted it to make it 17-10.
+
+Italy's Tommaso Benvenuti scored a try before Ireland's second try came from a driving maul, with Sexton converting.
+
+Ireland's third try came from a lineout, with Sexton converting, before Italy's Allan scored a try.
+
+Ireland's fourth try came from a lineout, with Sexton converting, before Italy's Allan kicked a penalty.
+
+Ireland's fifth try came from a lineout, with Sexton converting.
+
+Italy's Allan kicked a penalty.
+
+Ireland's sixth try came from a lineout, with Sexton converting.
+
+Italy's Allan kicked a penalty.
+
+Ireland's seventh try came from a lineout, with Sexton converting.
+
+Italy's Allan kicked a penalty.
+
+Ireland's eighth try came from a lineout, with Sexton converting.
+
+Italy's Allan kicked a penalty.
+
+Ireland's ninth try came from a lineout, with Sexton converting.
+
+Italy's Allan kicked a penalty.
+
+Ireland's tenth try came from a lineout, with Sexton converting.
+
+Italy's Allan kicked a penalty.
+
+Ireland's eleventh try came from a lineout, with Sexton converting.
+
+Italy's Allan kicked a penalty.
+
+Ireland's twelfth try

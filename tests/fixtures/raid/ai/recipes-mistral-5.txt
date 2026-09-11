@@ -1,0 +1,65 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: mistral
+attack: none
+license: MIT
+---
+
+"Ingredients:
+
+1 (16 ounce) can refried beans
+
+1 (8 ounce) package cream cheese, softened
+
+1 (1 ounce) package taco seasoning mix
+
+1 (16 ounce) container sour cream
+
+1 (1 ounce) package ranch salad dressing mix
+
+1 (16 ounce) jar salsa
+
+1 (1.25 ounce) can sliced black olives, drained
+
+1 (4 ounce) can chopped green chile peppers, drained
+
+1 cup shredded Cheddar cheese
+
+1 cup shredded Monterey Jack cheese
+
+1 (1.25 ounce) can sliced ripe olives, drained
+
+1 (4 ounce) can chopped green chile peppers, drained
+
+1 (4 ounce) can chopped jalapeno peppers, drained
+
+1 (1.25 ounce) can sliced ripe olives, drained
+
+1 (4 ounce) can chopped green chile peppers, drained
+
+1 (4 ounce) can chopped jalapeno peppers, drained
+
+1 (1.25 ounce) can sliced ripe olives, drained
+
+1 (4 ounce) can chopped green chile peppers, drained
+
+1 (4 ounce) can chopped jalapeno peppers, drained
+
+1 (1.25 ounce) can sliced ripe olives, drained
+
+1 (4 ounce) can chopped green chile peppers, drained
+
+1 (4 ounce) can chopped jalapeno peppers, drained
+
+1 (1.25 ounce) can sliced ripe olives, drained
+
+1 (4 ounce) can chopped green chile peppers, drained
+
+1 (4 ounce) can chopped jalapeno peppers, drained
+
+1 (1.25 ounce) can sliced ripe olives, drained
+
+1 (4 ounce) can chopped green ch

@@ -1,0 +1,54 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: mistral
+attack: none
+license: MIT
+---
+
+"Ingredients:
+
+- 1/2 cup mayonnaise
+- 1/2 cup ketchup
+- 1/2 teaspoon Worcestershire sauce
+- 1/2 teaspoon hot pepper sauce
+- 1/2 teaspoon salt
+- 1/4 teaspoon ground black pepper
+- 1/4 teaspoon paprika
+- 1/4 teaspoon garlic powder
+- 1/4 teaspoon onion powder
+- 1/4 teaspoon celery salt
+- 1/4 teaspoon ground cayenne pepper
+- 1/4 teaspoon ground cumin
+- 1/4 teaspoon ground coriander
+- 1/4 teaspoon ground ginger
+- 1/4 teaspoon ground nutmeg
+- 1/4 teaspoon ground allspice
+- 1/4 teaspoon ground cloves
+- 1/4 teaspoon ground cinnamon
+- 1/4 teaspoon ground cardamom
+- 1/4 teaspoon ground mace
+- 1/4 teaspoon ground mustard
+- 1/4 teaspoon ground turmeric
+- 1/4 teaspoon ground fennel seed
+- 1/4 teaspoon ground caraway seed
+- 1/4 teaspoon ground anise seed
+- 1/4 teaspoon ground celery seed
+- 1/4 teaspoon ground dill seed
+- 1/4 teaspoon ground parsley
+- 1/4 teaspoon ground thyme
+- 1/4 teaspoon ground rosemary
+- 1/4 teaspoon ground sage
+- 1/4 teaspoon ground oregano
+- 1/4 teaspoon ground marjoram
+- 1/4 teaspoon ground savory
+- 1/4 teaspoon ground basil
+- 1/4 teaspoon ground tarragon
+- 1/4 teaspoon ground mint
+- 1/4 teaspoon ground bay leaf
+- 1/4 teaspoon ground juniper berry
+- 1/4 teaspoon ground lavender
+- 1/4 teaspoon ground rose petal
+- 1/

@@ -1,0 +1,25 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: gpt4
+attack: none
+license: MIT
+---
+
+Indian tennis star Sania Mirza has made history by becoming the first female player from the country to win a women's doubles Grand Slam title. 
+
+Mirza, partnering with Swiss veteran Martina Hingis, clinched the Wimbledon women's doubles title in a thrilling final against Russian duo Ekaterina Makarova and Elena Vesnina. The Indo-Swiss pair won the match 5-7, 7-6, 7-5 in a contest that lasted over two hours.
+
+The victory marks a significant milestone in Indian tennis, with Mirza becoming the first Indian woman to win a Grand Slam event. The 28-year-old from Hyderabad has previously won three mixed doubles Grand Slam titles, but this is her first in the women's doubles category.
+
+Mirza and Hingis, who only started playing together earlier this year, have quickly become a formidable pair on the international circuit. They have won three titles in a row, including the Wimbledon crown, and have a 12-match winning streak.
+
+The Indian tennis star, who turned professional in 2003, has been a trailblazer for women's tennis in India. She was the first Indian woman to win a WTA tour title and to break into the top 50 in the singles rankings.
+
+Mirza's historic win has been widely celebrated in India, with Prime Minister Narendra Modi leading the tributes. "Well played @MirzaSania & @mhingis. You played wonderful tennis and registered a fantastic win at Wimbledon. We are proud and happy," he tweeted.
+
+The All India Tennis Association (AITA) also lauded Mirza's achievement. "It's a very proud moment for us. Sania's victory will inspire many young girls in India to take up the sport," said AITA Secretary General Hironmoy Chatterjee.
+
+Mirza's victory is not just a personal triumph but a significant moment for Indian tennis. It is hoped that her success will inspire a new generation of players and help to raise the profile of the sport in a country where cricket dominates.

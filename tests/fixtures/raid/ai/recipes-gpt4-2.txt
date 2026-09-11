@@ -1,0 +1,51 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: gpt4
+attack: none
+license: MIT
+---
+
+Ingredients:
+
+For the Sauce:
+- 2 tbsp (30 ml) mayonnaise 
+- 2 tbsp (30 ml) tomato ketchup 
+- 2 teaspoons Worcestershire sauce 
+- 1 teaspoon lemon juice 
+- a few drops of Tabasco sauce 
+- 4 tablespoons (60 ml) cream 
+- salt, to taste
+
+For the Salad: 
+- 18 large cooked prawns, shelled and deveined 
+- 1 small iceberg lettuce or cos lettuce, finely shredded 
+- 1 ripe avocado, peeled and chopped 
+- lemon wedges, to serve 
+- paprika, for garnishing
+
+Instructions:
+
+Sauce Preparation:
+
+1. In a bowl, mix together the mayonnaise and tomato ketchup until they fully combine.
+2. Add the Worcestershire sauce, lemon juice, and a few drops of Tabasco sauce to this ketchup-mayonnaise mixture, stirring thoroughly.
+3. Next, stir in the cream until everything is well incorporated. Season with salt, then set the sauce aside for later.
+
+Salad Preparation:
+
+1. Rinse the cooked prawns under cold water, then pat them dry with a kitchen towel.
+2. Shred the lettuce and divide it among four glasses. If you are using an iceberg lettuce, you might want to remove the outer leaves and use the crisp inner part.
+3. On top of the shredded lettuce, layer the chopped avocado evenly among the four glasses.
+
+Prawn Cocktail:
+
+1. Drizzle a generous amount of the prepared sauce over the avocado in each glass.
+2. Arrange the prawns over the top, leaving one prawn to place on the side of the glass as a garnish.
+3. Sprinkle a dusting of paprika over the prawns and serve your Prawn Cocktail a la Delia Smith immediately, with lemon wedges on the side.
+
+Prawn Cocktail a la Delia Smith is now ready! This classic appetizer is perfect for any dinner party or special occasion. The tangy sauce beautifully complements the sweet prawns, while the crisp lettuce adds a bit of crunch. 
+
+Enjoy!

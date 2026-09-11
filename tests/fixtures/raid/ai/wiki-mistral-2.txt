@@ -1,0 +1,11 @@
+---
+source: RAID
+label: ai
+language: en
+domain: wiki
+model: mistral
+attack: none
+license: MIT
+---
+
+For most intents and purposes, contemporary history in Madagascar starts on 26 March 1975 when President Tsiranana submitted his resignation. Despite a number of candidates standing for election, Ratsiraka won the first round handsomely with more than half of the votes cast. However there were allegations that Ratsiraka's campaign finances had been secured using money borrowed from foreign banks.[31] He announced himself as president at the opening ceremony of the first National University of Madagascar near Tsimbazaza zoo, thus starting what became known as The Madagascar Culinary Revolution. It took two decades (from 1980 until 2000) to restore macroeconomic stability through stabilisation programmes backed by international financial institutions such as the World Bank and IMF. The years after independence saw major changes regarding infrastructure development which resulted in massive economic growth; unfortunately however, many key sectors of national economy went into crisis. Infrastructure development led to urbanization resulting in significant population increase. [ Read More ]

@@ -1,0 +1,11 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: mistral
+attack: none
+license: MIT
+---
+
+Finnish-Indian player Anisah Mirza made history in Mumbai, becoming the first Indian to win an ITF 10K title on her own soil. And you thought there was only cricket. In fact, India was home base for the Davis Cup's inaugural tournament back in 1924. But even with such a rich tennis heritage and large population - over one billion people - it's astonishing that no Indian has won their country's national tournaments until last weekend when Delhi girl Anisah Mirzawon the girls U/8 singles crown at the All India Tennis Association championships. Although she didn’t make history by winning this month at Kandivli – not quite making headlines like India’s most famous women cricketers Jhulan Goswami and Mithali Raj. For 17-year old Anisah, just getting a chance to return to her country has been rewarding enough. Anisah and Finnish-American sister Yasmine have already done some amazing things here with limited funding: representing Finland's Fed Cup team (the highest level international competition outside Grand Slams), competing overseas in countries including Sweden (where they were runners up) and Australia, playing exhibition matches where they met fellow players such as Martina Hingis and Maria Sharapova as well as Wimbledon champions Boris Becker and Pete Sampras, and attending camps and workshops with Roger Federer in Monte Carlo among other experiences too numerous to mention here. So why should another victory make a difference?

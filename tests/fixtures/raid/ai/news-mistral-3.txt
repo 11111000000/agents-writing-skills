@@ -1,0 +1,37 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: mistral
+attack: none
+license: MIT
+---
+
+Japanese tennis player Kimiko Date-Krumm has apologised for the third time after her outburst at the US Open.
+
+The 42-year-old was fined $10,000 (£6,400) for swearing at a lineswoman during her first-round defeat by Mandy Minella.
+
+Date-Krumm, who was playing in her first Grand Slam since 1996, said she was "very sorry" for her behaviour.
+
+"I was very upset and I was very angry," she said. "I'm very sorry for what I did."
+
+Date-Krumm, who is ranked 120th in the world, was fined $2,000 for unsportsmanlike conduct and $8,000 for verbal abuse.
+
+She was also given a warning for swearing at the lineswoman during her 6-2 6-2 defeat by Luxembourg's Minella.
+
+Date-Krumm, who was playing in her first Grand Slam since 1996, said she was "very sorry" for her behaviour.
+
+"I was very upset and I was very angry," she said. "I'm very sorry for what I did."
+
+Date-Krumm, who is ranked 120th in the world, was fined $2,000 for unsportsmanlike conduct and $8,000 for verbal abuse.
+
+She was also given a warning for swearing at the lineswoman during her 6-2 6-2 defeat by Luxembourg's Minella.
+
+Date-Krumm, who was playing in her first Grand Slam since 1996, said she was "very sorry" for her behaviour.
+
+"I was very upset and I was very angry," she said. "I'm very sorry for what I did."
+
+Date-Krumm, who is ranked 120th in the world, was fined $2,000 for unsportsmanlike conduct and $8,000 for verbal abuse.
+
+She was also given a warning for swearing at the

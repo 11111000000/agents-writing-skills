@@ -1,0 +1,25 @@
+---
+source: RAID
+label: ai
+language: en
+domain: wiki
+model: gpt4
+attack: none
+license: MIT
+---
+
+The history of Madagascar is distinguished by the early isolation of the landmass from the ancient supercontinents containing Africa and India, and by the island's late colonization by human settlers arriving in outrigger canoes from the Sunda islands and Malay Archipelago (Malaysia, Indonesia, Philippines). 
+
+Madagascar was probably uninhabited until 500 BCE, when seafarers from southeast Asia (probably from Borneo or the southern Celebes) arrived in outrigger sailing canoes. These were the ancestors of the Malagasy, the island's principal ethnic group. The cultural features such as village layout, rice cultivation, and dialects of the Malagasy bear close resemblance to practices in Indonesia, particularly the island of Borneo.
+
+From the 7th to the 11th century, Arab traders from the Middle East had regular contact with the local population and established trading posts along the northwest coast. Arab influence can be seen in the Malagasy language and the practice of Islam among coastal communities.
+
+The island attracted the attention of European sea powers in the 16th century; Portugal, Britain, and France attempted to establish control over Madagascar. The British and French were particularly active in the 19th century, with the French ultimately establishing control over the island in 1896.
+
+The French colonial period, lasting from 1896 until 1960, brought profound changes to the social and economic structure of the island. It ended with Madagascar's independence as the Malagasy Republic, following a peaceful and relatively swift transition process.
+
+Since gaining independence, Madagascar has experienced political instability, including a number of attempted coups, violent unrest, and disputed elections. The island's current political structure constitutes a semi-presidential representative democratic multi-party republic, whereby the President of Madagascar is head of state and the Prime Minister of Madagascar is head of government.
+
+Throughout its history, Madagascar has maintained a unique biodiversity and ecological footprint. The island is home to thousands of plant and animal species found nowhere else in the world. However, the island's diverse ecosystems and unique wildlife are threatened by the encroachment of the rapidly growing human population and other environmental threats.
+
+The history of Madagascar is marked by the struggles of the people and their interaction with the environment. It is a history of kingdoms and conquests, of European colonialism and its aftermath, and of efforts to cope with economic and political change and to preserve the island's unique and rich biodiversity.

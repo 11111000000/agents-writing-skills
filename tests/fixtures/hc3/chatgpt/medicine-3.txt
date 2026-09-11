@@ -1,0 +1,9 @@
+---
+source: HC3
+label: ai
+language: en
+domain: medicine
+license: CC-BY-SA-4.0
+---
+
+It is possible that chest pain could be related to the use of Clindamycin and Oxycodone. However, it is also important to consider other potential causes of chest pain, such as heart problems or other underlying health conditions. It is important to speak with a healthcare provider if you are experiencing chest pain, as this could be a serious issue that requires medical attention. In the meantime, you should follow the instructions of your healthcare provider and report any adverse effects to them. If you are experiencing difficulty breathing or severe chest pain, you should seek immediate medical attention.

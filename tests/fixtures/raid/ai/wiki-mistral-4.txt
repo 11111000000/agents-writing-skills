@@ -1,0 +1,15 @@
+---
+source: RAID
+label: ai
+language: en
+domain: wiki
+model: mistral
+attack: none
+license: MIT
+---
+
+Marybeth Haley Yuen was raised in Hong Kong and educated at Queen's College, London and University College Said Business School (Oxford), where she received her Master's degree in business administration as a Winston Churchill Fellow. She also has been awarded an Honorary Doctorate by Tianjin Foreign Trade Economic College, TJFTEC-2005. Marybeth has worked for many famous companies such as Bankers Trust on Wall Street in New York City. In 1983, she established Naylor Yuen Associates Consulting Services for China, with Peter Clement Naylor – President Ford Foundation, Asia Programme; they have since collaborated to write nine books together. A founding member of the Shanghai Jiao Tong University School of Continuing Education; Marybeth established its first western marketing programme.She started working in Mainland China during their Open Door economy and worked there continuously right through until 1997 when she relocated to San Francisco Bay Area. This gave rise to numerous opportunities including being elected Chairman & CEO of GAP Trading Inc – a US-listed garment company headquartered in Hong Kong trading with over twenty Chinese provinces, which were producing fashion goods for GAP USA outlines Marybeth’s extensive involvement in establishing production links throughout China and Taiwan.
+
+From 1999 - present, MaryBeth is now living between London and Singapore while maintaining her position as Vice Chairwoman & COO International Executive Service Corps (IESC) – a US not-for profit organisation based in Washington DC and Beijing specialising in technical consulting projects primarily focusing upon sustainable development issues in developing countries around the world and more specifically helping China improve its standards so that it may become part of the World Trade Organisation. IESC operates in Africa, Central Asia and Latin America besides mainland China. Marybeth herself manages programmes within these regions personally. Most notably, on three previous occasions Marybeth assisted and arranged international conferences to be held in Wuhan China organised jointly between Harvard Business Schools Women Forum and State Key Laboratory of Quality Measure Technology of China.
+
+It was through this work involving collaboration with key professionals from Harvard Law Faculty, Boston, Massachusetts; Stanford University Graduate School

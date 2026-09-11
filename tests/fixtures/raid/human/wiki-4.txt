@@ -1,0 +1,13 @@
+---
+source: RAID
+label: human
+language: en
+domain: wiki
+attack: none
+license: MIT
+---
+
+Vaclav Smil (; born 9 December 1943) is a Czech-Canadian scientist and policy analyst. He is Distinguished Professor Emeritus in the Faculty of Environment at the University of Manitoba in Winnipeg, Manitoba, Canada.  His interdisciplinary research interests encompass a broad area of energy, environmental, food, population, economic, historical and public policy studies. He has also applied these approaches to energy, food and environmental affairs of China. Early life and education
+Smil was born during WWII in Plzeň, at that time in the German Protectorate of Bohemia and Moravia (present-day Czech Republic). His father was a police officer and his mother a book keeper. Growing up in a remote mountain town in the Plzeň Region, Smil cut wood daily to keep the home heated. This provided an early lesson in energy efficiency and density.
+ 
+Smil completed his undergraduate studies at the Faculty of Natural Sciences of Charles University in Prague, where he took 35 classes a week, 10 months a year, for 5 years. "They taught me nature, from geology to clouds," Smil said. After graduation he refused to join the Communist party, undermining his job prospects, though he found employment at a regional planning office. He married Eva, who was studying to be a physician. In 1969, following the Soviet invasion of Czechoslovakia and also Eva's graduation, the Smils emigrated to the US, leaving the country months before a Soviet travel ban shut the borders. "That was not a minor sacrifice, you know?" Smil says. Over the next two years, Smil completed a doctorate in Geography at the College of Earth and Mineral Sciences of the Pennsylvania State University.

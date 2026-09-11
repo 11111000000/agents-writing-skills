@@ -1,0 +1,27 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: gpt4
+attack: none
+license: MIT
+---
+
+Egyptian footballer, Ahmed "Mido" Hossam Hussein Abdelhamid, has issued a third apology following his controversial comments made during a live television broadcast. This marks the third time the former Tottenham Hotspur striker has had to publicly apologise for his actions.
+
+Mido, who is now a football analyst, sparked outrage after making inappropriate remarks on a popular sports show. The comments were deemed offensive and disrespectful by many viewers, leading to a wave of criticism on social media.
+
+In his latest apology, Mido said, "I am deeply sorry for my comments. I understand that they were inappropriate and offensive. I did not mean to hurt anyone's feelings or cause any harm. I am learning from this experience and will strive to be more mindful of my words in the future."
+
+The former Ajax and Roma player had previously apologised twice for the same incident, but his apologies were met with scepticism from the public, many of whom felt they were insincere.
+
+Mido's third apology seems to be more heartfelt, with the former footballer expressing his regret and promising to learn from his mistakes. He also thanked his fans for their support during this difficult time.
+
+"I am grateful for the support I have received from my fans. I understand that I have let you down and for that, I am truly sorry. I promise to do better and to make you proud," he said.
+
+Despite his apologies, Mido's comments have led to a significant backlash, with some calling for his removal from the sports show. The network has not yet commented on whether Mido will continue to appear on the programme.
+
+Mido, who retired from professional football in 2013, has been working as a football analyst since 2014. He has often been praised for his insightful analysis and deep understanding of the game, but his recent comments have overshadowed his contributions to the show.
+
+The incident serves as a reminder of the responsibility that public figures have in using their platforms respectfully and thoughtfully. As Mido navigates the fallout from his comments, it is clear that a sincere apology and a commitment to change are necessary steps towards redemption.

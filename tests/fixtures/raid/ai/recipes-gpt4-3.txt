@@ -1,0 +1,44 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: gpt4
+attack: none
+license: MIT
+---
+
+Ingredients:
+
+- 1 sheet of puff pastry
+- 1/2 cup of black olives, pitted and finely chopped
+- 1/2 cup of green olives, pitted and finely chopped
+- 1/2 cup of feta cheese, crumbled
+- 1/2 cup of grated Parmesan cheese
+- 1/4 cup of fresh basil leaves, finely chopped
+- 1 egg, beaten
+- Salt and pepper to taste
+
+Instructions:
+
+1. Preheat your oven to 200°C (400°F) and line a baking sheet with parchment paper.
+
+2. Roll out the puff pastry on a lightly floured surface into a rectangle shape.
+
+3. In a bowl, combine the chopped black and green olives, crumbled feta cheese, grated Parmesan cheese, and chopped basil leaves. Mix well until all ingredients are evenly distributed.
+
+4. Spread the olive and cheese mixture evenly over the puff pastry, leaving a small border around the edges. Season with salt and pepper to taste.
+
+5. Starting from one of the shorter ends, roll the puff pastry tightly into a log. 
+
+6. Using a sharp knife, cut the log into slices approximately 1/2 inch thick.
+
+7. Place the slices on the prepared baking sheet, spacing them about 1 inch apart.
+
+8. Brush the tops of the spirals with the beaten egg to give them a nice golden color when baked.
+
+9. Bake in the preheated oven for 15-20 minutes, or until the spirals are puffed and golden brown.
+
+10. Allow the spirals to cool slightly on the baking sheet before serving.
+
+Enjoy these delicious Olive Spirals as a snack, appetizer, or side dish! They are best served warm.

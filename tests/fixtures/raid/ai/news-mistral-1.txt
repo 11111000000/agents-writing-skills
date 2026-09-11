@@ -1,0 +1,39 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: mistral
+attack: none
+license: MIT
+---
+
+India's Sania Mirza has become the first woman from the country to reach the semi-finals of a Grand Slam tournament.
+
+The 21-year-old, who is seeded 11th, beat Russia's Elena Vesnina 6-3 6-4 to reach the last four of the Australian Open.
+
+Mirza, who is the first Indian woman to reach the fourth round of a Grand Slam, will play either Serena or Venus Williams in the semi-finals.
+
+"I'm really happy to be in the semi-finals," said Mirza.
+
+"I'm really looking forward to playing the Williams sisters. I've never played them before so it's going to be a great experience."
+
+Mirza, who is the first Indian woman to reach the semi-finals of a Grand Slam, will play either Serena or Venus Williams in the semi-finals.
+
+"I'm really happy to be in the semi-finals," said Mirza.
+
+"I'm really looking forward to playing the Williams sisters. I've never played them before so it's going to be a great experience."
+
+Mirza, who is the first Indian woman to reach the semi-finals of a Grand Slam, will play either Serena or Venus Williams in the semi-finals.
+
+"I'm really happy to be in the semi-finals," said Mirza.
+
+"I'm really looking forward to playing the Williams sisters. I've never played them before so it's going to be a great experience."
+
+Mirza, who is the first Indian woman to reach the semi-finals of a Grand Slam, will play either Serena or Venus Williams in the semi-finals.
+
+"I'm really happy to be in the semi-finals," said Mirza.
+
+"I'm really looking forward to playing the Williams sisters. I've never played them before so it's going to be a great experience."
+
+Mirza, who is the first Indian woman to reach the semi-finals of a Grand Slam, will play either Serena or Venus

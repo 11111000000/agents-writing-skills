@@ -1,0 +1,9 @@
+---
+source: HC3
+label: ai
+language: en
+domain: medicine
+license: CC-BY-SA-4.0
+---
+
+It is not recommended to use Primolut N during pregnancy, as it can cause harm to the developing baby. Primolut N is a medication that contains the hormone norethisterone, which is used to regulate the menstrual cycle and treat menstrual disorders. When taken during pregnancy, it can interfere with the normal development of the fetus and increase the risk of birth defects. If you are pregnant and have taken Primolut N, it is important to speak with your healthcare provider as soon as possible. They will be able to advise you on the best course of action and provide any necessary medical care to ensure the health and safety of you and your baby.

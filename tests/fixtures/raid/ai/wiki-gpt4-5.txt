@@ -1,0 +1,23 @@
+---
+source: RAID
+label: ai
+language: en
+domain: wiki
+model: gpt4
+attack: none
+license: MIT
+---
+
+"Cheerleader" is a popular song by Jamaican recording artist Omi. The track was originally written and recorded in 2012, but it was not until 2014 that it gained international recognition, thanks to a remix by German DJ and producer Felix Jaehn. The song was released as a single on independent label Ultra Music.
+
+"Cheerleader" is a reggae fusion song, combining elements of reggae, pop, and house music. The lyrics tell the story of a man expressing his love and gratitude for his supportive girlfriend, likening her to a cheerleader. The song's catchy melody and upbeat rhythm contributed to its widespread popularity.
+
+Upon its release, "Cheerleader" quickly climbed the charts in numerous countries. It reached number one in Australia, Canada, France, Germany, Ireland, the Netherlands, Sweden, the United Kingdom, and the United States, among others. The song also topped the Billboard Hot 100 chart in the U.S., making Omi the first Jamaican artist to reach number one since Sean Paul in 2006.
+
+The music video for "Cheerleader" was directed by Lenny Bass and features Omi singing and dancing on a beach, interspersed with scenes of cheerleaders performing routines. The video has amassed hundreds of millions of views on YouTube.
+
+"Cheerleader" received mixed reviews from music critics. While some praised its catchy tune and positive message, others criticized its lyrics and production. Despite the mixed critical reception, the song was a commercial success and has been certified multi-platinum in several countries.
+
+The success of "Cheerleader" catapulted Omi to international fame. The song earned him several awards and nominations, including a Billboard Music Award for Top Reggae Song and a Teen Choice Award for Choice Music: Breakout Artist. Despite the success of "Cheerleader", Omi has yet to replicate its success with subsequent releases.
+
+In popular culture, "Cheerleader" has been featured in numerous television shows, films, and commercials. It has also been covered by various artists and has been used in several viral internet videos. Despite its release nearly a decade ago, "Cheerleader" remains a popular and recognizable song worldwide.

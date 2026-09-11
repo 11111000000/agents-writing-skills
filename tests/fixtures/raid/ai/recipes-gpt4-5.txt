@@ -1,0 +1,52 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: gpt4
+attack: none
+license: MIT
+---
+
+Ingredients:
+
+- 1 can (16 ounces) refried beans
+- 1 package (1 ounce) taco seasoning mix
+- 1 package (8 ounces) cream cheese, softened
+- 1 cup sour cream
+- 1 cup salsa
+- 1 cup shredded lettuce
+- 1 cup shredded cheddar cheese
+- 1 cup chopped tomatoes
+- 1/2 cup sliced black olives
+- 1/2 cup chopped green onions
+- 1/4 cup chopped fresh cilantro
+- Tortilla chips for serving
+
+Instructions:
+
+1. In a bowl, mix the refried beans and taco seasoning mix until well combined.
+
+2. Spread the bean mixture evenly at the bottom of a serving dish or a glass baking dish.
+
+3. In another bowl, beat the cream cheese until it's smooth and creamy. Add the sour cream to the cream cheese and mix until well combined.
+
+4. Spread the cream cheese mixture over the bean layer in the serving dish.
+
+5. Pour the salsa over the cream cheese layer, spreading it out to cover the cream cheese completely.
+
+6. Sprinkle the shredded lettuce evenly over the salsa.
+
+7. Add a layer of shredded cheddar cheese over the lettuce.
+
+8. Top the cheese with a layer of chopped tomatoes.
+
+9. Sprinkle the sliced black olives and chopped green onions over the tomatoes.
+
+10. Finally, garnish with the chopped fresh cilantro.
+
+11. Cover the dish and refrigerate for at least 2 hours before serving to allow the flavors to meld together.
+
+12. Serve the Mexican Layer Dip with tortilla chips.
+
+Enjoy this delicious and colorful Mexican Layer Dip at your next party or family gathering!

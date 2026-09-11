@@ -1,0 +1,23 @@
+---
+source: RAID
+label: ai
+language: en
+domain: wiki
+model: mistral
+attack: none
+license: MIT
+---
+
+Madagascar is the fourth largest island in the world, and the second largest island in the Indian Ocean. It is located off the southeast coast of Africa, in the Indian Ocean. The island is situated 250 miles (400 km) off the coast of Mozambique, and 250 miles (400 km) north of the island of Mauritius. The island is approximately 1,000 miles (1,600 km) long and 300 miles (500 km) wide.
+
+The island is divided into two regions: the highlands and the coastal plains. The highlands are located in the center of the island, and are characterized by rolling hills and mountains. The coastal plains are located along the coast, and are characterized by flat, fertile land.
+
+The island is home to a variety of plant and animal life. The highlands are home to a variety of plants, including trees, shrubs, and flowers. The coastal plains are home to a variety of animals, including lemurs, chameleons, and snakes.
+
+The island is also home to a variety of people. The majority of the population is Malagasy, a people of African descent. There are also a number of other ethnic groups on the island, including French, Chinese, and Indian.
+
+The island has a long and rich history. The first people to settle on the island were the Malagasy people, who arrived on the island around 2,000 years ago. The Malagasy people were followed by the Arabs, who arrived on the island around 1,000 years ago. The Arabs were followed by the Portuguese, who arrived on the island around 500 years ago. The Portuguese were followed by the French, who arrived on the island around 200 years ago.
+
+The island was colonized by the French in 1896. The French ruled the island until 1960, when the island gained its independence. The island has been a republic since 1960.
+
+The island is home to a variety of industries. The island is home to a variety of industries, including agriculture, fishing, and tourism. The island is also

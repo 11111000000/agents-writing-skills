@@ -1,0 +1,16 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: mistral
+attack: none
+license: MIT
+---
+
+Spanish Footballer Juanfran has posted an image on Chinese social media app Weibo expressing his solidarity with his Brazilian team-mate Mato Kovacic - who was the subject last night's controversy at the World Cup clash between Spain and Iran which eventually finished 1-0 to Iran in Kazan.
+
+As reported earlier, Kovaci received his second yellow card after just nine minutes into the game when he attempted to go for a sliding tackle but ended up making contact with opponent Pejmansi Ehsanjari's head while chasing the ball resulting in it heading towards the corner flag. But, Iran protested strongly against the referee awarding only a free kick, instead of a red card due to this unsporting behaviour from Mato Kovaci.
+Later, Spanish footballers apologised during halftime citing 'ignorance of the law' as being their reason behind continuing the match without further punishment for him. Later, Mata had also expressed dismay over the fact that there are different set of rules governing such incidents across various major sport associations worldwide and added that it would help players avoid such situations if laws were standardized globally among all sports like tennis or cricket where there was lesser ambiguity regarding what action can be taken next under similar circumstances despite each association having its own regulations related specifically based upon local conditions concerning safety etcetera. This statement has brought much relief amongst those watching live coverage since we know now exactly how things should work going forward so hopefully never again will someone suffer unwarranted punishment because of not knowing anything about these matters! In short, Mata's words seem quite reasonable although some may feel disappointed by them still anyway considering Spain did end up losing out on top spot within their group meaning no chance ever existed anymore anyway even though surely many wanted otherwise anyway due course whatever…
+
+Anyway, I don't really understand why people care so deeply regarding this situation; football isn't known for making sense sometimes ya know? Why spend time worrying over unimportant subjects rather focus more energy saving animals/plants dying throughout world climate change issues etc instead I mean seriously!! Oh well good luck trying explaining your pointless concerns others won't share same opinion probably either way lol

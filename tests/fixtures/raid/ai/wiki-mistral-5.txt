@@ -1,0 +1,17 @@
+---
+source: RAID
+label: ai
+language: en
+domain: wiki
+model: mistral
+attack: none
+license: MIT
+---
+
+"Cheerleader" is a song by American indie rock band Owl City. It was released on January 21, 2012, as the lead single from the band's third studio album, The Midsummer Station. The song was written by Adam Young and produced by Young and Ryan M. Tanaka. The song was released as a digital download on January 21, 2012, and was released to radio on February 21, 2012. The song was released to iTunes on February 28, 2012. The song was released to radio on February 21, 2012. The song was released to iTunes on February 28, 2012.
+
+The song was written by Adam Young and produced by Young and Ryan M. Tanaka. The song was released as a digital download on January 21, 2012, and was released to radio on February 21, 2012. The song was released to iTunes on February 28, 2012. The song was released to radio on February 21, 2012. The song was released to iTunes on February 28, 2012.
+
+The song was written by Adam Young and produced by Young and Ryan M. Tanaka. The song was released as a digital download on January 21, 2012, and was released to radio on February 21, 2012. The song was released to iTunes on February 28, 2012. The song was released to radio on February 21, 2012. The song was released to iTunes on February 28, 2012.
+
+The song was written by Adam Young and produced by Young and Ryan M. Tanaka. The song was released as a digital download on January 21, 2012, and was released to radio on February 21, 2012. The song was released to iTunes on February 28, 2012. The song was released to radio on February 2

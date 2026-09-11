@@ -1,0 +1,20 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: mistral
+attack: none
+license: MIT
+---
+
+> Ingredients:
+> 4 large heads of Iceberg lettuce, outer leaves removed and washed
+> Chunky Heinz Tomato Sauce (from U.K.) - if you live outside U.S., just substitute any ketchup with Tabasco sauce added
+> Prawns (shrimp) deveined & peeled
+> Lemon Juice
+> Sea Salt to taste
+> Ground Black Pepper to taste
+> Cooking Instructions:
+
+It was one of dozens of variants on prawn cocktails that pop up when I search Google or Blogger for food combinations containing shrimps and tomatoes, often interspersed with recipes for things as diverse as "Russian Salad," Mexican Beef Nachos", "Lamb Burgers" ...

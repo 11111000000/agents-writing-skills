@@ -1,0 +1,31 @@
+---
+source: RAID
+label: ai
+language: en
+domain: news
+model: gpt4
+attack: none
+license: MIT
+---
+
+Mido, the renowned football player, has issued his third public apology following a series of unfortunate incidents in recent weeks. 
+
+The former Tottenham Hotspur striker reportedly clashed with angry fans during a local league match last week, leading to his second public apology. This followed the controversy surrounding his insensitive online remarks which triggered his first public apology a fortnight ago.
+
+In his latest apology letter, Mido acknowledged his mistakes and admitted to the unprofessional behaviour he has shown.
+
+"I have had time to reflect on my recent actions and upon review, realised I had been both careless and impulsive," Mido stated. "I am deeply sorry for any distress caused by my actions."
+
+The former Egyptian international who currently manages the Egyptian Premier League side, Zamalek SC, has found himself under fire for his brash attitude and controversial comments on social media platforms. 
+
+Mido’s third apology comes after he was accused of violating the club's ethics code. While the details remain confidential, Mido admitted in his statement that he had not conducted himself as expected of someone in his position.
+
+Zamalek SC stated they were "reviewing the situation" but withheld from further comments. 
+
+This series of events have prompted critics and fans alike to question Mido's suitability for the managerial role. The ball is now in the court of the club's management to deliberate the repercussions of Mido's actions and decide whether or not his public apologies are enough to regain their trust. 
+
+Notably, Mido has had a tumultuous career on and off the pitch. Despite his impressive performances in the past, he was often criticised for his volatile temperament and difficulty to coach. 
+
+The 37-year-old retired player's latest apology underlines his struggle to stay clear of controversies and comes as a reminder of the high standards of conduct expected of public figures, especially those affiliated with the world of sports.
+
+While some sympathize with Mido, many claim that multiple apologies indicate a pattern of inappropriate behaviour that should not be overlooked. The football world awaits anxiously to see what Mido and Zamalek SC's next moves will be.

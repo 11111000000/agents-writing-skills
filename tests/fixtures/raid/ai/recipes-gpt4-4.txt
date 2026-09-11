@@ -1,0 +1,42 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: gpt4
+attack: none
+license: MIT
+---
+
+Ingredients:
+
+- 1 package (8 oz) cream cheese, softened 
+- 1/4 cup mayonnaise 
+- 1/4 cup sour cream 
+- 1/2 cup chopped black olives
+- 1/2 cup chopped green olives 
+- 2 tablespoons chopped fresh chives 
+- 1/2 teaspoon garlic powder
+- 1/4 teaspoon pepper
+- 5 flour tortillas (10 inch diameter)
+- Fresh parsley leaves for garnish 
+
+Instructions:
+
+1. In a medium-sized bowl, combine the cream cheese, mayonnaise, and sour cream. Stir until well blended and smooth.
+
+2. Add in the chopped black olives, green olives, chives, garlic powder, and pepper. Mix well until all ingredients are evenly distributed.
+
+3. Spread an even layer of the olive cream mixture onto each of the tortillas, leaving about 1/2 inch around the edge of the tortilla.
+
+4. Roll up each tortilla tightly, making sure to keep the filling inside. 
+
+5. Wrap each rolled tortilla in plastic wrap and refrigerate for at least 2 hours, or until firm. This will make slicing easier.
+
+6. Once firm, use a sharp knife to cut the tortilla rolls into 1/2 inch slices.
+
+7. Arrange the olive spirals on a serving plate with the cut-side facing up, so the spiral pattern is visible. 
+
+8. Garnish with fresh parsley leaves before serving.
+
+Enjoy these tasty and easy-to-make Olive Spirals as a perfect appetizer for your next party or gathering!

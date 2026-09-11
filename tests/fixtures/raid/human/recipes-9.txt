@@ -1,0 +1,12 @@
+---
+source: RAID
+label: human
+language: en
+domain: recipes
+attack: none
+license: MIT
+---
+
+1 recipe Chocolate Cookie Dough (page 54)
+1/4 recipe Vanilla Icing (page 136)
+Preheat the oven to 350 F. Line two sheet pans with parchment paper or spray lightly with nonstick cooking spray. Remove one disk of dough from the refrigerator and let it sit at room temperature for about 15 minutes. (The dough should be soft enough to roll without cracking, but not yet sticky.) Place the dough on a piece of parchment paper or on a lightly floured flat surface. Lightly flour the top of the disk and begin rolling the dough (see Rolling Dough, page 10). Lift and rotate the dough between each roll to prevent it from sticking. Repeat the process until the dough is between 1/8 and 1/4 inch thick. Using a 1 1/2-inch round cookie cutter, cut out cookies and place them about 1/2 inch apart on the prepared pans. Repeat until the pans are full. (The remaining dough can be kept in the refrigerator until ready to be used.) Bake for 12 to 15 minutes, rotating the pans once halfway through, until the edges of the cookies are firm. Remove the cookies from the oven, let them cool slightly on the pans, then transfer them to a wire rack to cool to room temperature. While the cookies are cooling, prepare the Vanilla Icing if you have not already done so. Set it aside. On a separate sheet pan or work surface, place half the cookies bottom side up. Fill a pastry bag with icing (no tip is necessary) and pipe about 1 teaspoon icing onto each cookie bottom. Take the remaining cookies and gently press one on top of each iced cookie, bottom side down, to form a sandwich. Allow the cookies to set at room temperature for about 30 minutes before serving or packaging. The cookies can be stored in an airtight container at room temperature for up to 1 week.

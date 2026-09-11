@@ -1,0 +1,55 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: mistral
+attack: none
+license: MIT
+---
+
+"Ingredients:
+
+1 (8 ounce) package cream cheese, softened
+
+1/2 cup mayonnaise
+
+1/2 cup sour cream
+
+1 (2.25 ounce) can sliced ripe olives, drained
+
+1 (4 ounce) can chopped ripe olives, drained
+
+1 (4 ounce) can chopped pimento, drained
+
+1 (1 ounce) package dry onion soup mix
+
+1 (10 ounce) package frozen puff pastry, thawed
+
+Directions:
+
+Preheat oven to 400 degrees F (200 degrees C).
+
+In a medium bowl, mix together the cream cheese, mayonnaise, sour cream, sliced olives, chopped olives, pimento, and onion soup mix.
+
+Unfold the puff pastry sheets, and cut each into 12 squares. Place a heaping teaspoon of the cream cheese mixture in the center of each square. Fold the corners of the square over the filling, and pinch the edges together to seal. Place the spirals on a baking sheet, and bake for 15 minutes in the preheated oven, or until golden brown. Serve warm."
+
+The recipe is attributed to "Mary" and has been rated by 1,000 people, who gave it an average rating of 4.5 stars.
+
+The recipe is also available in a video format, which you can watch here.
+
+The recipe is also available in a PDF format, which you can download here.
+
+The recipe is also available in a Word document format, which you can download here.
+
+The recipe is also available in a PowerPoint presentation format, which you can download here.
+
+The recipe is also available in a Keynote presentation format, which you can download here.
+
+The recipe is also available in a Google Slides presentation format, which you can download here.
+
+The recipe is also available in a Prezi presentation format, which you can download here.
+
+The recipe is also available in a Scribd document format, which you can download here.
+
+The recipe is also available in

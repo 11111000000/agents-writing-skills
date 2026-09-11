@@ -1,0 +1,42 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: gpt4
+attack: none
+license: MIT
+---
+
+Ingredients:
+
+- 24 large cooked prawns
+- 1 large ripe avocado
+- 1 small cos lettuce
+- 4 tablespoons mayonnaise
+- 2 tablespoons tomato ketchup
+- 1 tablespoon brandy
+- 1 tablespoon lemon juice
+- Salt and freshly milled black pepper
+- Cayenne pepper
+- Lemon wedges, to serve
+
+Instructions:
+
+1. Start by preparing the prawns. If they are not already cooked, boil them in salted water for 3-4 minutes until they turn pink. Allow them to cool, then peel and devein them, leaving the tails intact for presentation.
+
+2. Next, prepare the cocktail sauce. In a bowl, mix together the mayonnaise, tomato ketchup, brandy, and lemon juice. Season with a pinch of salt, freshly milled black pepper, and a dash of cayenne pepper. Stir until well combined.
+
+3. Cut the avocado in half, remove the stone, and peel. Slice the avocado into thin strips.
+
+4. Wash and dry the lettuce, then shred it finely.
+
+5. To assemble the cocktail, divide the shredded lettuce among four cocktail glasses. Arrange the avocado slices on top of the lettuce.
+
+6. Place six prawns in each glass, then spoon over the cocktail sauce, ensuring each prawn is well coated.
+
+7. Garnish each cocktail with a sprinkle of cayenne pepper and a lemon wedge on the side.
+
+8. Serve your Prawn Cocktail A La Delia Smith immediately, with some crusty bread on the side if desired.
+
+Enjoy this classic British starter that's perfect for any dinner party or special occasion.

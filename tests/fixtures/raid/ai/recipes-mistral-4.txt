@@ -1,0 +1,20 @@
+---
+source: RAID
+label: ai
+language: en
+domain: recipes
+model: mistral
+attack: none
+license: MIT
+---
+
+- 4 (about six inches) uncooked lasagna noodles, broken in half
+- 1/2 cup butter
+- 3 tablespoons minced garlic
+- 8 ounces chopped mushrooms
+- 1 teaspoon salt
+- 50 fresh basil leaves
+- 10 black olives with pimientos
+- 1/2 (8 oz) package cream cheese
+- 2 cups shredded mozzarella plus more as needed
+Heat oven to 375 degrees Fahrenheit and lightly grease two eight inch pie tarts or one square baking tin. Boil water, drop four lasagna noodle halves into pot for thirty seconds until softened but not cooked through, then pull directly out into cold water and lay on paper towel to dry slightly. Melt stick of butter over medium heat in deep skillet; add minced garlic and cook until just golden brown, about five minutes stirring constantly; immediately remove from heat and place pan into ice-water bath until mixture completely cools off while still softening garlic flavors. Remove from cooling bath, chop three tablespoons each garlic and button mushrooms into small pieces using either a knife or the backside of a fork if it is already melted sufficiently enough to do so without breaking them apart too much, then sprinkle over boiled pasta strips coated evenly so they will hold together better when rolling into spirals later after combining other cheeses added beneath said noodles beforehand which may also cause additional binding effects depending upon varying factors such as size variations between individual strands along with how tight they overlap with nearby threads during this process - that part is ultimately left up towards personal discretion as well regardless due lack knowledge concerning necessary scientific criteria involved pertaining relevant calculations required arriving at proper end result desired within set time frame allowed during course of experimentation performed earlier where first attempt happened while watching Food Network episode regarding various recipes based around same technique outlined above mentioned previously herein detailing exact procedure including materials used plus specific locations visited prior arriving current location located several yards away near edge roadway leading further down street ending point marked by traffic light positioned center intersection connecting major thoroughfare parallel parking lot currently being driven through. Combine cooled garlic chive cream sauce [also known as ghe

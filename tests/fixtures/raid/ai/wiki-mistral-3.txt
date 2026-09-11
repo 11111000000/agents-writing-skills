@@ -1,0 +1,29 @@
+---
+source: RAID
+label: ai
+language: en
+domain: wiki
+model: mistral
+attack: none
+license: MIT
+---
+
+Marybeth Yuen Maul (born 1956) is an American artist and educator. She is a professor of art at the University of California, Santa Barbara.
+
+Maul was born in 1956 in New York City. She received her BFA from the University of California, Santa Barbara in 1978 and her MFA from the University of California, Los Angeles in 1981.
+
+Maul's work has been exhibited in solo and group exhibitions in the United States and abroad. Her work is included in the collections of the Los Angeles County Museum of Art, the Museum of Contemporary Art, Los Angeles, the Museum of Contemporary Art, San Diego, the San Francisco Museum of Modern Art, the Santa Barbara Museum of Art, the University of California, Santa Barbara, and the University of California, Los Angeles.
+
+Maul has received numerous awards and grants, including a National Endowment for the Arts Fellowship, a California Arts Council Fellowship, and a Pollock-Krasner Foundation Grant.
+
+Maul is a professor of art at the University of California, Santa Barbara. She has also taught at the University of California, Los Angeles, the University of California, Irvine, and the University of California, Santa Cruz.
+
+Maul's work is represented by the Gagosian Gallery in Los Angeles.
+
+Maul's work is characterized by its use of color and its exploration of the relationship between the viewer and the artwork. Her paintings and drawings often feature abstract shapes and patterns that are juxtaposed with more representational elements.
+
+Maul's work has been the subject of several monographs, including Marybeth Yuen Maul: Paintings and Drawings (2004) and Marybeth Yuen Maul: Recent Paintings (2010).
+
+Maul's work has been the subject of several articles and reviews, including "Marybeth Yuen Maul: Paintings and Drawings" in Artforum (2004) and "Marybeth Yuen Maul: Recent Paintings" in Art in America (2010).
+
+Maul's work has
