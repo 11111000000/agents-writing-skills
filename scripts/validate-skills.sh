@@ -112,6 +112,9 @@ main() {
       err "benchmark smoke tests failed (see /tmp/test-benchmark.log)"
     fi
   fi
+  # Note: validates SKILL.md frontmatter and runs benchmark smoke tests.
+  # Path filter requires changes to skills/, prompts/, manifest.json, or
+  # this script itself to retrigger.
 
   echo ""
   if [[ $errors -eq 0 ]]; then
