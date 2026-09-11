@@ -231,7 +231,7 @@ fi
 # Wikisource corpus: each must be runnable (exit 0,1,2 are all acceptable
 # — only exit >2 means actual crash; ru-corpus literary prose may exit 1
 # because YapScore/format_bias thresholds trip, which is expected).
-for f in tests/fixtures/ru-corpus/*.txt; do
+for f in "$FIXTURES"/ru-corpus/*.txt; do
     [[ -f "$f" ]] || continue
     base=$(basename "$f" .txt)
     out=$(bash "$BENCH" "$f" --json 2>&1)
