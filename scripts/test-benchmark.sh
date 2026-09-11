@@ -137,11 +137,15 @@ AI_FIXTURE="${FIXTURES}/ai-typical-readme.txt"
 HUMAN_FIXTURE="${FIXTURES}/human-readme.txt"
 RU_AI_FIXTURE="${FIXTURES}/ru-ai-typical.txt"
 RU_HUMAN_FIXTURE="${FIXTURES}/ru-human-laconic.txt"
+OVERGEN_FIXTURE="${FIXTURES}/over-generated.txt"
+RU_PROSE_FIXTURE="${FIXTURES}/ru-prose-deeprichastiya.txt"
 
 require_file "$AI_FIXTURE"
 require_file "$HUMAN_FIXTURE"
 require_file "$RU_AI_FIXTURE"
 require_file "$RU_HUMAN_FIXTURE"
+require_file "$OVERGEN_FIXTURE"
+require_file "$RU_PROSE_FIXTURE"
 
 if [[ -f "$AI_FIXTURE" ]]; then
     run_exit_test "AI-typical README is flagged" "$AI_FIXTURE" 1 "FAIL"
@@ -161,6 +165,83 @@ fi
 if [[ -f "$RU_HUMAN_FIXTURE" ]]; then
     json_assert "RU laconic fixture is factual" "$RU_HUMAN_FIXTURE" 'd["metrics"]["specificity_facts_per_para"] >= 1.0 and d["metrics"]["YapScore"] <= 1.5'
 fi
+
+# --- Golden tests for the P0 metric fixes (lock in regressions) ---
+if [[ -f "$OVERGEN_FIXTURE" ]]; then
+    # Regression test for the YapScore cap bug: this text is heavily
+    # filler-laden and must score > 2.0 (old code capped at 1.67).
+    json_assert "YapScore is NOT silently capped at 1.67 (regression)" \
+        "$OVERGEN_FIXTURE" \
+        'd["metrics"]["YapScore"] >= 2.0 and d["metrics"]["YapScore"] <= 10.0'
+fi
+
+if [[ -f "$RU_PROSE_FIXTURE" ]]; then
+    # Regression test for D-metric Cyrillic bug: this Russian prose contains
+    # verifiable деепричастия and must register D > 0 (old code returned 0
+    # due to LC_ALL=C breaking Cyrillic character classes).
+    json_assert "D-metric works on Russian prose (regression)" \
+        "$RU_PROSE_FIXTURE" \
+        'd["metrics"]["D"] > 0'
+fi
+
+# Stderr noise test: running benchmark on any fixture must not leak
+# "Invalid character class name" or similar grep errors.
+stderr_noise=$(bash "$BENCH" "$AI_FIXTURE" 2>&1 >/dev/null | grep -c "Invalid character class" || true)
+if [[ "$stderr_noise" -eq 0 ]]; then
+    pass "no grep stderr noise on AI fixture"
+else
+    fail "grep stderr leaked $stderr_noise lines on AI fixture"
+fi
+
+# --- Calibrated-separation regression tests ---
+# Each test asserts that a known fixture scores in the empirically
+# validated range. Fails if a future refactor breaks the calibration.
+# See knowledge/02-Techniques/metric-validation.md (n=145).
+
+if [[ -f "$OVERGEN_FIXTURE" ]]; then
+    json_assert "over-generated YapScore is critically high (>=2.0)" \
+        "$OVERGEN_FIXTURE" \
+        'd["metrics"]["YapScore"] >= 2.0 and d["metrics"]["YapScore"] <= 10.0'
+fi
+
+if [[ -f "$RU_PROSE_FIXTURE" ]]; then
+    # ru-prose-deeprichastiya.txt is a Tolstoy-style excerpt with 5+ деепричастия
+    # in ~79 words; raw D count is high. Per-1000 density is in 60-100 range.
+    json_assert "RU literary prose D registers non-zero (regression)" \
+        "$RU_PROSE_FIXTURE" \
+        'd["metrics"]["D"] > 30.0'
+fi
+
+# ai-typical-readme is RU-mixed; ensure language detection says ru
+if [[ -f "$AI_FIXTURE" ]]; then
+    json_assert "language detection picks ru for Cyrillic-dominant AI fixture" \
+        "$AI_FIXTURE" \
+        'd["language"] == "ru"'
+fi
+
+# human-readme.txt is actually mixed RU/EN (it's "Genium Tasks — CLI для тех...")
+# so it should be detected as ru. Use an HC3 fixture for the EN case.
+EN_FIXTURE="${FIXTURES}/hc3/human/finance-1.txt"
+if [[ -f "$EN_FIXTURE" ]]; then
+    json_assert "language detection picks en for HC3 finance human fixture" \
+        "$EN_FIXTURE" \
+        'd["language"] == "en"'
+fi
+
+# Wikisource corpus: each must be runnable (exit 0,1,2 are all acceptable
+# — only exit >2 means actual crash; ru-corpus literary prose may exit 1
+# because YapScore/format_bias thresholds trip, which is expected).
+for f in tests/fixtures/ru-corpus/*.txt; do
+    [[ -f "$f" ]] || continue
+    base=$(basename "$f" .txt)
+    out=$(bash "$BENCH" "$f" --json 2>&1)
+    rc=$?
+    if [[ $rc -le 2 ]] && [[ -n "$out" ]] && [[ "$out" == "{"* ]]; then
+        pass "Wikisource $base benchmark runs"
+    else
+        fail "Wikisource $base benchmark crashed (rc=$rc, output=$(echo "$out" | head -c 80))"
+    fi
+done
 
 run_no_crash_stdin "empty stdin" ""
 
