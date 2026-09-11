@@ -66,8 +66,9 @@ Rewrite existing text so it stops reading like LLM output. v6 keeps the **3-pass
 > 4. Strip negative parallelisms (P9)
 > 5. Strip hedging
 > 6. Strip pairing (RU) — "цели и задачи" → pick one
-> 7. Strip деепричастия (RU) — ≤1 per paragraph
-> 8. Em-dash discipline — ≤1 per 300 words
+> 7. Strip деепричастия (RU) — для conversational/technical: ≤1 per paragraph;
+>    для literary prose: **target 14-30/1000 слов (НЕ снижать до 7)** — см. эмпирическую калибровку в `knowledge/02-Techniques/metric-validation.md`
+> 8. Em-dash discipline — EN: ≤1 per 300 words; **RU: 0 em-dash в LLM-тексте — сильный AI-сигнал**, литературная проза использует 5-23/300 слов — норма
 >
 > **TIGHTEN phase (Lever 10):**
 > 9. Concrete — replace abstract claims with numbers
@@ -84,6 +85,7 @@ Rewrite existing text so it stops reading like LLM output. v6 keeps the **3-pass
 >
 > **Antipatterns (cross-phase):**
 > 16. Strip over-generation (P-NEW-1…P-NEW-7) — vacuum-filling, restatement chains, bridging, antithetical recap
+> 17. Strip new patterns (P-NEW-13…20) — False Agency, Argument Residue, Asyndeton Tricolon, Mini-Aphorism Closer, Hedged-Enumeration Openers. See [`knowledge/01-Patterns/catalogue-update.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/catalogue-update.md).
 
 ---
 

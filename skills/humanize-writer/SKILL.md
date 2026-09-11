@@ -83,16 +83,36 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 
 Используйте простые текстовые счётчики (wc, awk) или `scripts/benchmark-skill.sh`:
 
-| Метрика | Формула | Target |
-|---|---|---|
-| **AP** (negative parallelism) | (число антитезисов / слов) × 1000 | <1 |
-| **D** (деепричастия RU) | (деепричастий / слов) × 1000 | <7 |
-| **E** (em-dash) | (em-dash / слов) × 1000 | <3 |
-| **YapScore** | длина / минимально-достаточный baseline | 1.0–1.5 |
-| **V** (vacuum-filling sentences) | (вводных предложений / всего предложений) × 100 | <5% |
-| **R** (restatement chains) | (повторов смысла / всего предложений) × 100 | <10% |
-| **B** (bridging phrases) | (мостиков на границе абзацев) / всего абзацев | <5% |
-| **Fmt** (format bias) | emoji + bold + list-items per 1000 words | sensible |
+| Метрика | Формула | Target (EN) | Target (RU) | Source |
+|---|---|---|---|---|
+| **AP** (negative parallelism) | (число антитезисов / слов) × 1000 | <1 | <1 | empirical, n=145 |
+| **D** (деепричастия RU) | (деепричастий / слов) × 1000 | n/a | <12 (soft warning); conversational/technical <7; literary ≤30 OK | empirical + Tolstoy |
+| **E** (em-dash) | (em-dash / слов) × 1000 | <3 | "0 em-dash в RU = AI-signal"; высокий E — норма | empirical |
+| **YapScore** | длина / минимально-достаточный baseline | 1.0–1.5 | 1.0–1.5 | Borisov 2026 |
+| **V** (vacuum-filling sentences) | (вводных предложений / всего предложений) × 100 | <2% | <2% | empirical |
+| **R** (restatement chains) | (повторов смысла / всего предложений) × 100 | <10% | <10% | empirical |
+| **B** (bridging phrases) | (мостиков на границе абзацев) / всего абзацев | <5% | <5% | empirical |
+| **Burstiness std** | std длины предложений (слов) | >3 | >8 (human литературная: 18+, AI маркетинг: 6.5) | empirical |
+| **Specificity** | конкретных фактов на абзац | >0.5 | varies | empirical |
+
+> [!info] Калибровка порогов
+> Все цифры в таблице получены эмпирически на корпусе 145 размеченных текстов
+> (HC3, RAID, Wikisource + синтетика). Полный отчёт:
+> [`knowledge/02-Techniques/metric-validation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/metric-validation.md).
+> Пороги языково-зависимы: `benchmark-skill.sh` определяет RU/EN автоматически
+> по соотношению кириллицы (≥30% → RU mode).
+
+> [!warning] D — soft, не hard fail
+> Деепричастия в RU литературной прозе — норма: 14-30/1000 слов
+> (Бунин, Чехов, Тургенев, Толстой). Жёсткий порог D < 7 флагал бы
+> почти всю русскую классику как AI. Поэтому D — только рекомендация.
+> **Если вы пишете в регистре "Tolstoy dense"** — игнорируйте D-предупреждение.
+
+> [!info] E (em-dash) — единственный надёжный RU-AI signal
+> В нашем корпусе: 0/12 RU-AI текстов содержат em-dash; 8/8 RU-human содержат
+> (Tolstoy/Bunin/Chekhov/Turgenev). Сигнал: **отсутствие em-dash в RU-тексте
+> длиной >200 слов — сильный AI-маркер**. Высокий E (5+ на 300 слов) —
+> наоборот, человеческий признак.
 
 ### 1.2. Признаки AI-текста без счётчиков
 
@@ -153,6 +173,14 @@ audit_report:
 
 **Lexicon** для запрещённых слов: [`references/lexicon.md`](https://github.com/11111000000/agents-writing-skills/blob/main/skills/humanize-writer/references/lexicon.md).
 
+**Расширенный список AI-паттернов** (P-NEW-13..20, добавлены в v1.5 из survey GitHub humanizer-репозиториев): см. [`knowledge/01-Patterns/catalogue-update.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/01-Patterns/catalogue-update.md). Самые частые:
+
+- **P-NEW-13 False Agency** — «The market rewards…», «Security says no.», «Performance demands…». Заменять на конкретного субъекта.
+- **P-NEW-16 Argument Residue** — реплики-возражения в пустоту: «While X argues Y, however…». Удалить.
+- **P-NEW-18 Asyndeton Tricolon** — три длинных параллельных элемента через запятую без союза: «innovation, inspiration, and insights». Заменить на 2-разных-элемента.
+- **P-NEW-19 Mini-Aphorism Closer** — последнее предложение абзаца — короткая сентенция-мораль. Удалить или развернуть.
+- **P-NEW-20 Hedged-Enumeration Openers** — «From X to Y, …», «Whether A or B, …», «Not just A, but B». Заменить прямой формулировкой.
+
 **Пример STRIP:**
 
 ```diff
@@ -160,6 +188,12 @@ audit_report:
 - управление задачами, способствуя повышению производительности команды.
 + Genium Tasks — CLI для тех, кому надоело вести задачи в Notion. Один бинарь,
 + конфиг в ~/.config/genium/tasks.toml, и задачи живут в git вместе с кодом.
+```
+
+```diff
+# P-NEW-13 False Agency
+- The market rewards companies that listen.
++ Customers spend more with companies that answer support tickets within an hour.
 ```
 
 ### Phase TIGHTEN (Lever 10) — суффицентность
@@ -369,10 +403,17 @@ verify_failure:
 |---|---|---|
 | Conversational | Levers 1-12, кроме Lever 11 | Levers 1-9, 11 |
 | Blog | Levers 1-12 | Levers 1-11 |
-| Email коллеге | Levers 1-9, 11, 12 (без эллипсиса) | Levers 1-9, 11 |
+| Email коллеге | Levers 1-9, 11, 12 (без эллипсиса — что делать вместо: парцелляция, литота, нулевая связка) | Levers 1-9, 11 |
 | README | Levers 1-9 | Levers 1-9 |
-| Marketing | Только Lever 9 (RLHF strip) | Только Lever 9 |
+| Marketing | Только Lever 9 (RLHF strip) + P-NEW-13/16/20 strip | Только Lever 9 + P-NEW-13/16/20 |
 | Technical reference | Никакие (нужна точность) | Никакие |
+| Literary prose | Levers 1-9, **сохраняем D 14-30/1000, E >0, burstiness std >10** | n/a |
+
+> [!note] Literary RU — отдельный регистр
+> Если пишете в стиле русской литературной прозы (Бунин, Чехов, Толстой):
+> **не пытайтесь попасть в D < 7**. Эти авторы используют 14-30 деепричастий
+> на 1000 слов и 5-23 em-dash на 300 слов. Целевой профиль — burstiness
+> std >10 (vs AI ~6), деепричастия — да, em-dash — да, RLHF-voice — нет.
 
 ---
 

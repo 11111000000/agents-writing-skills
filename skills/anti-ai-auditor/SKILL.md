@@ -246,13 +246,30 @@ recommendations:
 Risk score: <0-100>%
 Detector expectation: <what ZeroGPT/GPTZero would likely say>
 
-### Metrics
+### Metrics (calibrated on HC3/RAID/Wikisource, n=145)
+
+Примените пороги в зависимости от языка. Скрипт `benchmark-skill.sh` определяет RU/EN автоматически.
+
+**EN thresholds:**
 - AP: <число> (target <1)
-- D: <число> (RU, target <7)
 - E: <число> (target <3 per 300 words)
 - YapScore: <число> (target 1.0-1.5)
-- Burstiness std: <число> (target >5)
+- Burstiness std: <число> (target >3; >5 ideal)
 - Concrete facts per para: <число> (target >0.5)
+
+**RU thresholds (literary prose — Tolstoy/Bunin/Chekhov/Turgenev baseline):**
+- D: <число> (target <7 для conversational/technical; **14-30 — норма для literary**)
+- E: <число> (**0 em-dash в RU-тексте >200 слов = AI-сигнал**; литературная проза использует 5-23/300)
+- YapScore: <число> (target 1.0-1.5)
+- Burstiness std: <число> (**target >8 для RU**; AI-маркетинг ~6, человеческая проза 11-65)
+- P-NEW-13/16/20 densities (per 1k words): from `benchmark-skill.sh --json` output
+
+> [!info] Empirical basis
+> Все пороги получены на корпусе 145 размеченных текстов (HC3, RAID,
+> Wikisource + синтетика). Полный отчёт:
+> [`knowledge/02-Techniques/metric-validation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/metric-validation.md).
+> Discrimination: RU-AI 100% catch, RU-human 12.5% FP (1/8, реалистический
+> Тургенев с burstiness 6.8), EN-AI 18.5% catch (concise Q&A hard to detect).
 
 ### Lexical (X hits)
 - Line 3: "delve" — replace with "look at"
