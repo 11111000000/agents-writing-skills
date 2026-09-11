@@ -144,11 +144,15 @@ if [[ -d "$REPO_ROOT/components" ]]; then
   ok "Final restage of local plugin aws-landing"
 fi
 
-# Install Mermaid support (rendered via obsidian-flavored-markdown in Quartz v5)
-OFM_LINE=$(grep -n "source: github:quartz-community/obsidian-flavored-markdown" "$TEMP_QUARTZ/quartz.config.default.yaml" | head -1 | cut -d: -f1)
+# Install Mermaid support (rendered via obsidian-flavored-markdown in Quartz v5).
+# `set -o pipefail` makes a no-match grep (exit 1) propagate through the
+# pipeline and abort the script via `set -e`. Guard with `|| true` so a
+# missing OFM_LINE simply skips Mermaid setup (Quartz 5 may have renamed
+# or removed the plugin in newer releases).
+OFM_LINE=$(grep -n "source: github:quartz-community/obsidian-flavored-markdown" "$TEMP_QUARTZ/quartz.config.default.yaml" | head -1 | cut -d: -f1 || true)
 if [[ -n "$OFM_LINE" ]]; then
   ENABLED_LINE=$((OFM_LINE + 1))
-  if ! grep -q "^      mermaid: true" <(sed -n "${ENABLED_LINE},$((OFM+8))p" "$TEMP_QUARTZ/quartz.config.default.yaml" 2>/dev/null); then
+  if ! grep -q "^      mermaid: true" <(sed -n "${ENABLED_LINE},$((OFM_LINE+8))p" "$TEMP_QUARTZ/quartz.config.default.yaml" 2>/dev/null); then
     OFM_OPT=$((OFM_LINE + 2))
     if ! grep -q "^    options:" <(sed -n "${OFM_OPT}p" "$TEMP_QUARTZ/quartz.config.default.yaml"); then
       sed -i "${ENABLED_LINE}a\\    options:\n      mermaid: true" "$TEMP_QUARTZ/quartz.config.default.yaml"
