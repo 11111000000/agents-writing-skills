@@ -22,9 +22,9 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 > export KNOWLEDGE_PATH="$HOME/.cache/agents-writing-skills-knowledge/knowledge"
 > ```
 
-> [!warning] Что этот skill МОЖЕТ и чего НЕ МОЖЕТ
+> [!warning] Что этот скил МОЖЕТ и чего НЕ МОЖЕТ
 > **Может:** сделать текст, который читается как человеческий для среднестатистического читателя.
-> **Не может:** гарантировать прохождение GPTZero, Pangram, Grammarly. Против обученных детекторов **статические правила имеют ceiling** (MASH, ACL 2026).
+> **Не может:** гарантировать прохождение GPTZero, Pangram, Grammarly. Против обученных детекторов **статические правила имеют потолок** (MASH, ACL 2026).
 > **Не предназначен для:** обхода академической проверки, сдачи AI-текста как своего. Используйте, чтобы **писать лучше**, не чтобы **скрывать**.
 > См. [`05-References/limits-and-self-critique.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md).
 
@@ -32,8 +32,8 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 > YapBench (Borisov et al., 2026) и Park et al. (2024) показали, что length bias — структурное свойство RLHF preference tuning. **Tighten pass может привести к bias substitution** (Lamparth et al., 2026): сокращение длины → перенос bias на другие proxies (confidence, factual depth). Tighten pass должен сохранять плотность фактов, не только сокращать слова.
 
 > [!info] Major changes in v5
-> - **3-pass архитектура**: Audit → Rewrite → Verify (явные входы/выходы)
-> - **4 phase-группы**: STRIP / TIGHTEN / RELY / REBUILD (вместо плоского списка 12 levers)
+> - **3-проходная архитектура**: Audit → Rewrite → Verify (явные входы/выходы)
+> - **4 фазовые группы**: STRIP / TIGHTEN / RELY / REBUILD (вместо плоского списка 12 рычагов)
 > - **Code blocks для примеров** (вместо bullet-списков)
 > - **Decision tree** для выбора применения Lever 11/12
 > - **Multi-language support table** для RU/EN регистров

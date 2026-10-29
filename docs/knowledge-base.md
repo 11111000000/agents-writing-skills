@@ -1,13 +1,13 @@
 ---
 title: Knowledge Base
-description: 41+ Obsidian-format notes documenting patterns, techniques, sources, examples, references. The theoretical foundation under each skill.
+description: 37+ Obsidian-format notes documenting patterns, techniques, sources, examples, references. The theoretical foundation under each skill.
 ---
 
 [← Back to Home](index)
 
 # 📚 Knowledge Base
 
-> The 41+ notes that ground every recommendation in the 4 skills. Open them in [Obsidian](https://obsidian.md/) for full graph view, or browse here.
+> The 37+ notes that ground every recommendation in the 4 skills. Open them in [Obsidian](https://obsidian.md/) for full graph view, or browse here.
 
 <br>
 

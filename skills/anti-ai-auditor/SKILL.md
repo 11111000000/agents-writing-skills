@@ -16,7 +16,7 @@ Audit an existing text for AI-pattern probability. **Do not rewrite** — only d
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.
 
-## Архитектура: 3-pass audit
+## Архитектура: 3-проходный аудит
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
