@@ -1,29 +1,29 @@
 # agents-writing-skills (на русском)
 
-**Skill'ы и промпты для агентов, которые пишут текст, не похожий на AI.**
+**Скилы и промпты для агентов, которые пишут текст, не похожий на AI.**
 
 В репозитории:
 
-1. **Skill'ы** для [opencode](https://opencode.ai), [pi](https://github.com/badlogic/pi-mono), Claude Code и других агентов, поддерживающих Agent Skills. Skill'ы помогают агенту писать, редактировать и проверять текст так, чтобы он читался как написанный человеком.
-2. **Prompt-templates** для [pi](https://github.com/badlogic/pi-mono): `/humanize`, `/audit-ai`, и другие.
+1. **Скилы** для [opencode](https://opencode.ai), [pi](https://github.com/badlogic/pi-mono), Claude Code и других агентов, поддерживающих Agent Skills. Скилы помогают агенту писать, редактировать и проверять текст так, чтобы он читался как написанный человеком.
+2. **Промпты** для [pi](https://github.com/badlogic/pi-mono): `/humanize`, `/audit-ai` и другие.
 3. **База знаний** — Obsidian-хранилище, документирующее паттерны, техники и методы обнаружения.
 
 > [!important] Чего это НЕ делает
-> Это не инструмент для обхода AI-детекторов. Skill'ы помогают тексту читаться как человеческому для обычного читателя. Они не гарантируют прохождение GPTZero, Pangram, Grammarly. Подробнее: [`knowledge/05-References/limits-and-self-critique.md`](knowledge/05-References/limits-and-self-critique.md).
+> Это не инструмент для обхода AI-детекторов. Скилы помогают тексту читаться как человеческому для обычного читателя. Они не гарантируют прохождение GPTZero, Pangram, Grammarly. Подробнее: [`knowledge/05-References/limits-and-self-critique.md`](knowledge/05-References/limits-and-self-critique.md).
 
 ## Установка
 
 Скажите агенту:
 
 ```
-Клонируй https://github.com/11111000000/agents-writing-skills и установи skill'ы из manifest.json
+Клонируй https://github.com/11111000000/agents-writing-skills и установи скилы из manifest.json
 ```
 
 Агент:
 1. Клонирует репозиторий
 2. Читает `manifest.json`
-3. Копирует skill'ы в свою директорию
-4. Регистрирует промпты если нужно
+3. Копирует скилы в свою директорию
+4. Регистрирует промпты, если нужно
 
 Без скриптов. Без захардкоженных путей. Любой агент, любая ОС.
 
@@ -34,18 +34,18 @@
    git clone https://github.com/11111000000/agents-writing-skills.git
    ```
 
-2. Прочитайте `manifest.json` чтобы понять что доступно
+2. Прочитайте `manifest.json`, чтобы понять, что доступно.
 
-3. Скопируйте skill'ы в директорию skill'ов вашего агента:
+3. Скопируйте скилы в директорию скилов вашего агента:
    - opencode: `~/.config/opencode/skills/`
    - pi: `~/.pi/agent/skills/`
    - claude-code: `~/.claude/skills/`
 
 ## Что вы получаете
 
-### Skill'ы
+### Скилы
 
-| Skill | Назначение |
+| Скил | Назначение |
 |---|---|
 | `humanize-writer` | Написание нового текста без AI-паттернов |
 | `humanize-editor` | Переписать готовый текст, чтобы он читался как человеческий |
@@ -59,26 +59,26 @@
 | `/humanize` | Переписать AI-текст на человеческий |
 | `/audit-ai` | Проверить вероятность AI-генерации |
 | `/audit-43` | Аудит по полному 43-паттерновому каталогу |
-| `/humanize-9-levers` | Применить 9 levers от harshaneel |
+| `/humanize-9-levers` | Применить 9 рычагов из harshaneel |
 | `/anti-thesis` | Обнаружить и переписать антитезисы (P9) |
 | `/writer-voice` | Написать текст без AI-паттернов |
 | `/clean-draft` | Лёгкая чистка черновика |
 | `/rewrite-ai` | Точечная правка фразы |
-| `/honest-check` | Проверка «стоит ли применять skill» |
+| `/honest-check` | Проверка «стоит ли применять скил» |
 
 ### База знаний (Obsidian)
 
-См. [`knowledge/README.md`](knowledge/README.md). Хранилище документирует 43 категории AI-паттернов (от Aboudjem), 12-lever систему (9 levers от harshaneel + суффицентность, iceberg, русская краткость), русскую специфику и методы обнаружения (Binoculars, MASH, watermarking).
+См. [`knowledge/README.md`](knowledge/README.md). Хранилище документирует 43 категории AI-паттернов (от Aboudjem), 12-рычажную систему (9 рычагов от harshaneel + суффицентность, айсберг, русская краткость), русскую специфику и методы обнаружения (Binoculars, MASH, watermarking).
 
-## Как работают skill'ы
+## Как работают скилы
 
-Skill'ы — это Markdown-файлы с YAML frontmatter. Они лежат в `~/.config/opencode/skills/<name>/SKILL.md` (или `~/.pi/agent/skills/<name>/SKILL.md`). Когда агент видит задачу, подходящую под `description` skill'а, он загружает skill автоматически.
+Скилы — это Markdown-файлы с YAML frontmatter. Они лежат в `~/.config/opencode/skills/<name>/SKILL.md` (или `~/.pi/agent/skills/<name>/SKILL.md`). Когда агент видит задачу, подходящую под `description` скила, он загружает скил автоматически.
 
-Каждый skill содержит:
+Каждый скил содержит:
 
 - **Жёсткие правила** — обязательные паттерны
-- **Workflow** — пошаговый алгоритм
-- **Связанные skill'ы** — когда комбинировать
+- **Процесс работы** — пошаговый алгоритм
+- **Связанные скилы** — когда комбинировать
 - **Ограничения** — когда НЕ применять
 
 Пример frontmatter:
@@ -99,26 +99,26 @@ metadata:
 ## Документация
 
 - **[База знаний](knowledge/README.md)** — паттерны, техники, примеры
-- **[Contributing](CONTRIBUTING.md)** — как добавить skill или промпт
+- **[Contributing](CONTRIBUTING.md)** — как добавить скил или промпт
 - **[Changelog](CHANGELOG.md)** — что изменилось
 - **[Ограничения](knowledge/05-References/limits-and-self-critique.md)** — эпистемический анализ
 
 ## Лицензия
 
-- Skill'ы и промпты: MIT
+- Скилы и промпты: MIT
 - Заметки базы знаний: CC-BY-SA-4.0
 - См. [LICENSE](LICENSE).
 
 ## Участие в разработке
 
-Принимаем контрибуции. См. [CONTRIBUTING.md](CONTRIBUTING.md). Для новых skill'ов используйте [`skills/template-skill/`](skills/template-skill/) как стартовую точку.
+Принимаем контрибуции. См. [CONTRIBUTING.md](CONTRIBUTING.md). Для новых скилов используйте [`skills/template-skill/`](skills/template-skill/) как стартовую точку.
 
 ## Благодарности
 
 Построено на основе исследований:
 
 - [Aboudjem/humanizer-skill](https://github.com/Aboudjem/humanizer-skill) — 43-паттерновый каталог (MIT)
-- [harshaneel/humanize](https://github.com/harshaneel/humanize) — 9 levers (MIT)
+- [harshaneel/humanize](https://github.com/harshaneel/humanize) — 9 рычагов (MIT)
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) — community-maintained patterns
 - [Wikipedia: Признаки сгенерированности текста](https://ru.wikipedia.org/wiki/Википедия:Признаки_сгенерированности_текста) — русские паттерны
 - Академические работы: Binoculars (ICML 2024), Watermarking (ICML 2023), MASH (ACL 2026)

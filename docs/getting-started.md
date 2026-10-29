@@ -146,7 +146,7 @@ The agent picks up changes on next skill load.
 | Document | What it covers |
 |---|---|
 | [Skills Overview](skills-overview) | 4 skills, 4 phases, 12 levers, when to use which |
-| [Knowledge Base](knowledge-base) | Tour of 41+ notes (patterns, techniques, sources) |
+| [Knowledge Base](knowledge-base) | Tour of 37+ notes (patterns, techniques, sources) |
 | [Limitations](limitations) | What these skills can and cannot do |
 | [Contributing](contributing) | Add new skills, prompts, notes |
 
