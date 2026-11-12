@@ -3,10 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    math-coding.url = "github:11111000000/math-coding";
   };
 
   outputs =
-    { self, nixpkgs }:
+    { self, nixpkgs, math-coding }:
     let
       lib = nixpkgs.lib;
       systems = [
@@ -82,6 +83,10 @@
             bash ./scripts/build-site.sh "''${1:-public}"
           '';
           default = self.packages.${system}.validate;
+          # The method binary, built from source at the revision this flake
+          # pins. A downloaded release lags behind the repository and then
+          # generates a different agent page, which fails `mathc doctor`.
+          mathc = math-coding.packages.${system}.default;
         }
       );
 
@@ -98,6 +103,13 @@
           build-site = {
             type = "app";
             program = "${self.packages.${system}.build-site}/bin/agents-writing-skills-build-site";
+          };
+          # The method binary is built from source at the revision this flake
+          # pins. A downloaded release lags behind the repository and then
+          # generates a different agent page, which fails `mathc doctor`.
+          mathc = {
+            type = "app";
+            program = "${self.packages.${system}.mathc}/bin/mathc";
           };
           default = self.apps.${system}.validate;
         }

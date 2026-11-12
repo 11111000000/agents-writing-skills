@@ -43,6 +43,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa
+        with:
+          extra-conf: |
+            accept-flake-config = true
+            experimental-features = nix-command flakes
+
+      - uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569
+        with:
+          primary-key: nix-${{ runner.os }}-mathc-${{ hashFiles('flake.lock') }}
+          restore-prefixes-first-match: true
+
       - name: Run validation
         run: ./scripts/validate-skills.sh .
 
@@ -58,18 +69,12 @@ jobs:
       - name: Check that examples preserve source facts
         run: ./scripts/check-examples-facts.sh
 
-      - name: Install the math-coding binary
+      - name: Build the math-coding binary
         run: |
           set -euo pipefail
-          version="v5.0.2"
-          asset="mathc-${version}-linux-x86_64"
-          base="https://github.com/11111000000/math-coding/releases/download/${version}"
-          curl -fsSL "$base/SHA256SUMS" -o SHA256SUMS
-          curl -fsSL "$base/$asset" -o "$asset"
-          grep " $asset\$" SHA256SUMS | sha256sum -c -
-          chmod +x "$asset"
+          nix build .#mathc --no-link
           mkdir -p "$HOME/.local/bin"
-          mv "$asset" "$HOME/.local/bin/mathc"
+          cp "$(nix path-info .#mathc)/bin/mathc" "$HOME/.local/bin/mathc"
           # The OCaml 5 runtime sizes its signal stack from SIGSTKSZ, which
           # follows the stack rlimit. GitHub runners leave it unlimited, and
           # the allocation then fails with "Failed to allocate signal stack".
