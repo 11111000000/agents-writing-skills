@@ -2,10 +2,13 @@
   "schema_version": 5,
   "goal": {
     "text": "Редактура текста сохраняет смысл: факты, условия и оговорки не теряются и не выдумываются",
-    "scope": [ "skills/", "prompts/", "scripts/", "tests/" ],
+    "scope": [
+      "skills/", "prompts/", "scripts/", "tests/", "knowledge/04-Examples/",
+      "knowledge/02-Techniques/", "manifest.json"
+    ],
     "by": "az",
-    "at": 1794491817,
-    "reason": null
+    "at": 1794499000,
+    "reason": "the audit showed the meaning-preservation examples and the skill manifest were outside the aim scope, so the aim could not be verified there"
   },
   "claims": [
     {
@@ -87,6 +90,45 @@
       "falsifier": "a fixture loses required fields or a gold edit silently drops a fact",
       "register": "fact",
       "control": "sed -i 's/^## Gold edit/## GoldEditBroken/' tests/fixtures/editing/formal-email-1.md",
+      "waiver": null
+    },
+    {
+      "id": "meaning-contract",
+      "text": "the examples preserve the source facts: every number in an after block already exists in its before block",
+      "scope": [
+        "knowledge/04-Examples/", "scripts/check-examples-facts.sh"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/check-examples-facts.sh"
+        }
+      ],
+      "falsifier": "an after block introduces a number that the before block never contained",
+      "register": "fact",
+      "control": "sed -i 's/Простой в использовании, настраивается под процесс команды./Простой в использовании, настраивается под процесс команды. Обрабатывает 500 RPS./' knowledge/04-Examples/before-after.md",
+      "waiver": null
+    },
+    {
+      "id": "manifest-valid",
+      "text": "every skill path declared in the manifest exists in the repository",
+      "scope": [ "manifest.json", "scripts/validate-manifest.sh" ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        { "kind": "verifier", "spec": "bash scripts/validate-manifest.sh" }
+      ],
+      "falsifier": "a manifest declares a skill path that does not exist",
+      "register": "fact",
+      "control": "sed -i 's|skills/humanize-writer/SKILL.md|skills/nonexistent/SKILL.md|' manifest.json",
       "waiver": null
     }
   ]

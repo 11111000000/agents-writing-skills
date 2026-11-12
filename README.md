@@ -36,16 +36,16 @@ Clone https://github.com/11111000000/agents-writing-skills and install the skill
 
 Works in any language, on any agent, any OS.
 
-## 📦 What you get (v1.4)
+## 📦 What you get (v1.5)
 
 ### 4 production skills
 
 | Skill | Purpose | Version |
 |---|---|---|
-| `humanize-writer` | Write new prose that avoids typical LLM patterns | v5 (3-pass) |
-| `humanize-editor` | Rewrite existing text to read as human-authored | v5 (3-pass + Tighten) |
-| `anti-ai-auditor` | Audit text for AI-pattern probability without rewriting | v4 (3-pass audit) |
-| `ai-pattern-rewriter` | Surgical, line-level rewriting of specific AI-pattern phrases | v4 (3-pass surgical) |
+| `humanize-writer` | Write new prose that avoids typical LLM patterns | v7 (3-pass + meaning contract) |
+| `humanize-editor` | Rewrite existing text to read as human-authored | v7 (3-pass + zero semantic loss) |
+| `anti-ai-auditor` | Audit text for AI-pattern probability without rewriting | v7 (3-pass audit) |
+| `ai-pattern-rewriter` | Surgical, line-level rewriting of specific AI-pattern phrases | v7 (3-pass + no invented facts) |
 
 ### 12 levers in 4 phases
 
@@ -125,16 +125,16 @@ See [**Getting Started**](docs/getting-started.md) for three install methods:
 
 Работает на любом агенте с любой ОС.
 
-## 📦 Что внутри (v1.4)
+## 📦 Что внутри (v1.5)
 
 ### 4 production скила
 
 | Скил | Назначение | Версия |
 |---|---|---|
-| `humanize-writer` | Писать прозу без AI-маркеров | v5 (3-pass) |
-| `humanize-editor` | Переписать существующий текст | v5 (3-pass + Tighten) |
-| `anti-ai-auditor` | Диагностика без переписывания | v4 (3-pass аудит) |
-| `ai-pattern-rewriter` | Хирургические правки конкретных spans | v4 (3-pass surgical) |
+| `humanize-writer` | Писать прозу без AI-маркеров | v7 (3-pass + смысловой контракт) |
+| `humanize-editor` | Переписать существующий текст | v7 (3-pass + нулевая потеря смысла) |
+| `anti-ai-auditor` | Диагностика без переписывания | v7 (3-pass аудит) |
+| `ai-pattern-rewriter` | Хирургические правки конкретных spans | v7 (3-pass + без выдуманных фактов) |
 
 ### 12 рычагов в 4 фазах
 

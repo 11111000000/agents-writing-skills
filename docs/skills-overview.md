@@ -15,10 +15,10 @@ description: 4 skills across 4 phases of humanization — STRIP, TIGHTEN, RELY, 
 
 | Skill | When to load | When **NOT** to load | Version |
 |---|---|---|---|
-| 🖊 **`humanize-writer`** | Writing new prose (README, docs, blog, email, status) | Code comments, JSON, short error messages | v5 (3-pass) |
-| ✏ **`humanize-editor`** | Rewriting existing AI-sounding text | Code, math, legal text | v5 (3-pass + Tighten) |
-| 🔍 **`anti-ai-auditor`** | Diagnosing text without changing it | When user wants actual rewrite | v4 (3-pass audit) |
-| 🩹 **`ai-pattern-rewriter`** | Fixing one phrase at a time | Whole-document rewrites | v4 (3-pass surgical) |
+| 🖊 **`humanize-writer`** | Writing new prose (README, docs, blog, email, status) | Code comments, JSON, short error messages | v7 (3-pass + meaning contract) |
+| ✏ **`humanize-editor`** | Rewriting existing AI-sounding text | Code, math, legal text | v7 (3-pass + zero semantic loss) |
+| 🔍 **`anti-ai-auditor`** | Diagnosing text without changing it | When user wants actual rewrite | v7 (3-pass audit) |
+| 🩹 **`ai-pattern-rewriter`** | Fixing one phrase at a time | Whole-document rewrites | v7 (3-pass + no invented facts) |
 
 <br>
 

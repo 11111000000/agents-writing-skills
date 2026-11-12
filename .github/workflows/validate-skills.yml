@@ -6,16 +6,25 @@ on:
     paths:
       - 'skills/**'
       - 'prompts/**'
+      - 'knowledge/04-Examples/**'
+      - 'knowledge/02-Techniques/**'
       - 'manifest.json'
+      - 'spec.json'
       - 'scripts/validate-skills.sh'
       - 'scripts/validate-manifest.sh'
       - 'scripts/test-editing-fixtures.sh'
+      - 'scripts/check-examples-facts.sh'
       - 'tests/fixtures/editing/**'
   pull_request:
     branches: [main, master]
     paths:
       - 'skills/**'
       - 'prompts/**'
+      - 'knowledge/04-Examples/**'
+      - 'knowledge/02-Techniques/**'
+      - 'manifest.json'
+      - 'spec.json'
+      - 'scripts/check-examples-facts.sh'
       - 'tests/fixtures/editing/**'
 
 jobs:
@@ -36,6 +45,29 @@ jobs:
 
       - name: Validate editing fixtures
         run: ./scripts/test-editing-fixtures.sh
+
+      - name: Check that examples preserve source facts
+        run: ./scripts/check-examples-facts.sh
+
+      - name: Install the math-coding binary
+        run: |
+          set -euo pipefail
+          version="v5.0.2"
+          asset="mathc-${version}-linux-x86_64"
+          base="https://github.com/11111000000/math-coding/releases/download/${version}"
+          curl -fsSL "$base/SHA256SUMS" -o SHA256SUMS
+          curl -fsSL "$base/$asset" -o "$asset"
+          grep " $asset\$" SHA256SUMS | sha256sum -c -
+          chmod +x "$asset"
+          mkdir -p "$HOME/.local/bin"
+          mv "$asset" "$HOME/.local/bin/mathc"
+          "$HOME/.local/bin/mathc" --version
+
+      - name: Bind evidence and check the verdict
+        run: |
+          set -euo pipefail
+          "$HOME/.local/bin/mathc" --root . run
+          "$HOME/.local/bin/mathc" --root . doctor
 
       - name: Check for stray em-dash patterns
         run: |
