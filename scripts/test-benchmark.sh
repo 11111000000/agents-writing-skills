@@ -198,6 +198,20 @@ fi
 # validated range. Fails if a future refactor breaks the calibration.
 # See knowledge/02-Techniques/metric-validation.md (n=145).
 
+# --- Locale regression: metrics must not depend on the runner's locale ---
+# CI runners use C.UTF-8, which has no collation: a Cyrillic range like
+# `[А-Яа-я]` makes grep fail with "Invalid collation character" and every
+# Cyrillic metric comes out empty. The same input must score the same under
+# any UTF-8 locale.
+locale_json=$(LC_ALL=C.UTF-8 bash "$BENCH" "$RU_PROSE_FIXTURE" --json 2>/dev/null)
+echo ""
+echo "Test: metrics do not depend on the locale"
+if JSON_PAYLOAD="$locale_json" python3 -c 'import json, os, sys; d=json.loads(os.environ["JSON_PAYLOAD"]); m=d["metrics"]; sys.exit(0 if m["D"] > 30.0 and d["language"] == "ru" else 1)'; then
+    pass "metrics are locale-independent"
+else
+    fail "metrics changed under C.UTF-8 (D and language detection must stay)"
+fi
+
 if [[ -f "$OVERGEN_FIXTURE" ]]; then
     json_assert "over-generated YapScore is critically high (>=2.0)" \
         "$OVERGEN_FIXTURE" \

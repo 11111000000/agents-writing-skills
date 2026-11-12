@@ -85,8 +85,12 @@ sentence_lengths() {
 }
 
 # Locale note: do NOT export LC_ALL=C globally — it breaks Cyrillic character
-# classes (e.g. `[А-Яа-я]` becomes silent-no-match). Set it per-call only where
-# byte-level semantics are needed (emoji byte-range, count_sentences).
+# classes. The Cyrillic ranges below are written as explicit letter lists rather
+# than `[А-Яа-я]` ranges on purpose: a range needs a collation, and under
+# `C.UTF-8` (the default on GitHub runners) grep rejects it with
+# "Invalid collation character", which silently empties every Cyrillic metric.
+# Set the locale per-call only where byte-level semantics are needed (emoji
+# byte-range, count_sentences).
 
 # --- Compute metrics ---
 WORDS=$(count_words "$INPUT")
@@ -116,7 +120,7 @@ fi
 # is missed. Empirically this is <15% of real cases in literary prose.
 # See knowledge/01-Patterns/structural/deeprichastnye-oboroty.md for
 # discussion of false-positive rate.
-D_RU=$(echo "$INPUT" | grep -oE '(^|[,.;:][[:space:]]+)([А-Яа-яЁё]{4,}(ив|вши|а|в|я))(ся)?[[:space:]]' | wc -l | tr -d ' ')
+D_RU=$(echo "$INPUT" | grep -oE '(^|[,.;:][[:space:]]+)([АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]{4,}(ив|вши|а|в|я))(ся)?[[:space:]]' | wc -l | tr -d ' ')
 D=$(awk "BEGIN {printf \"%.1f\", $D_RU * 1000 / $WORDS}")
 
 # E: em-dash
@@ -271,8 +275,8 @@ P20=$(awk "BEGIN {printf \"%.2f\", $HEDGED_OPENER * 1000 / $WORDS}")
 
 # --- Language detection for calibrated thresholds ---
 # Cyrillic ratio > 0.3 → RU mode (applies RU-specific thresholds).
-CYR_COUNT=$(echo "$INPUT" | grep -oE '[А-Яа-яЁё]' | wc -l | tr -d ' ')
-LETTER_COUNT=$(echo "$INPUT" | grep -oE '[A-Za-zА-Яа-яЁё]' | wc -l | tr -d ' ')
+CYR_COUNT=$(echo "$INPUT" | grep -oE '[АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]' | wc -l | tr -d ' ')
+LETTER_COUNT=$(echo "$INPUT" | grep -oE '[A-Za-zАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]' | wc -l | tr -d ' ')
 if [[ "$LETTER_COUNT" -gt 0 ]]; then
     CYR_RATIO=$(awk "BEGIN {printf \"%.3f\", $CYR_COUNT / $LETTER_COUNT}")
 else
