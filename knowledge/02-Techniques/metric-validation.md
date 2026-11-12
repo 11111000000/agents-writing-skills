@@ -55,6 +55,12 @@ Run with `scripts/run-corpus-benchmark.sh` → `tests/results/corpus-benchmark.j
 
 ## Findings
 
+> **Caveat: маленький RU-корпус.** RU-выводы ниже опираются всего на
+> 8 human (Wikisource) и 12 AI (synthetic) файлов — на порядок меньше,
+> чем EN-плечо (60/65). Направления сигналов (E = 0, burstiness < 8 у AI)
+> устойчивы, но конкретные пороги для RU — ориентировочные и требуют
+> подтверждения на реальном RU LLM-корпусе (см. раздел 5).
+
 ### 1. P0 metric fixes verified
 
 - **YapScore cap removed**: pre-fix capped at 1.67; post-fix correctly
@@ -83,7 +89,7 @@ Current default thresholds (from skill docs):
 |---|---|---|---|
 | AP < 1 | Generic | No AP signal in HC3/RAID/Wikisource/synthetic. HC3/RAID: AP≈0.10 both classes. | Keep generic; AP triggers mostly on marketing prose, not Q&A. |
 | **D < 7** | For "all RU" | RU literary prose: 20.2 (Tolstoy). RU marketing AI: 11.0. | **Raise to D < 12** for RU literary; **D < 7** still OK for RU conversational. |
-| **E < 3** | Generic | RU literary: 8.0. EN: 0–0.05. AI RU: 0. | **E > 0 in RU is a strong AI flag** (humans use em-dash). Threshold should be split: EN <3 stays; **RU < 1 = AI flag**. |
+| **E < 3** | Generic | RU literary: 8.0. EN: 0–0.05. AI RU: 0. | **E = 0 в RU — AI-сигнал**: человеческая русская проза использует em-dash, LLM — нет. Threshold should be split: EN <3 stays; **RU < 1 = AI flag**. |
 | **V < 5%** | Generic | RU human: 0%, RU AI: 6.72%. EN human: 0%, EN AI: 1.70%. | Tighten to **V > 2%** as warning threshold. |
 | R < 10% | Generic | RU human: 3.86%, RU AI: 0%. EN human: 6.15%, EN AI: 7.10%. | Less reliable signal than expected. Keep as-is. |
 | B < 5% | Generic | Near-zero in all classes. | Almost never triggers; consider raising threshold or removing from default decision logic. |

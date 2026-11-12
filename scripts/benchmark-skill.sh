@@ -7,9 +7,9 @@
 #   - D:  деепричастия density (per 1000 words, RU only)
 #   - E:  em-dash count (per 300 words)
 #   - V:  vacuum-filling sentences (%)
-#   - R:  restatement chains (%)
+#   - R:  restatement chains (% of adjacent sentence pairs sharing >50% trigrams)
 #   - B:  bridging phrases at para starts (%)
-#   - YapScore estimate (длина / baseline, где baseline = 60% текущей длины)
+#   - YapScore (filler-based heuristic: длина / (длина − взвешенные маркеры-пустышки))
 #   - Burstiness: mean & std of sentence length
 #   - Specificity: concrete facts per paragraph
 #   - Format bias: emojis, bold, list density
@@ -22,8 +22,8 @@
 #   ./scripts/benchmark-skill.sh --stdin           # читать из stdin
 #
 # Возвращает:
-#   exit 0 если текст OK (все метрики в target range)
-#   exit 1 если есть проблемы
+#   exit 0 если все метрики в целевых диапазонах (диагностика, не оценка качества)
+#   exit 1 если есть сигналы для ручной проверки
 #   exit 2 если файл не найден
 
 # NOTE: set -e disabled to allow graceful handling of grep returning non-zero
@@ -133,25 +133,37 @@ else
   V="0.0"
 fi
 
-# R: restatement chains (heuristic: trigram overlap between adjacent sentences)
-R=$(echo "$INPUT" | awk '
-  BEGIN { FS = ".!?\n"; }
+# R: restatement chains — trigram overlap between ADJACENT sentences.
+# A sentence pair (i-1, i) counts as "restated" when the two sentences share
+# more than 50% of their trigrams (overlap coefficient over the smaller set).
+# Normalization: lowercase, whitespace-split; sentence split on .!?
+# R% = restated pairs / all adjacent pairs.
+R=$(echo "$INPUT" | tr '\n' ' ' | sed 's/[.!?]\+/&\n/g' | awk '
   {
-    sub(/^\s+|\s+$/, "")
+    sub(/^[[:space:]]+/, "")
+    sub(/[[:space:]]+$/, "")
     if (length($0) == 0) next
-    n = split($0, words, /[[:space:]]+/)
-    delete trie
+    n = split(tolower($0), words, /[[:space:]]+/)
+    delete cur
+    cnt = 0
     for (i = 1; i <= n - 2; i++) {
-      tri = tolower(words[i] " " words[i+1] " " words[i+2])
-      if (trie[tri]) { restated++; break }
-      trie[tri] = 1
+      tri = words[i] " " words[i+1] " " words[i+2]
+      if (!(tri in cur)) { cur[tri] = 1; cnt++ }
     }
     sentences++
+    if (sentences > 1 && cnt > 0 && prev_cnt > 0) {
+      common = 0
+      for (t in cur) if (t in prev) common++
+      denom = (cnt < prev_cnt ? cnt : prev_cnt)
+      if (common / denom > 0.5) restated++
+    }
+    delete prev
+    for (t in cur) prev[t] = 1
+    prev_cnt = cnt
   }
   END {
-    if (sentences == 0) { print 0; exit }
-    pct = restated * 100 / sentences
-    printf "%.1f\n", pct
+    if (sentences <= 1) { printf "0.0"; exit }
+    printf "%.1f", restated * 100 / (sentences - 1)
   }
 ')
 
@@ -165,12 +177,20 @@ else
   B="0.0"
 fi
 
+# YapScore — filler-based heuristic, НЕ сравнение с минимально-достаточным
+# baseline. Настоящий YapBench baseline (Borisov et al., 2026) требует
+# эталонного «достаточного» ответа на тот же промпт; здесь его нет. Вместо
+# этого: baseline = WORDS минус взвешенные маркеры-пустышки (vacuum openers,
+# bridging, negative parallelism, лексические fillers). Значение ~1.0 означает
+# «мало маркеров», а не «текст достаточной длины». Использовать только как
+# сигнал over-generation, не как меру качества.
 YAP_FILLER=$(echo "$INPUT" | grep -Eio '(современн(ое|ый|ая)|Стоит отметить|Более того|значительных результатов|эффективное решение|оптимизаци[яи]|интуитивн|продуманн|comprehensive|seamless|robust|cutting-edge|It is worth noting|In today.s|Moreover|Furthermore)' | wc -l | tr -d ' ')
 YAP_REDUNDANT=$(( (V_OPENER_TOTAL + B_TOTAL) * 8 + AP_TOTAL * 6 + YAP_FILLER * 4 ))
 if [[ $WORDS -gt 0 ]]; then
-  # baseline = non-redundant words; floor at 1 to avoid div-by-zero.
-  # (previous formula floored at 60% of WORDS, which silently capped YapScore
-  # at 1.67 — making it impossible to flag severely over-generated text.)
+  # baseline = words minus weighted filler markers; floor at 1 to avoid
+  # div-by-zero. (An earlier formula floored at 60% of WORDS, which silently
+  # capped YapScore at 1.67 — making it impossible to flag severely
+  # over-generated text.)
   YAP_BASELINE=$(awk "BEGIN {b=$WORDS-$YAP_REDUNDANT; if (b<1) b=1; printf \"%d\", b}")
   YAP=$(awk "BEGIN {printf \"%.2f\", $WORDS / $YAP_BASELINE}")
 else
@@ -373,12 +393,12 @@ Volume:
 
 Density metrics:
   AP (negative parallelism):  $AP  per 1000 words   [target <$TH_AP]
-  D  (RU деепричастия):       $D   per 1000 words   [target <$TH_D]
+  D  (RU деепричастия):       $D   per 1000 words   [target <$TH_D_SOFT]
   E  (em-dash):               $E   per 300 words     [target <$TH_E]
   V  (vacuum-filling):        $V%                   [target <$TH_V%]
   B  (bridging):              $B%  of paragraphs    [target <5%]
   R  (restatement):           $R%  of sentences    [target <$TH_R%]
-  YapScore:                   $YAP                   [target 1.0-1.5]"
+  YapScore (filler heuristic): $YAP                   [target 1.0-1.5; не мера качества]
 
 
 Burstiness:
@@ -405,7 +425,8 @@ Voice:
   Opinion present:            $OPINION_PRESENT
 
 ─────────────────────────────────────────────────────────────────
-Verdict: $([ "$TARGETS_OK" = "true" ] && echo "PASS (все метрики в target)" || echo "FAIL (есть проблемы)")
+Diagnostic verdict (НЕ оценка качества текста, только проверка метрик):
+  $([ "$TARGETS_OK" = "true" ] && echo "OK — метрики в целевых диапазонах" || echo "REVIEW — есть сигналы для ручной проверки")
 
 Recommendations:
 EOF

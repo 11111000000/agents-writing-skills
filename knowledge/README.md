@@ -59,6 +59,9 @@ templates/            — шаблоны заметок
 - [[02-Techniques/length-bias-research]] — **NEW**: академический обзор length bias в RLHF (Park, Shen, Zhang, Lamparth, Huang)
 - [[02-Techniques/russian-brevity-grammar]] — **NEW**: парцелляция, эллипсис, литота как русские грамматические инструменты краткости
 - [[02-Techniques/laconic-prose-models]] — **NEW**: Толстой, Довлатов, Шкловский, Бунин как эталонные модели русской краткости
+- [[02-Techniques/meaning-preservation]] — **NEW v7**: meaning_map и двусторонняя сверка смысла; нулевая потеря утверждений, запрет выдуманных фактов
+- [[02-Techniques/editing-modes]] — **NEW v7**: режимы proofread / light / style / deep и границы применения фаз STRIP/TIGHTEN/RELY/REBUILD
+- [[02-Techniques/russian-copyediting]] — **NEW v7**: этап COPYEDIT для русского — грамматика, управление, модальность, 24 пары ошибка→исправление
 - [[02-Techniques/agent-writing-workflow]] — алгоритм Pre-flight → Write → Audit
 
 ### Структурные паттерны
@@ -110,7 +113,9 @@ templates/            — шаблоны заметок
 - Source notes для Шкловского, Лотмана, Гаспарова, Аверинцева получили дословные цитаты из оригиналов (Phase 3 закрыт на уровне ключевых работ; дальше — выписки)
 - Примеры до/после собраны (tightening, iceberg, Russian grammar, Kholstomer example)
 - Первоисточники скачаны и описаны (Fabric, Anthropic, Pi skills, Aboudjem, harshaneel, lynote-ai, Wikipedia RU, arXiv length-bias, Шкловский/Лотман/Гаспаров/Аверинцев)
-- Skill'ы для opencode/pi/Claude Code синхронизированы до v6
+- Skill'ы для opencode/pi/Claude Code синхронизированы до v7 (смысловой контракт: нулевая потеря утверждений, запрет выдуманных фактов, режимы proofread/light/style/deep)
+- Поведенческий корпус редактуры `tests/fixtures/editing/` (24 примера, ловушки на модальность/условия/выдумки) + валидатор `scripts/test-editing-fixtures.sh`
+- Слой доказательств math-coding v5: `spec.json`, 4 claims с negative controls, `mathc run` — green
 - Skill'ы и prompt-templates для pi установлены
 - Регулярный аудит при обновлении upstream (Aboudjem и harshaneel активно развиваются)
 

@@ -148,7 +148,7 @@ require_file "$OVERGEN_FIXTURE"
 require_file "$RU_PROSE_FIXTURE"
 
 if [[ -f "$AI_FIXTURE" ]]; then
-    run_exit_test "AI-typical README is flagged" "$AI_FIXTURE" 1 "FAIL"
+    run_exit_test "AI-typical README is flagged" "$AI_FIXTURE" 1 "REVIEW — есть сигналы для ручной проверки"
     require_metrics "$AI_FIXTURE"
     json_assert "AI fixture has failing thresholds" "$AI_FIXTURE" 'd["targets_ok"] == False and d["metrics"]["YapScore"] > 1.5 and d["metrics"]["specificity_facts_per_para"] < 0.5'
 fi
@@ -242,6 +242,27 @@ for f in "$FIXTURES"/ru-corpus/*.txt; do
         fail "Wikisource $base benchmark crashed (rc=$rc, output=$(echo "$out" | head -c 80))"
     fi
 done
+
+# --- R-metric regression: restatement between ADJACENT sentences ---
+# Two identical adjacent sentences share all trigrams -> the pair counts as
+# restated. A trigram repeated WITHIN one sentence must NOT count.
+r_adj_json=$(printf '%s' "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. Nothing else repeats here at all." | bash "$BENCH" --stdin --json 2>/dev/null)
+echo ""
+echo "Test: R counts restatement between adjacent sentences"
+if JSON_PAYLOAD="$r_adj_json" python3 -c 'import json, os, sys; d=json.loads(os.environ["JSON_PAYLOAD"]); sys.exit(0 if d["metrics"]["R"] >= 50.0 else 1)'; then
+    pass "R counts restatement between adjacent sentences"
+else
+    fail "R missed adjacent-sentence restatement (R=$r_adj_json)"
+fi
+
+r_intra_json=$(printf '%s' "alpha beta gamma delta alpha beta gamma delta." | bash "$BENCH" --stdin --json 2>/dev/null)
+echo ""
+echo "Test: R ignores trigram repeats within a single sentence"
+if JSON_PAYLOAD="$r_intra_json" python3 -c 'import json, os, sys; d=json.loads(os.environ["JSON_PAYLOAD"]); sys.exit(0 if d["metrics"]["R"] == 0.0 else 1)'; then
+    pass "R ignores trigram repeats within a single sentence"
+else
+    fail "R flagged intra-sentence trigram repeat (R=$r_intra_json)"
+fi
 
 run_no_crash_stdin "empty stdin" ""
 

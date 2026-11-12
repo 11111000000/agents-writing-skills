@@ -6,12 +6,12 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-generation
-  version: 6
+  version: 7
 ---
 
-# Humanize-Writer (v6)
+# Humanize-Writer (v7)
 
-Write text that reads like a human wrote it. v6 keeps the explicit **3-pass architecture** (Audit → Rewrite → Verify) and adds literary grounding for Russian brevity through Shklovsky, Tolstoy, Dovlatov, and Bunin. 12 levers stay organized into 4 phases (STRIP / TIGHTEN / RELY / REBUILD).
+Write text that reads like a human wrote it — without invented facts and without a template "humanize style" (рубленые фразы + числа + «я» + вопрос в конце). v7 keeps the explicit **3-pass architecture** (Audit → Rewrite → Verify) and adds the fact contract: конкретика берётся только из входных данных пользователя, приёмы применяются условно, метрики — диагностика, а не цель. 12 levers stay organized into 4 phases (STRIP / TIGHTEN / RELY / REBUILD).
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). They resolve via the GitHub web UI / API. **No local file dependencies** — works on any machine with internet access.
@@ -22,6 +22,12 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 > export KNOWLEDGE_PATH="$HOME/.cache/agents-writing-skills-knowledge/knowledge"
 > ```
 
+> [!warning] Фактический контракт (v7)
+> **Запрещено выдумывать** числа, имена, даты, личный опыт и причины. Конкретика берётся только из входных данных пользователя или явно оговорённых источников.
+> Если факта нет — **спросите пользователя**, пометьте `[нужен факт: ...]` или пишите без него.
+> Приёмы (первое лицо, rupture, короткие фразы, тире) — **условные, а не обязательные**: они выбираются под жанр и голос, а не применяются всегда.
+> **Хороший исходный текст можно оставить почти без изменений.**
+
 > [!warning] Что этот скил МОЖЕТ и чего НЕ МОЖЕТ
 > **Может:** сделать текст, который читается как человеческий для среднестатистического читателя.
 > **Не может:** гарантировать прохождение GPTZero, Pangram, Grammarly. Против обученных детекторов **статические правила имеют потолок** (MASH, ACL 2026).
@@ -30,6 +36,12 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 
 > [!warning] Length bias caveat (v4+)
 > YapBench (Borisov et al., 2026) и Park et al. (2024) показали, что length bias — структурное свойство RLHF preference tuning. **Tighten pass может привести к bias substitution** (Lamparth et al., 2026): сокращение длины → перенос bias на другие proxies (confidence, factual depth). Tighten pass должен сохранять плотность фактов, не только сокращать слова.
+
+> [!info] Major changes in v7
+> - **Фактический контракт**: запрет на выдуманную конкретику; сбор фактов — обязательный шаг Pass 1
+> - **Условные приёмы**: первое лицо, конкретика, rupture — «если уместно и доступно», без жёстких квот
+> - **Метрики как диагностика**, не как цель: хороший исходный текст можно оставить почти без изменений
+> - **Режимы правки**: proofread / light / style / deep (см. `agent-writing-workflow`)
 
 > [!info] Major changes in v5
 > - **3-проходная архитектура**: Audit → Rewrite → Verify (явные входы/выходы)
@@ -53,7 +65,7 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 ```
 ┌────────────────────────────────────────────────────────────────┐
 │ PASS 1: AUDIT (identify what to fix)                           │
-│   Output: список проблем + метрики (AP, D, E, YapScore)        │
+│   Output: сбор фактов + список проблем + метрики (AP, D, E…)   │
 └────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────────┐
@@ -78,8 +90,35 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 
 > [!tip] Когда применять
 > Перед написанием длинного текста. Перед редактированием чужого. Когда нужна отправная точка для оценки длины.
+> Если задача — правка существующего текста, сначала выберите режим: **proofread / light / style / deep** (см. [`02-Techniques/agent-writing-workflow.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/agent-writing-workflow.md)). Хороший исходный текст можно оставить почти без изменений — режим proofread для этого и существует.
 
-### 1.1. Метрики для подсчёта
+### 1.1. Сбор фактов (обязательный шаг)
+
+Прежде чем что-то писать или переписывать, зафиксируйте, **что реально известно**. Конкретика в итоговом тексте может происходить только из этого списка.
+
+```yaml
+fact_sheet:
+  known:                # факты из входных данных пользователя
+    - "…"               # числа, имена, даты, пути, команды, ссылки
+  ask_user:             # факты, без которых текст будет пустым — спросить до написания
+    - "…"
+  optional:             # украсят текст, но можно писать и без них
+    - "…"
+  forbidden:            # никогда не появляются в тексте
+    - "выдуманные числа, имена, даты, личный опыт, причины"
+```
+
+Правила:
+
+- **Нет факта — нет конкретики.** Заменять абстракцию выдуманным числом хуже, чем оставить абстракцию.
+- Если факт критичен и недоступен — **спросите пользователя** до начала Pass 2.
+- Если спросить нельзя, а место под факт остаётся — пометьте `[нужен факт: что именно]`.
+- Примеры в этом документе (Genium Tasks и т.п.) — **иллюстрации с вымышленными продуктами**, а не образец того, откуда брать конкретику.
+
+### 1.2. Метрики для подсчёта
+
+> [!note] Метрики — диагностика, не цель
+> Таблица ниже помогает **найти** проблемы, а не заставляет «попасть в норму» любой ценой. Если текст уже хорош, метрики подтвердят это — и текст можно оставить почти без изменений. Погоня за порогами ради порогов воспроизводит шаблонный «humanize-стиль», от которого проект уходит.
 
 Используйте простые текстовые счётчики (wc, awk) или `scripts/benchmark-skill.sh`:
 
@@ -114,7 +153,7 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 > длиной >200 слов — сильный AI-маркер**. Высокий E (5+ на 300 слов) —
 > наоборот, человеческий признак.
 
-### 1.2. Признаки AI-текста без счётчиков
+### 1.3. Признаки AI-текста без счётчиков
 
 Прочитайте текст вслух. Спросите себя:
 
@@ -123,12 +162,16 @@ Write text that reads like a human wrote it. v6 keeps the explicit **3-pass arch
 - [ ] **Есть ли "let me explain", "стоит отметить", "это важно"?** (RLHF voice)
 - [ ] **Каждый второй абзац заканчивается выводом?** (mini-conclusion)
 - [ ] **Есть ли списки ровно из 3 элементов с одинаковой грамматикой?** (rule of three)
-- [ ] **В тексте больше абстрактных слов, чем чисел?** (низкая фактичность / low specificity)
+- [ ] **В тексте больше абстрактных слов, чем конкретики?** (низкая фактичность / low specificity)
 
-### 1.3. Audit output
+### 1.4. Audit output
 
 ```yaml
 audit_report:
+  facts:
+    known: ["…"]            # см. 1.1
+    ask_user: ["…"]
+    missing_marked: 0       # сколько [нужен факт: ...] останется в тексте
   metrics:
     AP: 5.2  # critical
     D: 9.1  # high
@@ -142,9 +185,9 @@ audit_report:
     - type: negative_parallelism
       locations: [para_4_sentence_2]
   voice_signals:
-    first_person: false
+    first_person: false     # нужен ли — решают жанр и голос, не квота
     opinion: false
-    concrete_facts: 2  # low
+    concrete_facts: 2  # low — но добавлять только реальные
   estimated_effort: "2-3 passes"
 ```
 
@@ -165,8 +208,8 @@ audit_report:
 | **2. Burstiness** | Чередовать длины предложений (5–25+ слов) | Когда std предложений < 3 |
 | **3. Hedge surgery** | Удалить «можно сказать», «it could be argued» | Когда есть hedging |
 | **4. Structural flatten** | Убрать лишние структурные навороты | Когда bullets перегружены |
-| **5. Specificity** | Заменить абстракции числами | Когда мало конкретики (<0.5 факта/абзац) |
-| **6. Voice** | Добавить «я»/«мы»/«I»/«we» | Когда нет авторского голоса |
+| **5. Specificity** | Заменить абстракции реальными фактами (числа, имена, пути) | Когда мало конкретики (<0.5 факта/абзац) **и факты доступны**; иначе — спросить или пометить `[нужен факт: ...]`. Выдумывать запрещено |
+| **6. Voice** | Добавить «я»/«мы»/«I»/«we» | Когда нет авторского голоса **и жанр/формат это допускает**; если уместно — иначе пропустить |
 | **7. Discourse** | Убрать «Furthermore», «Moreover» | Когда есть AI-коннекторы |
 | **8. Punctuation** | Em-dash ≤ 1 на 300 слов | Когда em-dash > нормы |
 | **9. RLHF strip** | Убрать polite hedging, balanced framing | Когда есть «Great question!», «I hope this helps» |
@@ -181,7 +224,7 @@ audit_report:
 - **P-NEW-19 Mini-Aphorism Closer** — последнее предложение абзаца — короткая сентенция-мораль. Удалить или развернуть.
 - **P-NEW-20 Hedged-Enumeration Openers** — «From X to Y, …», «Whether A or B, …», «Not just A, but B». Заменить прямой формулировкой.
 
-**Пример STRIP:**
+**Пример STRIP** (иллюстрация: продукт «Genium Tasks» и детали вымышлены. Это демонстрация замены штампов прямой речью, а **не** образец превращения абстракции в факты — в реальной работе конкретику даёт пользователь, см. 1.1):
 
 ```diff
 - Мы предоставляем современное решение, которое обеспечивает эффективное
@@ -192,6 +235,7 @@ audit_report:
 
 ```diff
 # P-NEW-13 False Agency
+# NB: конкретика в «после» должна быть реальной (от пользователя), не выдуманной
 - The market rewards companies that listen.
 + Customers spend more with companies that answer support tickets within an hour.
 ```
@@ -362,7 +406,27 @@ def check_bias_substitution(original: str, rewritten: str) -> dict:
     return {"status": "PASS", "loss_pct": loss_pct}
 ```
 
+### 3.1.1. Fact-contract check (v7)
+
+Симметричная проверка в обратную сторону: в переписанном тексте не должно появиться фактов, которых не было ни в оригинале, ни в `fact_sheet.known` (см. 1.1).
+
+```python
+def check_no_invented_facts(rewritten: str, fact_sheet: dict) -> dict:
+    """Каждый факт в тексте должен происходить из fact_sheet.known."""
+
+    facts = extract_facts(rewritten)
+    invented = facts - set(fact_sheet["known"])
+
+    if invented:
+        return {"status": "FAIL", "invented_facts": invented,
+                "action": "удалить, спросить пользователя или пометить [нужен факт: ...]"}
+
+    return {"status": "PASS"}
+```
+
 ### 3.2. Final density check
+
+Метрики здесь — диагностика: они показывают, где искать проблему, а не задают цель «попасть в норму».
 
 ```yaml
 final_check:
@@ -374,6 +438,7 @@ final_check:
   R: <10%                 # restatement chains
   B: <5%                  # bridging
   loss_pct_facts: <10%    # bias substitution
+  invented_facts: 0       # fact contract
 ```
 
 ### 3.3. Read aloud test
@@ -382,6 +447,7 @@ final_check:
 - ❌ пресс-релиз LinkedIn → переписать
 - ❌ marketing landing → переписать
 - ❌ Wikipedia article → переписать
+- ❌ шаблонный «humanize-стиль» (рубленые фразы + числа + «я» + вопрос в конце) → переписать
 - ✅ normal human speech / post / email — OK
 
 ### 3.4. Если VERIFY не проходит
@@ -424,13 +490,13 @@ verify_failure:
 > Следующие шаги эквивалентны Pass 1-3 архитектуре выше, но описаны линейно.
 
 ### Step 1 — Pre-flight (Pass 1, частично)
-4 вопроса: voice, lead, numbers ready?, sufficiency budget.
+4 вопроса: voice, lead, numbers ready?, sufficiency budget. Плюс обязательный сбор фактов (см. 1.1): что известно, что спросить у пользователя.
 
 ### Step 2 — Draft
-Draft full text, monitor: вариативность длины, деепричастия, em-dash count, я/мы.
+Draft full text, monitor: вариативность длины, деепричастия, em-dash count, я/мы (если уместно).
 
 ### Step 3 — Audit pass (Pass 1)
-Per-paragraph checks: concrete detail, sentence length diff, banned lexicon, triple-parallel, abstract sentence.
+Per-paragraph checks: concrete detail (только реальная), sentence length diff, banned lexicon, triple-parallel, abstract sentence.
 
 ### Step 4 — Tighten pass (Pass 2, TIGHTEN)
 8 scans + Strunk cut-test + Williams 6 operations.
@@ -442,7 +508,7 @@ Insert rupture if smooth, or silence (Lever 11).
 Reader-fill test, distinctive-word test.
 
 ### Step 7 — Density check (Pass 3)
-Count per 1000 words: AP, D, E, V, R, B.
+Count per 1000 words: AP, D, E, V, R, B. Плюс fact-contract check: выдуманных фактов — 0.
 
 ---
 
@@ -467,6 +533,8 @@ Count per 1000 words: AP, D, E, V, R, B.
 ## Output format
 
 Always output **only the final text**. No preamble, no "Here's a draft:", no apologies.
+
+Допустимое исключение — маркеры `[нужен факт: ...]` в местах, где пользователь должен подставить реальную конкретику. Если таких маркеров много, сначала спросите пользователя, потом пишите.
 
 Если пользователь просит audit или diagnosis — переключись на `anti-ai-auditor`.
 

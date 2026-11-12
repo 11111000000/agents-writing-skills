@@ -6,12 +6,17 @@ compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: surgical-edit
-  version: 6
+  version: 7
 ---
 
-# AI-Pattern Rewriter (v6)
+# AI-Pattern Rewriter (v7)
 
-Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v6 keeps the **3-pass surgical architecture** (Identify → Rewrite → Verify) and adds laconic RU rewrite models for short, concrete replacements.
+Surgical, span-level rewriting. **Only** rewrite the specific phrases the user flagged (or that you can clearly identify as AI-pattern spans). Preserve everything else. v7 keeps the **3-pass surgical architecture** (Identify → Rewrite → Verify) and исправляет ключевой дефект примеров: **правка не имеет права выдумывать факты**.
+
+> [!info] Changelog v7
+> - Примеры переписаны: раньше «Система быстрая» → «p99 14 мс, 5k RPS» демонстрировал выдумку чисел. Теперь примеры либо не добавляют новых фактов, либо работают с исходником, где числа уже есть.
+> - Добавлен маркер `[нужен факт: ...]` — если утверждению не хватает конкретики, пометить, а не выдумать.
+> - Проверка span'а ищет и потерянные, и **выдуманные** факты.
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.
@@ -54,16 +59,17 @@ Surgical, span-level rewriting. **Only** rewrite the specific phrases the user f
 ## Hard rules
 
 1. **Touch only the flagged spans.** If the user said "only line 7", do not edit line 12 even if it has issues.
-2. **Preserve meaning** of the rewritten span exactly.
-3. **Preserve surrounding tone** — don't make the rewritten span either more or less formal than its neighbors.
-4. **Single rewrite per span** — show one alternative, not three. If the user wants options, they will ask.
-5. **No commentary outside the rewrite** unless asked. Don't explain the change unless asked.
-6. **NEW v5**: When applying over-generation rewrites, it's OK to **delete** rather than rewrite — that's often the right answer.
+2. **Preserve meaning** of the rewritten span exactly — утверждения, числа и их отношения, условия, исключения, отрицания, модальность («может» ≠ «точно»), терминология, цитаты, регистр формальности.
+3. **Never invent facts** — никаких новых чисел, имён, дат, личного опыта, причин. Если утверждению не хватает конкретики, а во входных данных её нет — пометить `[нужен факт: ...]`, не выдумывать. Выдуманное число хуже абстрактного утверждения.
+4. **Preserve surrounding tone** — don't make the rewritten span either more or less formal than its neighbors.
+5. **Single rewrite per span** — show one alternative, not three. If the user wants options, they will ask.
+6. **No commentary outside the rewrite** unless asked. Don't explain the change unless asked.
+7. When applying over-generation rewrites, it's OK to **delete** rather than rewrite — that's often the right answer. Но удалять можно только явные дубликаты и пустые фразы; удаление настоящего утверждения = потеря смысла.
 
-## Bias substitution warning (introduced in v5)
+## Bias substitution warning (introduced in v5, усилено в v7)
 
 > [!warning] Critical (Lamparth et al. 2026)
-> При сокращении span'а проверьте, что **не потеряли факты внутри span'а** (числа, имена, команды, пути).
+> При сокращении span'а проверьте, что **не потеряли факты внутри span'а** (числа, имена, команды, пути) — и что **не добавили новых**.
 
 Перед применением tight-rewrite:
 
@@ -72,13 +78,15 @@ def check_span_bias_substitution(original_span, rewritten_span):
     orig_facts = extract_facts(original_span)
     new_facts = extract_facts(rewritten_span)
     lost = orig_facts - new_facts
+    invented = new_facts - orig_facts
     return {
         "lost_facts": list(lost),
-        "verdict": "FAIL" if lost else "PASS"
+        "invented_facts": list(invented),   # выдуманные факты = FAIL наравне с потерянными
+        "verdict": "FAIL" if (lost or invented) else "PASS"
     }
 ```
 
-Если `verdict == "FAIL"` — restore facts, choose alternative rewrite or partial deletion.
+Если `verdict == "FAIL"` — restore facts, remove invented ones, choose alternative rewrite or partial deletion.
 
 ---
 
@@ -114,42 +122,54 @@ PATTERNS = {
 
 ##### Lexical cliches
 
+> [!warning] Правило примеров (v7)
+> Правка **не добавляет** фактов, которых нет в исходнике. Если утверждение абстрактно и конкретики во входных данных нет — правка убирает клише и помечает `[нужен факт: ...]`. Числа появляются в правке только если они уже есть в исходнике.
+
 ```diff
 # delve into
 - "Let's delve into the architecture."
-+ "Architecture: 3 services, Kafka between them."
++ "Now, the architecture."
 
 # leverage
 - "We leverage modern technologies to ensure robust performance."
-+ "We use modern tech. Performance: p99 14ms."
++ "We use modern tech and get solid performance. [нужен факт: время ответа, p99]"
 
 # "стоит отметить"
 - "Стоит отметить, что API имеет rate limits."
-+ "API: 100 req/min на free tier."
++ "У API есть rate limits. [нужен факт: лимит, req/min]"
 
 # "Более того"
 - "Система быстрая. Более того, она масштабируемая."
-+ "Система быстрая — p99 14 мс. Масштабируется: 5k RPS."
++ "Система быстрая и масштабируемая. [нужен факт: время ответа, RPS]"
 ```
 
 ##### Structural patterns
 
 ```diff
-# Triple-parallel list
+# Triple-parallel list (фактов во входных данных нет — не выдумывать)
 - "- Fast
    - Reliable
    - Secure"
-+ "- 14 ms p99.
++ "- Fast [нужен факт: p99]
+   - Reliable [нужен факт: uptime]
+   - Secure [нужен факт: как обеспечивается]"
+
+# Triple-parallel list (исходник УЖЕ содержит числа — вытащить на первый план)
+- "- Мы добились быстрой работы (14 мс p99)
+   - Надёжность на уровне 99.99% за квартал
+   - Безопасность: тесты на каждом merge"
++ "- 14 мс p99.
    - 99.99% uptime за квартал.
    - Тесты на каждом merge."
 
 # Abstract adjective + noun
 - "Это эффективное решение."
-+ "Это решение сократило время обработки с 4 сек до 200 мс."
++ (cut entirely — пустое утверждение) или
++ "Это эффективное решение. [нужен факт: что улучшилось, насколько]"
 
-# Hedging
+# Hedging (снимаем хеджирование, не добавляя фактов)
 - "Возможно, стоит рассмотреть использование кеширования."
-+ "Нужен кеш — без него каждый запрос лезет в Postgres, 2k req/s вместо 5k."
++ "Нужен кеш."
 ```
 
 ##### Closing cliches
@@ -157,7 +177,7 @@ PATTERNS = {
 ```diff
 # "Таким образом, мы рассмотрели три подхода."
 - (cliche closing)
-+ (cut entirely, or "Из всех трёх я бы выбрал B — но A проще, если у вас уже есть Redis.")
++ (cut entirely; если нужен вывод — только реальная рекомендация из входных данных, не выдуманная)
 
 # "I hope this helps!"
 - (chatbot artifact)
@@ -166,20 +186,20 @@ PATTERNS = {
 
 #### Over-generation spans (introduced in v5)
 
-> [!info] Для каждого паттерна: часто правильный ответ — **удалить**, а не переписать.
+> [!info] Для каждого паттерна: часто правильный ответ — **удалить**, а не переписать. Но удалять можно только явные дубликаты и пустые фразы («важно отметить», «как мы видим»). Удаление настоящего утверждения, условия или имени = потеря смысла.
 
 ```diff
 # Vacuum-filling opener (P-NEW-1)
 - "У нас в команде возник вопрос по дедлайну. После обсуждения мы пришли к выводу, что дедлайн нужно перенести."
-+ "Дедлайн нереальный. Сдвигаем."
++ "Дедлайн переносим."
 
 # Restatement chain (P-NEW-2)
 - "API стал работать быстрее. Оптимизация позволила сократить время отклика. Производительность улучшилась значительно."
-+ "API стал отвечать за 14 мс вместо 380."
++ "API стал работать быстрее. [нужен факт: время отклика до/после]"
 
 # Bridging phrase (P-NEW-3)
 - "Как упоминалось выше, кеш важен. Это подводит нас к следующей теме — инвалидации кеша."
-+ "Кеш важен. Инвалидация — TTL 60 сек, плюс ручной cache.del(key)."
++ "Кеш важен. Теперь — инвалидация."
 
 # Over-explanation (P-NEW-4)
 - "Чтобы установить библиотеку, вам нужно выполнить команду pip install. Команда pip install — это стандартный способ установки Python-пакетов."
@@ -188,23 +208,29 @@ PATTERNS = {
 
 # Anticipatory hedging (P-NEW-5)
 - "Возможно, в некоторых случаях может быть полезно рассмотреть использование кеширования, хотя это зависит от конкретной ситуации."
-+ "Нужен кеш. Без него каждый запрос лезет в Postgres."
++ "Нужен кеш."
+# внимание: если «в некоторых случаях» — реальное условие, а не хеджирование,
+# условие сохраняется: "Если запросы повторяются, нужен кеш."
 
 # Balanced framing (P-NEW-6)
 - "У PostgreSQL есть преимущества и недостатки. С одной стороны, он зрелый и проверенный. С другой стороны, его сложнее масштабировать горизонтально. Каждый проект индивидуален."
-+ "PostgreSQL хорош, пока не упрётесь в single-writer. У нас упёрлись при 8k req/s."
++ "PostgreSQL зрелый и проверенный, но горизонтально масштабируется сложно."
+# обе стороны сохранены; «каждый проект индивидуален» — пустая фраза, удалена
 
 # Antithetical recap (P-NEW-7)
 - "Итак, мы рассмотрели три подхода: A, B, C. Каждый имеет свои плюсы и минусы. Выбор зависит от контекста проекта. Надеюсь, это поможет вам принять решение!"
 + (cut entirely)
 
-# Restated examples
+# Restated examples — внимание, это потеря фактов:
 - "Stripe, Datadog и PlanetScale используют этот подход."
-+ "Stripe использует этот подход."
++ "Stripe, Datadog и PlanetScale используют этот подход."
+# имена — факты. Сокращать список нельзя; можно только убрать span целиком,
+# если он дублирует уже сказанное.
 
-# Obvious consequence
+# Obvious consequence — удалять только если следствие действительно подразумевается:
 - "Мы переписали кеш. Теперь API отвечает быстрее."
-+ "Мы переписали кеш."
++ "Мы переписали кеш — API отвечает быстрее."
+# если «API отвечает быстрее» — самостоятельное утверждение, его нельзя просто удалить
 ```
 
 #### Russian brevity grammar spans (Lever 12)
@@ -263,9 +289,11 @@ PATTERNS = {
 
 ```yaml
 verify:
-  bias_substitution:
+  meaning_contract:
     status: PASS              # or FAIL
     lost_facts: []
+    invented_facts: []        # выдуманные числа/имена/даты = FAIL
+    modality_preserved: true  # "может" не стало "точно"
   length_sanity:
     reduction_pct: 30         # or whatever
     still_meaningful: true
@@ -276,7 +304,7 @@ verify:
     acceptable: true          # < 50% of span length changed
 ```
 
-If `bias_substitution.status == "FAIL"` — restore facts or choose alternative rewrite.
+If `meaning_contract.status == "FAIL"` — restore lost facts, remove invented ones, or choose alternative rewrite.
 
 ---
 
@@ -308,10 +336,10 @@ If the user asked for alternatives (they will say so), provide 2-3 options.
 
 ## Constraints to honor
 
-- **Length** — don't expand unless asked. Default: keep new span within ±20% of old span's length. **NEW v5**: for over-generation rewrites, **deletion is preferred over compression** — if 50% of the span can be cut, cut it.
+- **Length** — don't expand unless asked. Default: keep new span within ±20% of old span's length. **NEW v5**: for over-generation rewrites, **deletion is preferred over compression** — if 50% of the span can be cut, cut it. **v7**: но только если срезаемое — вода, а не утверждения.
 - **Tone** — match neighbors. If surrounding text is formal, rewrite formally. If informal, match.
 - **Domain vocabulary** — keep domain terms. Don't `Python` → `язык Python` or similar.
-- **Bias substitution check** — don't lose facts when shortening.
+- **Meaning contract** — don't lose facts when shortening, don't invent facts when конкретизируешь. Не хватает факта → `[нужен факт: ...]`.
 
 ---
 

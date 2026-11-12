@@ -141,7 +141,20 @@ when it's coin-flip is dishonest.
 
 - [x] P0 fixes: YapScore, emoji regex, D-metric regex, golden tests (18/18 pass)
 - [x] Phase A: subagents dispatched
-- [ ] Phase B: ground truth corpus
-- [ ] Phase C: discrimination metrics
-- [ ] Phase D: calibration
-- [ ] Phase E: skill updates
+- [x] Phase B: ground truth corpus — собрано **145** размеченных файлов
+      (HC3 60, RAID 60, Wikisource RU 8, synthetic RU-AI 12, EN synthetic 5,
+      legacy fixtures 4). Меньше целевых 200; RU-плечо маленькое (8 human /
+      12 AI) — ограничение зафиксировано в metric-validation.md.
+- [x] Phase C: discrimination metrics — benchmark прогнан по корпусу,
+      результаты в `tests/results/corpus-benchmark.jsonl`; per-metric means и
+      Cohen's d посчитаны (см. `knowledge/02-Techniques/metric-validation.md`).
+      AUC/KS не считались; вместо них Cohen's d + калибровка порогов.
+- [x] Phase D: calibration — языково-зависимые пороги (RU/EN) применены в
+      `benchmark-skill.sh`, regression-тесты добавлены в `test-benchmark.sh`,
+      методология задокументирована в `metric-validation.md`.
+- [~] Phase E: skill updates — **частично**. Пороги и caveats отражены в
+      benchmark-скрипте и metric-validation.md; point updates в SKILL.md
+      (документирование false-positive стилей, расширение Lever 12) не
+      проверялись систематически.
+
+Фактическое завершение: 2026-11-12 (по тексту metric-validation.md).

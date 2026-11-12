@@ -66,6 +66,28 @@
       "register": "fact",
       "control": "sed -i 's/V_OPENER_TOTAL=$((V_OPENER_RU + V_OPENER_EN))/V_OPENER_TOTAL=0/' scripts/benchmark-skill.sh",
       "waiver": null
+    },
+    {
+      "id": "editing-fixtures",
+      "text": "editing fixtures are structurally valid and gold edits preserve source numbers",
+      "scope": [
+        "tests/fixtures/editing/", "scripts/test-editing-fixtures.sh"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/test-editing-fixtures.sh"
+        }
+      ],
+      "falsifier": "a fixture loses required fields or a gold edit silently drops a fact",
+      "register": "fact",
+      "control": "sed -i 's/^## Gold edit/## GoldEditBroken/' tests/fixtures/editing/formal-email-1.md",
+      "waiver": null
     }
   ]
 }
