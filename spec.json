@@ -1,0 +1,71 @@
+{
+  "schema_version": 5,
+  "goal": {
+    "text": "Редактура текста сохраняет смысл: факты, условия и оговорки не теряются и не выдумываются",
+    "scope": [ "skills/", "prompts/", "scripts/", "tests/" ],
+    "by": "az",
+    "at": 1794491817,
+    "reason": null
+  },
+  "claims": [
+    {
+      "id": "bench-golden",
+      "text": "golden fixtures classify as expected by benchmark-skill.sh",
+      "scope": [
+        "scripts/benchmark-skill.sh", "scripts/test-benchmark.sh",
+        "tests/fixtures/"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        { "kind": "verifier", "spec": "bash scripts/test-benchmark.sh" }
+      ],
+      "falsifier": "fixture expectations drift from script behavior",
+      "register": "fact",
+      "control": "sed -i 's/YapScore/YAPX/g' scripts/benchmark-skill.sh",
+      "waiver": null
+    },
+    {
+      "id": "skills-valid",
+      "text": "all SKILL.md and prompts pass frontmatter and smoke validation",
+      "scope": [ "skills/", "prompts/", "scripts/validate-skills.sh" ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        { "kind": "verifier", "spec": "bash scripts/validate-skills.sh" }
+      ],
+      "falsifier": "a skill loses its frontmatter or the manifest drifts",
+      "register": "fact",
+      "control": "sed -i '1{/^---$/d}' skills/humanize-writer/SKILL.md",
+      "waiver": null
+    },
+    {
+      "id": "vacuum-detect",
+      "text": "benchmark reports non-zero vacuum-filling on the known RU AI fixture",
+      "scope": [
+        "scripts/benchmark-skill.sh", "tests/fixtures/ru-ai-typical.txt"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/benchmark-skill.sh tests/fixtures/ru-ai-typical.txt --json | python3 -c 'import json,sys; d=json.load(sys.stdin); sys.exit(0 if d[\"metrics\"][\"V\"]>0 else 1)'"
+        }
+      ],
+      "falsifier": "vacuum-filling detection silently stops matching",
+      "register": "fact",
+      "control": "sed -i 's/V_OPENER_TOTAL=$((V_OPENER_RU + V_OPENER_EN))/V_OPENER_TOTAL=0/' scripts/benchmark-skill.sh",
+      "waiver": null
+    }
+  ]
+}
