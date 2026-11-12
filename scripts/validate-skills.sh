@@ -112,6 +112,16 @@ main() {
       err "benchmark smoke tests failed (see /tmp/test-benchmark.log)"
     fi
   fi
+
+  echo ""
+  echo "=== Validating editing fixtures ==="
+  if [[ -x "$SCRIPT_DIR/test-editing-fixtures.sh" ]]; then
+    if bash "$SCRIPT_DIR/test-editing-fixtures.sh" > /tmp/test-editing-fixtures.log 2>&1; then
+      ok "editing fixtures valid (source/gold structure, numbers preserved)"
+    else
+      err "editing fixtures validation failed (see /tmp/test-editing-fixtures.log)"
+    fi
+  fi
   # Note: validates SKILL.md frontmatter and runs benchmark smoke tests.
   # Path filter requires changes to skills/, prompts/, manifest.json, or
   # this script itself to retrigger.

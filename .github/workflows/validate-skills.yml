@@ -9,12 +9,14 @@ on:
       - 'manifest.json'
       - 'scripts/validate-skills.sh'
       - 'scripts/validate-manifest.sh'
+      - 'scripts/test-editing-fixtures.sh'
+      - 'tests/fixtures/editing/**'
   pull_request:
     branches: [main, master]
     paths:
       - 'skills/**'
       - 'prompts/**'
-      - 'manifest.json'
+      - 'tests/fixtures/editing/**'
 
 jobs:
   validate:
@@ -31,6 +33,9 @@ jobs:
 
       - name: Run benchmark smoke tests
         run: ./scripts/test-benchmark.sh
+
+      - name: Validate editing fixtures
+        run: ./scripts/test-editing-fixtures.sh
 
       - name: Check for stray em-dash patterns
         run: |
