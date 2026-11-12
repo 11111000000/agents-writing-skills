@@ -70,6 +70,10 @@ jobs:
           chmod +x "$asset"
           mkdir -p "$HOME/.local/bin"
           mv "$asset" "$HOME/.local/bin/mathc"
+          # The OCaml 5 runtime sizes its signal stack from SIGSTKSZ, which
+          # follows the stack rlimit. GitHub runners leave it unlimited, and
+          # the allocation then fails with "Failed to allocate signal stack".
+          ulimit -s 8192
           "$HOME/.local/bin/mathc" --version
 
       - name: Bind evidence and check the verdict
