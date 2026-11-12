@@ -17,6 +17,7 @@ on:
       - 'scripts/test-editing-fixtures.sh'
       - 'scripts/check-examples-facts.sh'
       - 'tests/fixtures/editing/**'
+      - '.github/workflows/validate-skills.yml'
   pull_request:
     branches: [main, master]
     paths:
@@ -33,6 +34,7 @@ on:
       - 'scripts/test-editing-fixtures.sh'
       - 'scripts/check-examples-facts.sh'
       - 'tests/fixtures/editing/**'
+      - '.github/workflows/validate-skills.yml'
 
 jobs:
   validate:
