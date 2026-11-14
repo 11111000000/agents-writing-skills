@@ -17,6 +17,13 @@ on:
       - 'scripts/test-editing-fixtures.sh'
       - 'scripts/check-examples-facts.sh'
       - 'tests/fixtures/editing/**'
+      - 'scripts/check-editing-output.sh'
+      - 'scripts/check-examples-coverage.sh'
+      - 'scripts/check-knowledge-links.sh'
+      - 'scripts/check-manifest-versions.sh'
+      - 'scripts/check-no-stale-contract.sh'
+      - 'scripts/collect-ru-corpus.sh'
+      - 'docs/**'
       - '.github/workflows/validate-skills.yml'
   pull_request:
     branches: [main, master]
@@ -34,6 +41,13 @@ on:
       - 'scripts/test-editing-fixtures.sh'
       - 'scripts/check-examples-facts.sh'
       - 'tests/fixtures/editing/**'
+      - 'scripts/check-editing-output.sh'
+      - 'scripts/check-examples-coverage.sh'
+      - 'scripts/check-knowledge-links.sh'
+      - 'scripts/check-manifest-versions.sh'
+      - 'scripts/check-no-stale-contract.sh'
+      - 'scripts/collect-ru-corpus.sh'
+      - 'docs/**'
       - '.github/workflows/validate-skills.yml'
 
 jobs:
