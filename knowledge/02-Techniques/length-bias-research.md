@@ -3,7 +3,7 @@ type: technique
 tags: [technique, length-bias, academic, detection, foundational]
 created: 2026-07-09
 status: active
-related: [sufficiency-and-underspecification, perplexity-and-burstiness, hc3-english, hc3-russian-translated, raid-multi-domain]
+related: [sufficiency-and-underspecification, perplexity-and-burstiness, meaning-preservation, editing-modes, hc3-english, hc3-russian-translated, raid-multi-domain]
 sources: [park-2024-disentangling-length-dpo, shen-2023-loose-lips, zhang-2024-format-bias, lamparth-2026-bias-substitution, huang-2024-post-hoc-calibration]
 ---
 
@@ -35,7 +35,10 @@ sources: [park-2024-disentangling-length-dpo, shen-2023-loose-lips, zhang-2024-f
 
 **Импликация для наших skill'ов:** Tighten pass (Lever 10) может привести к bias substitution. Если LLM учится быть коротким за счёт потери factual depth — это победа длины, но проигрыш качества.
 
-**Решение:** нужно проверять, что Tighten pass не убирает конкретные факты. Это значит — при сокращении сохранять числа, имена, команды.
+**Решение:** проверять не процент фактов, а сохранность утверждений. Перед сокращением строится карта смысла (`meaning_map`), после — двусторонняя сверка: каждое утверждение оригинала должно найтись в правке, и каждое утверждение правки должно иметь источник в оригинале (см. [[meaning-preservation]]). Потеря любого утверждения и любая выдумка — ошибка, допустимо удалять только явные дубликаты и пустые фразы.
+
+> [!warning] Нулевая потеря утверждений ≠ отсутствие bias
+> Проверка сохранности ловит потерю и выдумку, но ничего не говорит о **форме и подаче** текста. Тот же набор утверждений может уйти в list-heavy вид (format bias по Zhang et al.), стать равномернее по длине предложений или структурно «правильнее» — и ни одно утверждение при этом не потеряется. Отдельно: сохранённое утверждение может изменить свою эпистемическую роль, если его переставить (гипотеза, поставленная в позицию итога, читается как вывод, даже если её маркер неуверенности остался). Это и есть описанный Lamparth et al. механизм: давление с одной оси переходит на коррелированные. Поэтому проверка сохранности — необходимое, но не достаточное условие: она ловит потерю смысла, а не перенос предпочтения модели.
 
 ### 2.2. LLM-as-judge (Park et al.)
 
@@ -117,14 +120,16 @@ RLHF-COV can't easily fix (Lamparth: bias substitution)
 ## 7. Практические implications для skill'ов
 
 1. **Не полагаться только на LLM-judge для оценки качества.** Использовать human-validation для high-stakes.
-2. **Tighten pass должен сохранять плотность фактов.** Сокращаем слова, не числа.
-3. **Добавить в skill'ы предупреждение о bias substitution.** Single-axis mitigation ≠ universal fix.
+2. **Tighten pass должен сохранять плотность фактов.** Сокращаем слова, не числа. В v7 проверка идёт по каждому утверждению (`meaning_map`), а не по проценту фактов; выдуманная конкретика — ошибка наравне с потерянной.
+3. **Предупреждение о bias substitution уже в skill'ах.** Single-axis mitigation ≠ universal fix. Проверка сохранности утверждений ловит потерю смысла, но не перенос bias на другие прокси — это отдельное ограничение, а не следствие «потерь не было».
 4. **Фиксировать emoji и format bias** в нашем каталоге (сейчас покрыты только P10, P14).
 5. **Не обещать детектор bypass.** Против GPTZero/Pangram статические правила не работают (MASH, ACL 2026).
 
 ## 8. Связанные заметки
 
 - [[sufficiency-and-underspecification]] — наш Lever 10, теоретическая база
+- [[meaning-preservation]] — проверка сохранности утверждений (`meaning_map`) вместо процента фактов
+- [[editing-modes]] — режимы правки: proofread/light/style/deep; RELY только в style/deep
 - [[hc3-english]] — эталонный датасет для измерения length bias на практике
 - [[raid-multi-domain]] — multi-model benchmark для stress-теста
 - [[../01-Patterns/structural/over-generation]] — P-NEW-1…P-NEW-7
@@ -151,7 +156,7 @@ RLHF-COV can't easily fix (Lamparth: bias substitution)
 
 - **Что доказано:** length exploitation существует и в DPO (не только в PPO/RLHF); причина — out-of-distribution bootstrapping. Простое hinge-regularization даёт до 20% improvement в length-controlled (LC) win rate, несмотря на verbosity bias GPT-4 judge.
 - **Метод:** hinge penalty `λ · max(0, |y_w| - |y_l| - δ)²` поверх DPO loss. Измерение — LC win rate с trimmed comparison.
-- **Связь со скилами:** протокол измерения. `check_bias_substitution` — это наша реализация Park-протокола для output-level editing. Voice profile `laconic` — аналог Park-regularization.
+- **Связь со скилами:** протокол измерения. В v7 наша реализация Park-протокола для output-level editing — не процент фактов, а проверка сохранности утверждений (`meaning_map`, см. [[meaning-preservation]]): каждое утверждение оригинала должно найтись в правке. Voice profile `laconic` — аналог Park-regularization.
 - **Ограничения:** DPO-only; 6B–13B; два датасета (summarization, dialogue); GPT-4 judge bias acknowledged, не устранён.
 
 ### Zhang 2024 — [06-Sources/research-papers/length-bias/zhang-2024-format-bias](06-Sources/research-papers/length-bias/zhang-2024-format-bias)
@@ -172,7 +177,7 @@ RLHF-COV can't easily fix (Lamparth: bias substitution)
 
 - **Что доказано (CRITICAL):** single-axis mitigation не устраняет bias, а переносит. Length penalty → confidence over-calibration → factual accuracy falls. **«No method we survey reports the evidence needed to certify successful mitigation.»**
 - **Метод:** GRPO с perturbed RM (length term injected); измерение — calibration (Brier, ECE), factual free-form accuracy, win rate.
-- **Связь со скилами:** самый критический paper для нашего дизайна. Tighten pass может переносить bias. Решение: `check_bias_substitution` (факты до/после), honesty о границах в «When NOT to load».
+- **Связь со скилами:** самый критический paper для нашего дизайна. Tighten pass может переносить bias. Решение: проверка сохранности утверждений (`meaning_map`), а не процент фактов — каждое утверждение сверяется по карте, выдуманные факты считаются ошибкой наравне с потерянными. Честность о границах — в «When NOT to load». Оговорка: нулевая потеря утверждений не гарантирует отсутствия bias — он может перейти на другие прокси (см. раздел 2.1).
 - **Ограничения:** один модельный класс, синтетический setup. Не тестировали формат, sycophancy, safety. **Нет контрмеры** — заканчивается «need multi-axis, calibrated, post-deployment evaluation».
 
 ### Что даёт эта декомпозиция

@@ -1,6 +1,6 @@
 ---
 title: Skills Overview
-description: 4 skills across 4 phases of humanization — STRIP, TIGHTEN, RELY, REBUILD. 12 levers total.
+description: 4 skills across 4 phases of humanization — STRIP, TIGHTEN, RELY, REBUILD. 12 levers total. v7 adds editing modes and a meaning-preservation contract.
 ---
 
 [← Back to Home](index)
@@ -20,6 +20,31 @@ description: 4 skills across 4 phases of humanization — STRIP, TIGHTEN, RELY, 
 | 🔍 **`anti-ai-auditor`** | Diagnosing text without changing it | When user wants actual rewrite | v7 (3-pass audit) |
 | 🩹 **`ai-pattern-rewriter`** | Fixing one phrase at a time | Whole-document rewrites | v7 (3-pass + no invented facts) |
 
+All four are on **v7**: the same 3-pass architecture, plus the meaning contract — a rewrite may not invent facts, may not lose assertions, and may return an already-good text unchanged.
+
+> [!warning] Meaning contract (v7) — a rewrite never invents facts
+> Numbers, names, dates, causes, personal experience and citations come **only from the input text**. If an assertion needs a fact that is not in the source, the edit leaves it abstract or marks `[нужен факт: ...]` — it never fills the gap with something plausible. Losing an assertion, inventing a fact, or dropping the author's hedging («может» → «снижает») is an **error**, not a stylistic trade-off.
+
+<br>
+
+## 🎛 Режимы правки (editing modes)
+
+Before touching the text, the editor picks one of four depths. Deeper modes include the powers of the shallower ones; the mode never changes *what has to be preserved*.
+
+| Mode | What it does | What it does **not** do | Typical request |
+|---|---|---|---|
+| **proofread** | Typos, grammar, punctuation, agreement | Vocabulary, word order, structure | «вычитай», «check the errors» |
+| **light** | Clarity: ambiguity, heavy constructions, obvious office-speak | Rhythm, voice, paragraph order | «поправь, чтобы читалось» |
+| **style** | Rhythm and naturalness: sentence length, transitions, liveliness | The structure of the argument | «сделай живее», «убери AI-шность» |
+| **deep** | Restructure: order, merging/splitting paragraphs, sharper argument | The meaning; it never adds facts | «перепиши», «сделай из этого статью» |
+
+- **RELY (iceberg deletions) runs only in `style`/`deep`**, and only for literary or conversational register — never by default, never for technical, business or legal text.
+- **Ambiguous request → the shallower mode.** Take `light` unless the text or the user says otherwise, and say which mode you picked.
+- **A good text may be returned unchanged.** If the edit adds nothing but risk, say «текст уже хорош» and hand back the original.
+- Every mode above `proofread` ends with the same meaning check before the result is returned.
+
+> [!info] Full spec: [`editing-modes`](02-techniques/editing-modes) · [`meaning-preservation`](02-techniques/meaning-preservation)
+
 <br>
 
 ## 📐 Architecture: 3-pass workflow
@@ -29,7 +54,7 @@ All skills share the same overall structure:
 ```mermaid
 flowchart TB
     A["<b>PASS 1: AUDIT</b><br/><i>identify</i><br/>metrics, locations, severity"] --> B["<b>PASS 2: REWRITE</b><br/><i>apply 12 levers</i><br/>STRIP → TIGHTEN → RELY → REBUILD"]
-    B --> C["<b>PASS 3: VERIFY</b><br/><i>final checks</i><br/>density, bias substitution, read aloud"]
+    B --> C["<b>PASS 3: VERIFY</b><br/><i>final checks</i><br/>density, per-claim meaning, read aloud"]
 ```
 
 <br>
@@ -52,8 +77,8 @@ flowchart TB
 | 2 | **Burstiness** | Vary sentence length (std > 5) |
 | 3 | **Hedge surgery** | Remove `it could be argued that` |
 | 4 | **Structural flatten** | Drop bullet-list bloat |
-| 5 | **Specificity** | Replace `modern solution` with `p99 14ms` |
-| 6 | **Voice** | Add first-person where natural |
+| 5 | **Specificity** | Replace `modern solution` with `p99 14ms` — only when the source has that number |
+| 6 | **Voice** | Add first-person only where the register allows it |
 | 7 | **Discourse** | Cut `Furthermore`, `Moreover` |
 | 8 | **Punctuation** | Em-dash ≤ 1 per 300 words |
 | 9 | **RLHF strip** | Drop `Great question!`, `I hope this helps` |
@@ -80,19 +105,33 @@ TIGHTEN_SCANS = [
 ]
 ```
 
-**Bias substitution check** (Lamparth et al. 2026):
+**Meaning check (v7) — per-claim, no thresholds:**
 
 ```python
-def check_bias_substitution(original, rewritten):
-    orig_facts = extract_facts(original)  # numbers, names, paths, commands
-    new_facts = extract_facts(rewritten)
-    lost = orig_facts - new_facts
-    loss_pct = len(lost) / max(len(orig_facts), 1) * 100
-
-    if loss_pct > 10:
-        return {"status": "FAIL", "lost_facts": lost}
-    return {"status": "PASS"}
+def check_claims_preserved(original, rewritten):
+    """Per-claim check. One lost claim = FAIL. No "losing 10% is fine" allowance."""
+    lost_facts = extract_facts(original) - extract_facts(rewritten)
+    invented_facts = extract_facts(rewritten) - extract_facts(original)
+    lost_claims = [c for c in extract_claims(original)
+                   if not claim_survives(c, rewritten)]
+    return {
+        "status": "FAIL" if (lost_facts or invented_facts or lost_claims) else "PASS",
+        "lost_claims": lost_claims,
+        "invented_facts": list(invented_facts),   # выдуманные числа/имена = FAIL
+    }
 ```
+
+**Three ways to fail — none of them has a tolerance:**
+
+| Failure | Example | Status |
+|---|---|---|
+| **Lost claim** | «конверсия выросла с 2% до 3%» → «конверсия составила 3%» | ❌ FAIL |
+| **Invented fact** | «переписали кеш» → «переписали кеш, p99 упал с 800 до 90 мс» | ❌ FAIL |
+| **Lost modality** | «может снижать нагрузку» → «снижает нагрузку» | ❌ FAIL |
+
+Only explicit duplicates and empty filler phrases may be removed. `extract_facts` (numbers, names, paths) stays as a cheap smoke test — it compares tokens, not meaning; the verdict belongs to the `meaning_map` check.
+
+> [!info] The check itself: [`meaning-preservation`](02-techniques/meaning-preservation) — build a `meaning_map` of the original, then verify both directions: nothing lost, nothing invented.
 
 </details>
 
@@ -106,6 +145,8 @@ def check_bias_substitution(original, rewritten):
 **Условие Хемингуэя:** underspecification работает только если автор **знает** то, что не говорит.
 
 **Test:** удали абзац. Читатель может продолжить мысль без него? Если да — iceberg.
+
+**RELY runs only in `style`/`deep`** and only for literary or conversational register — never by default, never for technical, business or legal text (see «Режимы правки» above). For text you were handed to edit, every deletion has to survive the meaning check.
 
 </details>
 
@@ -147,7 +188,8 @@ graph LR
 **Triggers:** "Make this text sound less AI" / "Rewrite my draft" / "Humanize this"
 
 Differs from `humanize-writer` in that it must **preserve meaning**. Adds:
-- Bias substitution check (after Tighten pass)
+- Meaning-preservation check after the Tighten pass — per-claim, zero tolerance: a lost assertion, an invented fact or a dropped hedge fails the edit
+- Editing mode selection (proofread / light / style / deep)
 - Voice profile selection (casual/professional/technical/warm/blunt/laconic)
 
 [Source on GitHub →](https://github.com/11111000000/agents-writing-skills/tree/main/skills/humanize-editor)
@@ -169,7 +211,7 @@ Outputs structured report:
 
 **Triggers:** "Fix just this sentence" / "Replace only line 7" / "Make this one phrase less AI"
 
-Differs from `humanize-editor` in that it touches **only flagged spans**. Adds per-span bias substitution check.
+Differs from `humanize-editor` in that it touches **only flagged spans**. Adds a per-span meaning check: both lost and invented facts inside the span fail it — a surgical fix may not invent the number it wanted.
 
 [Source on GitHub →](https://github.com/11111000000/agents-writing-skills/tree/main/skills/ai-pattern-rewriter)
 
@@ -182,7 +224,7 @@ Differs from `humanize-editor` in that it touches **only flagged spans**. Adds p
 | `/humanize` | Full rewrite via prompt |
 | `/audit-ai` | Diagnostic report |
 | `/audit-43` | Full 43-pattern audit |
-| `/humanize-9-levers` | Apply only the 9 original levers |
+| `/humanize-9-levers` | The classic 9 levers, applied within the v7 meaning contract |
 | `/anti-thesis` | Detect «Это не X, а Y» patterns |
 | `/writer-voice` | Write new prose via prompt |
 | `/clean-draft` | Light cleanup |

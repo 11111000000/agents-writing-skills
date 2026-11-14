@@ -49,6 +49,9 @@ metadata:
 **Content checklist:**
 - [ ] 12 levers usage (if applies)
 - [ ] 3-pass workflow (if applies)
+- [ ] Meaning contract: claims preserved, nothing invented, no loss threshold
+- [ ] Editing modes, if the skill rewrites text (proofread / light / style / deep)
+- [ ] "The text is already good" case handled — returning the original unchanged is a valid result
 - [ ] "When NOT to load" section
 - [ ] Companion skills reference
 - [ ] Code blocks for examples (not bullet lists)
@@ -174,6 +177,8 @@ Small changes are welcome:
 
 - **Direct.** No «it could be argued that…», no hedging, no apologies.
 - **Specific.** Numbers > adjectives. Always.
+- **Never invent facts.** Every number, name, date, and example in a skill or note comes from the source text. If an example needs a placeholder, mark it `[нужен факт: ...]` — a plausible guess is a defect, not a shortcut.
+- **Don't strip the author's uncertainty.** Filler hedges («it could be argued that…») go; real uncertainty («might», «probably») stays — it is part of the claim. See [`meaning-preservation`](02-techniques/meaning-preservation).
 - **Russian-formal where appropriate.** We do translate concepts, but Russian formal register (деепричастия, парные синонимы) is **legitimate in formal docs**.
 - **No AI tells.** If your draft has em-dash density > 1/300 words or rule-of-three, **rewrite it before submitting**.
 
@@ -209,6 +214,8 @@ We maintain two versions of major docs:
 
 For knowledge notes, both languages can coexist in same file, with sections separated by H2 headers.
 
+Update both sides in the same PR — an edit to the EN page alone leaves the RU mirror (and its version table) stale.
+
 <br>
 
 ## 🚦 Pull request workflow
@@ -219,6 +226,7 @@ For knowledge notes, both languages can coexist in same file, with sections sepa
    ```bash
    bash scripts/validate-skills.sh
    bash scripts/test-benchmark.sh
+   bash scripts/check-knowledge-links.sh   # if you touched knowledge notes
    bash scripts/build-site.sh ./preview  # optional
    ```
 4. **Update CHANGELOG.md** with description of changes
@@ -229,7 +237,7 @@ For knowledge notes, both languages can coexist in same file, with sections sepa
 
    - Pass 1 (Audit): list AI patterns
    - Pass 2 (Rewrite): apply 12 levers
-   - Pass 3 (Verify): bias substitution check
+   - Pass 3 (Verify): meaning check (per-claim, zero loss)
 
    Tested on 5 sample texts.
    "
@@ -248,9 +256,10 @@ For knowledge notes, both languages can coexist in same file, with sections sepa
 | v3 | Russian brevity grammar (Lever 12) | Done |
 | v4 | 3-pass architecture + 13 worked examples + benchmark script | Done |
 | v5 | Laconic prose models (Tolstoy, Dovlatov, Shklovsky, Bunin) + benchmark smoke tests | Done |
-| v6 | Version sync + RU fixtures + threshold benchmark checks | Current |
-| **v7 (next)** | **A/B human evaluation** + **long-form benchmarks** | Planned |
-| v8 | Cross-language support (JA, ZH, FR) | Backlog |
+| v6 | Version sync + RU fixtures + threshold benchmark checks | Done |
+| **v7** | **Meaning contract: editing modes, zero claim loss, no invented facts** | **Current** |
+| **v8 (next)** | **A/B human evaluation** + **long-form benchmarks** | Planned |
+| v9 | Cross-language support (JA, ZH, FR) | Backlog |
 
 <br>
 

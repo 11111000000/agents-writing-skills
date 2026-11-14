@@ -122,6 +122,25 @@ main() {
       err "editing fixtures validation failed (see /tmp/test-editing-fixtures.log)"
     fi
   fi
+
+  echo ""
+  echo "=== Validating meaning contract ==="
+  for check in check-manifest-versions.sh check-no-stale-contract.sh check-examples-coverage.sh; do
+    if [[ -x "$SCRIPT_DIR/$check" ]]; then
+      if bash "$SCRIPT_DIR/$check" > "/tmp/$check.log" 2>&1; then
+        ok "$check passed"
+      else
+        err "$check failed (see /tmp/$check.log)"
+      fi
+    fi
+  done
+  if [[ -x "$SCRIPT_DIR/check-editing-output.sh" ]]; then
+    if bash "$SCRIPT_DIR/check-editing-output.sh" --selftest > /tmp/check-editing-output.log 2>&1; then
+      ok "editing-output validator selftest passed"
+    else
+      err "editing-output validator selftest failed (see /tmp/check-editing-output.log)"
+    fi
+  fi
   # Note: validates SKILL.md frontmatter and runs benchmark smoke tests.
   # Path filter requires changes to skills/, prompts/, manifest.json, or
   # this script itself to retrigger.

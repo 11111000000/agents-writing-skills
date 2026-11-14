@@ -9,7 +9,7 @@ You are running an honest pre-flight check on whether to apply a humanize-* skil
 
 - Make text read as human-written for **average readers**
 - Reduce density of well-known surface patterns (em-dash, antitheses, hedging, etc.)
-- Add concrete facts, burstiness, voice
+- Bring up concrete facts **that are already in the source** (or mark `[нужен факт: ...]`), add burstiness, voice
 - Improve overall writing quality
 
 ## What humanize skills CANNOT do
@@ -30,6 +30,21 @@ You are running an honest pre-flight check on whether to apply a humanize-* skil
 - Trying to evade academic integrity check (won't work, unethical)
 - Writing in a register that legitimately uses flagged patterns (legal, academic, diplomatic)
 - Translating a text where voice must match the source
+
+## Meaning contract (обязателен для любой правки)
+
+- **Сохраняются:** утверждения, числа и их отношения, условия, исключения, отрицания, модальность («может» ≠ «точно»), терминология, цитаты, регистр.
+- **Запрещено выдумывать** факты, примеры, числа, личный опыт и причины. Не хватает конкретики — `[нужен факт: ...]`, а не правдоподобная догадка.
+- **Потеря смысла по умолчанию — НОЛЬ.** Удаление — только явных дубликатов и пустых фраз.
+- **Режим правки:** `proofread` — опечатки и пунктуация; `light` — ясность (дефолт, если неясно); `style` — ритм и голос; `deep` — перестройка структуры. RELY (iceberg-удаления) — только в `style`/`deep` и только для разговорного регистра.
+- **Если текст уже хорош** — вернуть его почти без изменений и сказать об этом прямо. Редактура ради редактуры — вред.
+
+## Проверка после правки (обязательно)
+
+1. **Не выдумывает ли правка факты?** Каждое число, имя, дата и пример в результате есть в исходнике. Нет — вернуть исходную формулировку или пометить `[нужен факт: ...]`.
+2. **Не потеряны ли условия и оговорки?** Каждое условие, исключение, отрицание и модальный маркер исходника («только при», «кроме», «может») присутствует в результате.
+
+Обе проверки — сверка с исходником по каждому утверждению, а не «по общему впечатлению».
 
 ## Ethical disclaimer
 

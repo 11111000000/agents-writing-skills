@@ -7,6 +7,14 @@ You are operating as an anti-anti-thesis auditor.
 
 The construction «Это не X, а Y» / «It's not X, it's Y» / «Это не просто X» is the **#1 AI marker** in Washington Post 2024 research (43% GPT outputs vs 3% human). LLM uses it 5–15 times per 1000 words; humans use it 0–1.
 
+## Meaning contract (обязателен)
+
+- **Сохраняются:** утверждения, числа и их отношения, условия, исключения, отрицания, модальность («может» ≠ «точно»), терминология, цитаты, регистр.
+- **Запрещено выдумывать** факты, примеры и числа: конкретика — только из исходника. Не хватает — `[нужен факт: ...]`, а не правдоподобная догадка.
+- **Антитезис заменяется прямым утверждением** о том, что реально есть («Y делает Z»), а не новым X/Y-контрастом.
+- **Режим правки:** `proofread` — только формулировка; `light` — заменить антитезис прямым утверждением (дефолт); `style`/`deep` — плюс ритм и структура.
+- **Если текст уже хорош** (AP ≤ 1, антитезис работает как риторика) — вернуть почти без изменений и сказать об этом.
+
 ## Detection regexes (RU)
 
 - `/это\s+(?:не\s+)?(?:просто\s+|столько\s+|только\s+|больше\s+,?\s+чем\s+|меньше\s+,?\s+чем\s+)?[А-ЯЁ][а-яё]+/gi`
@@ -27,9 +35,10 @@ The construction «Это не X, а Y» / «It's not X, it's Y» / «Это н�
    - AP 3–5: probably AI
    - AP 5+: definitely AI
 4. **Suggest rewrites** for each match. Apply rule:
-   - If X and Y are genuinely mutually exclusive (монорепо vs polyrepo) → keep, add concrete details
-   - If X and Y are both abstract → replace with concrete facts
+   - If X and Y are genuinely mutually exclusive (монорепо vs polyrepo) → keep, add concrete details **from the source text only**
+   - If X and Y are both abstract → replace with a direct assertion about what actually exists, using **only facts from the source**
    - If construction adds nothing → delete entirely
+   - If the fact a rewrite would need is not in the source → `[нужен факт: ...]`, never a plausible guess
 
 ## Output format
 
@@ -45,9 +54,9 @@ The construction «Это не X, а Y» / «It's not X, it's Y» / «Это н�
 For each:
 - Line/spans
 - Pattern (negative / negative-just / negative-so-much / negative-more-than / etc.)
-- Suggested rewrite
+- Suggested rewrite (facts — only from the source; missing fact → `[нужен факт: ...]`)
 
-Example:
+Example (форма примера, а не источник фактов — в реальной правке конкретика только из исходника):
 - ❌ «Это не баг, а фича.» → ✅ «Метод возвращает null для не-ASCII; документировано в README как ожидаемое поведение.»
 - ❌ «Это не методология, а инфраструктура.» → ✅ «Инфраструктура: роутинг, авторизация, observability из коробки.»
 - ❌ «MathCodingFractal — это не „ещё одна методология". Это инфраструктура...» → ✅ «MathCodingFractal — инфраструктура: 14 сервисов, общий CI, shared observability.»
@@ -60,11 +69,11 @@ Example:
 
 ### Rewrite strategy by case
 
-1. **Abstract pair** → concrete facts
-   - «Это не X, а Y» → «X имеет [факт]. Y обеспечивает [факт].»
+1. **Abstract pair** → прямое утверждение о том, что реально есть (факт — из исходника)
+   - «Это не X, а Y» → «Y обеспечивает [факт из исходника].» X — удалить, если он ничего не добавляет.
 2. **Misleading pair** → delete
-   - «Это не просто X. Это Y.» → delete, use Y alone with concrete support
-3. **Genuinely opposite** → keep, add specifics
+   - «Это не просто X. Это Y.» → delete, use Y alone with concrete support from the source
+3. **Genuinely opposite** → keep, add specifics from the source
    - «Это монорепо, а не polyrepo» → «В отличие от монорепо, у нас polyrepo: 12 независимых репозиториев с shared CI-конфигом в отдельном репо.»
 ```
 

@@ -1,17 +1,24 @@
 ---
 name: anti-ai-auditor
-description: Audit an existing text for AI-pattern probability without rewriting it. Returns a structured report: per-paragraph risk score, list of specific AI-tells (lexical, structural, rhetorical, over-generation, length-bias-driven), perplexity (непредсказуемость лексики) / burstiness (вариативность длины) / YapScore estimates, format-bias density, and concrete suggestions. Use when the user wants feedback only, or wants to compare two drafts, or is unsure whether a text is "AI enough" to bother rewriting.
+description: Audit an existing text for AI-pattern probability without rewriting it. Returns a structured report: per-paragraph risk score, list of specific AI-tells (lexical, structural, rhetorical, over-generation, length-bias-driven), perplexity (непредсказуемость лексики) / burstiness (вариативность длины) / YapScore estimates, format-bias density, meaning-contract flags (lost claims, invented facts, modality drift), a manual meaning-review checklist, and concrete suggestions. Use when the user wants feedback only, or wants to compare two drafts, or is unsure whether a text is "AI enough" to bother rewriting.
 license: MIT
 compatibility: opencode, pi, claude-code
 metadata:
   audience: writing-assistants
   workflow: text-audit
-  version: 6
+  version: 7
 ---
 
-# Anti-AI Auditor (v6)
+# Anti-AI Auditor (v7)
 
-Audit an existing text for AI-pattern probability. **Do not rewrite** — only diagnose. v6 keeps the **3-pass audit architecture** (Surface Scan → Deep Analysis → Synthesis) and adds checks for laconic RU prose signals grounded in Shklovsky and Russian brevity grammar.
+Audit an existing text for AI-pattern probability. **Do not rewrite** — only diagnose. v7 keeps the **3-pass audit architecture** (Surface Scan → Deep Analysis → Synthesis) and adds the **meaning contract**: потеря любого утверждения, усиление модальности или выдуманный факт — флаг, а не «потеряли 10% фактов». Аудит выбирает режим правки (`proofread` / `light` / `style` / `deep`) и заканчивается разделом «Что проверить вручную по смыслу». Метрики остаются диагностикой: они показывают, где искать, а не оценивают текст.
+
+> [!info] Changelog v7
+> - **Смысловой контракт в PASS 1**: сохраняются утверждения, числа и их отношения, условия, исключения, отрицания, модальность, терминология, цитаты и регистр; запрещено выдумывать факты и усиливать уверенность.
+> - **Выбор режима** (`proofread` / `light` / `style` / `deep`) в PASS 1 — режим определяет, что именно рекомендовать.
+> - **Bias substitution без процентов**: потеря любого утверждения или усиление модальности = флаг. Счётчик «фактов до/после» остаётся как диагностика, а не как правило «−10% = ок».
+> - **Новый раздел отчёта**: «Что проверить вручную по смыслу» — условия, исключения, модальность, терминология.
+> - Структура отчёта и ссылки прежние; v6-проверки на laconic RU prose сохранены.
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). For offline: `./scripts/install-knowledge.sh`.
@@ -22,17 +29,20 @@ Audit an existing text for AI-pattern probability. **Do not rewrite** — only d
 ┌────────────────────────────────────────────────────────────────┐
 │ PASS 1: SURFACE SCAN (count patterns, flag locations)         │
 │   Output: counts + locations + per-paragraph risk            │
+│           + режим правки + регистр                           │
 └────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────────┐
 │ PASS 2: DEEP ANALYSIS (interpret metrics, compare to baselines) │
 │   Output: 4-8 patterns identified with risk scores            │
+│           + смысловые флаги (потерянные утверждения)           │
 └────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────────┐
 │ PASS 3: SYNTHESIS (verdict, recommendations, NO rewrite)       │
 │   Output: Human-leaning / Mixed / AI-leaning / Strongly AI    │
 │           + 3-5 concrete actionable recommendations            │
+│           + «Что проверить вручную по смыслу»                 │
 └────────────────────────────────────────────────────────────────┘
 ```
 
@@ -49,7 +59,38 @@ Audit an existing text for AI-pattern probability. **Do not rewrite** — only d
 
 ## PASS 1 — SURFACE SCAN
 
+### 1.0. Смысловой контракт и режим проверки
+
+> [!warning] Meaning contract (v7)
+> **Сохраняются:** утверждения, числа и их отношения, условия, исключения, отрицания, модальность («может снижать» ≠ «снижает»), терминология, цитаты, регистр формальности.
+> **Запрещено:** выдумывать числа/имена/даты/личный опыт/причины, усиливать уверенность.
+> **Потеря любого утверждения = флаг.** Не «фактов стало меньше на 10% — нормально».
+> Аудит не переписывает текст, но рекомендация «сократить» не должна привести к потере условий, исключений и оговорок.
+
+Подробности: [`02-Techniques/meaning-preservation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/meaning-preservation.md).
+
+**Режим правки** — определяет, что именно рекомендовать. Если пользователь назвал режим — берём его. Если нет — по жанру и аудитории, при сомнении мельче (`light`), и говорим в отчёте, какой режим выбран.
+
+| Режим | Что рекомендуем | Когда |
+|---|---|---|
+| `proofread` | Только грамматика, опечатки, пунктуация | юридический текст, цитаты, «просто вычитай» |
+| `light` | Ясность, канительян, явные дубликаты, AI-лексикон | черновик почти готов |
+| `style` | Ритм, живость, AI-маркеры, структура списков | дефолт для постов, писем, README |
+| `deep` | Перестройка структуры и аргументации | «перепиши», «сделай из этого статью» |
+
+**RELY (iceberg-удаления) рекомендуем только в `style`/`deep` и только для художественного/разговорного регистра** — в техническом, деловом и юридическом тексте недосказанность съедает условия.
+
+```yaml
+audit_context:
+  mode: light              # proofread | light | style | deep
+  mode_reason: "черновик почти готов, жанр — пост"
+  register: conversational # conversational | business | technical | legal | academic | literary
+```
+
 ### 1.1. Метрики (автоматический счёт)
+
+> [!note] Метрики — диагностика, а не вердикт
+> Числа ниже помогают **найти** проблему. Они не переводят текст в категорию «AI» или «не AI» и не заменяют проверку смысла: плотная фактура может быть выдуманной, а лёгкая — честной. Ни один порог не является условием прохождения аудита.
 
 ```yaml
 metrics:
@@ -166,10 +207,16 @@ cuttable:
   locations: [para_2_sent_1, para_3_sent_2, ...]
 ```
 
+> [!warning] Кандидат на удаление — это только дубликат или пустая фраза
+> Предложение с условием, исключением, отрицанием или модальностью кандидатом **не является**: в нём содержание, которое читатель иначе не восстановит. «Ничего нового» здесь означает «не несёт содержания», а не «кажется избыточным».
+
 ### 2.5. Reader-fill test (Lever 11)
 
 - Есть ли абзацы, где 1–2 предложения можно удалить, и читатель всё поймёт?
 - Если да — пометьте как iceberg opportunity.
+
+> [!note] Iceberg opportunity — не для всех режимов
+> Отмечать iceberg-удаления стоит только в режимах `style`/`deep` и только для художественного или разговорного регистра. В техническом, деловом и юридическом тексте «читатель поймёт» означает «читатель потеряет условие».
 
 ### 2.6. Format bias density (Zhang 2024)
 
@@ -183,11 +230,34 @@ Mark **HIGH** if format bias density > эталонной.
 ### 2.7. Length bias structural check (Lamparth 2026)
 
 > [!warning] Bias substitution
-> Single-axis mitigation (только сокращение длины) может перенести bias на другие proxies (factual depth, confidence calibration). Audit должен проверять, что **факты не потеряны при сокращении**.
+> Single-axis mitigation (только сокращение длины) может перенести bias на другие proxies (factual depth, confidence calibration). Аудит должен проверить, что **утверждения не потеряны при сокращении**.
 
-Compute:
-- Number of concrete facts (numbers, names, dates, paths) before vs after Tighten pass.
-- Если количество фактов уменьшилось более чем на 10% → флаг "potential bias substitution".
+**Правило — по фактам, а не по процентам.** Потеря факта — это факт, а не доля:
+
+| Что найдено | Флаг | Серьёзность |
+|---|---|---|
+| Потеряно **любое** утверждение (даже одно) | `meaning_loss` | критично |
+| Усилена модальность: «может снижать» → «снижает» | `modality_drift` | критично |
+| Выдуман факт, которого нет в исходнике | `invented_fact` | критично |
+| Потеряны условия («под нагрузкой 5k req/s» → «всегда») | `condition_loss` | критично |
+| Потеряны исключения («кроме X» исчезло) | `exception_loss` | критично |
+| Потеряно отрицание («не работает» → «работает с ограничениями») | `negation_loss` | критично |
+| Термин заменён неполным синонимом | `terminology_drift` | средне |
+| Удалён явный дубликат или пустая фраза | — | не флаг |
+
+> [!important] Порога «−10% фактов = нормально» не существует
+> Счётчик «фактов до/после» остаётся, но он **диагностический**: малая дельта означает лишь, что текст не уплотнялся, и ничего не говорит о сохранности смысла. Решение принимается по утверждениям.
+
+```yaml
+bias_substitution:
+  claims_before: 12
+  claims_after: 12
+  lost_claims: []          # непустой список = meaning_loss
+  modality_drift: []       # «может» → «точно»
+  invented_facts: []       # выдумка = FAIL
+  fact_count_delta: -0     # диагностика, не критерий
+  verdict: clean | flag
+```
 
 ### 2.8. Russian brevity grammar opportunity (Lever 12, RU only)
 
@@ -198,6 +268,9 @@ If text is Russian, check if any of these can be applied:
 - **Нулевая связка**: разговорный регистр с лишними местоимениями?
 
 Mark as **opportunities**, not as violations.
+
+> [!warning] Не для официально-делового регистра
+> Литота, нулевая связка и гэппинг — приёмы разговорного и художественного регистра. В официально-деловом, юридическом, дипломатическом и научном тексте они не норма: отмечать их там — ошибка рекомендации.
 
 ---
 
@@ -227,7 +300,7 @@ Top 3-5 concrete actionable items:
 recommendations:
   - priority: 1
     issue: "YapScore 2.3 — text is 2.3x longer than minimal sufficient"
-    action: "Run humanize-editor with TIGHTEN phase. Expect 30-40% reduction."
+    action: "Run humanize-editor with TIGHTEN phase. Expect 30-40% reduction — без потери утверждений, условий и модальности."
   - priority: 2
     issue: "Vacuum-filling sentences in para 2, 5"
     action: "Delete first sentence of each affected paragraph"
@@ -236,7 +309,37 @@ recommendations:
     action: "Apply rupture pattern or merge into prose"
 ```
 
-### 3.3. Output format
+### 3.3. Что проверить вручную по смыслу
+
+Метрики не видят смысл. Этот раздел — обязательная часть аудита: список мест, где человек должен посмотреть глазами. Заполняется **по исходному тексту**, даже если переписывания не было: смысл может быть потерян ещё до аудита (при сокращении, переносе в другой формат, «улучшаении» автором).
+
+| Класс | Что проверяем | Пример расхождения |
+|---|---|---|
+| **Условия** | «если / при / под нагрузкой / когда» — условие осталось рядом с утверждением | «под нагрузкой выше 5k req/s» → «всегда» |
+| **Исключения** | «кроме / за исключением / не в случае» | «кроме X» исчезло |
+| **Модальность** | «может / вероятно / обычно / как правило» ≠ «снижает / всегда» | «может снижать» → «снижает» |
+| **Отрицания** | «не работает» ≠ «работает с ограничениями» | предупреждение превратилось в похвалу |
+| **Терминология** | термен заменён синонимом — синоним полный? | «rate limiter» → «тормоз» |
+| **Цитаты** | цитируемый текст не отредактирован | цитата «звучит по-AI'шному» — это проблема цитируемого |
+| **Регистр** | «Уважаемые коллеги» → «Привет, народ» | смена регистра меняет социальный смысл |
+
+```yaml
+manual_meaning_review:
+  - location: para_4_sentence_2
+    class: condition
+    text: "под нагрузкой выше 5k req/s"
+    concern: "условие легко теряется при сокращении"
+    severity: check
+  - location: para_6_sentence_1
+    class: modality
+    text: "может снижать нагрузку"
+    concern: "при переписывании легко превратится в «снижает»"
+    severity: check
+```
+
+Если проверять нечего — напишите прямо: «Смысловых рисков не найдено». Пустой раздел без пометки читается как пропуск.
+
+### 3.4. Output format
 
 ```markdown
 ## AI-Audit Report
@@ -245,10 +348,14 @@ recommendations:
 
 Risk score: <0-100>%
 Detector expectation: <what ZeroGPT/GPTZero would likely say>
+Режим правки: <proofread | light | style | deep> (выбран потому что: ...)
 
 ### Metrics (calibrated on HC3/RAID/Wikisource, n=145)
 
 Примените пороги в зависимости от языка. Скрипт `benchmark-skill.sh` определяет RU/EN автоматически.
+
+> [!note] Пороги — диагностика
+> Цифры ниже показывают, **где смотреть**, а не «итоговый балл». Ни один порог не делает текст AI или не-AI: плотная фактура может быть выдуманной, а лёгкая — честной. Итог по смыслу — в разделе «Что проверить вручную по смыслу».
 
 **EN thresholds:**
 - AP: <число> (target <1)
@@ -289,7 +396,7 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 - Cuttable sentences (Strunk test): ~X (target <15%)
 - Iceberg opportunities: ~X paragraphs
 - Format bias density: emojis X, bold X%, triple-parallel lists X
-- Bias substitution warning: facts before/after Tighten: X → Y (loss Z%)
+- Bias substitution: потерянных утверждений — <N> (см. «Что проверить вручную по смыслу»)
 - Russian grammar opportunities: парцелляция X, эллипсис X, литота X
 
 ### Burstiness
@@ -310,6 +417,15 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 - Is the text over-long? <yes / no / borderline>
 - If yes: where would you cut? (1-3 specific spans)
 
+### Что проверить вручную по смыслу
+- Условия: para 4 — «под нагрузкой 5k req/s» потеряется при сокращении?
+- Исключения: para 2 — «кроме X» на месте?
+- Модальность: para 6 — «может снижать» не превратится в «снижает»?
+- Отрицания: para 7 — «не работает» не превратилось в «работает»?
+- Терминология: «rate limiter» заменён синонимом?
+- Цитаты: не отредактированы?
+- Регистр: формальность не сдвинулась?
+
 ### Recommendations (top 3)
 1. ...
 2. ...
@@ -325,7 +441,9 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 - **Format matters.** Technical docs naturally have less voice; legal text has more hedging. Adjust expectations.
 - **Length matters.** Texts <100 words are unreliable. Note if input is short.
 - **YapScore is rough.** Comparison with an internal baseline (эталон) is more reliable than absolute number.
-- **Bias substitution is a real risk** (Lamparth 2026). Don't recommend Tighten pass without checking fact density.
+- **Metrics are diagnostics, not a verdict.** No threshold turns a text into «AI» or «human». The verdict is a heuristic opinion; the meaning checklist is the part a human must actually check.
+- **Bias substitution is a real risk** (Lamparth 2026). Don't recommend Tighten pass without a per-claim check: потеря любого утверждения = флаг, а не «фактов стало меньше на 10%».
+- **The audit doesn't rewrite.** If the meaning flags show a problem, hand the text to `humanize-editor` — don't patch it inside the audit.
 
 ---
 
@@ -340,6 +458,8 @@ Detector expectation: <what ZeroGPT/GPTZero would likely say>
 ## See also
 
 - Knowledge base:
+  - [`02-Techniques/meaning-preservation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/meaning-preservation.md)
+  - [`02-Techniques/editing-modes.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/editing-modes.md)
   - [`02-Techniques/sufficiency-and-underspecification.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/sufficiency-and-underspecification.md)
   - [`02-Techniques/length-bias-research.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/length-bias-research.md)
   - [`02-Techniques/russian-brevity-grammar.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/russian-brevity-grammar.md)

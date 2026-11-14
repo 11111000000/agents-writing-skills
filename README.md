@@ -87,6 +87,7 @@ See [**Getting Started**](docs/getting-started.md) for three install methods:
 |---|---|
 | [🌐 Website](https://11111000000.github.io/agents-writing-skills/) | Rendered knowledge base with full navigation |
 | [Getting Started](docs/getting-started.md) | Three install methods + verification |
+| [Blind evaluation](docs/blind-evaluation.md) | Protocol for checking that edits preserve meaning |
 | [Skills Overview](docs/skills-overview.md) | 4 skills, 4 phases, 12 levers — when to use which |
 | [Knowledge Base tour](docs/knowledge-base.md) | Walk through 41+ notes by category |
 | [Limitations](docs/limitations.md) | What these skills can and cannot do |

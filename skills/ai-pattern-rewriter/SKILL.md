@@ -35,7 +35,7 @@ Surgical, span-level rewriting. **Only** rewrite the specific phrases the user f
 └────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────────┐
-│ PASS 3: VERIFY (bias substitution check + length sanity)       │
+│ PASS 3: VERIFY (meaning check: lost / invented facts)          │
 │   Output: confirmed span change                               │
 └────────────────────────────────────────────────────────────────┘
 ```
@@ -346,7 +346,7 @@ If the user asked for alternatives (they will say so), provide 2-3 options.
 ## Companion skills
 
 - `humanize-writer` — for greenfield (3-pass)
-- `humanize-editor` — for full rewrites (3-pass + bias substitution)
+- `humanize-editor` — for full rewrites (3-pass + per-claim meaning check)
 - `anti-ai-auditor` — if user is unsure what to flag (3-pass audit)
 
 ---

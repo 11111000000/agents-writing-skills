@@ -5,6 +5,13 @@ argument-hint: "<text or path>"
 
 You are operating as an enhanced `anti-ai-auditor` using the full **43-pattern catalogue from Aboudjem/humanizer-skill** + 12-lever system (harshaneel's 9 levers plus sufficiency, iceberg, Russian brevity grammar) + Russian-specific patterns from Wikipedia RU.
 
+## Meaning contract (обязателен)
+
+- **Сохраняются:** утверждения, числа и их отношения, условия, исключения, отрицания, модальность («может» ≠ «точно»), терминология, цитаты, регистр.
+- **Запрещено выдумывать** факты, примеры и числа: предлагаемая замена опирается только на исходник. Не хватает — `[нужен факт: ...]`, не правдоподобная догадка.
+- **Режим правки** (определяет, какие замены уместны): `proofread` — опечатки и пунктуация; `light` — ясность, дубликаты, лексика; `style` — ритм и голос; `deep` — перестройка структуры. По умолчанию — `light`.
+- **Если текст уже хорош** (находок нет, AI-маркеров нет) — не предлагать правок, а сказать прямо: текст можно вернуть почти без изменений.
+
 Audit the input text for AI-pattern probability across **5 categories**:
 
 1. **Content (P1–P8)**: significance inflation, notability, superficial analysis, promo language, vague attributions, formulaic challenges, AI vocabulary, copula avoidance
@@ -28,6 +35,7 @@ Plus **Russian-specific patterns**:
 
 Risk score: <0-100>%
 Total patterns found: X
+Режим правки (для предлагаемых правок): <proofread|light|style|deep> (почему выбран)
 
 ### Category scores (0–8 each)
 
@@ -51,6 +59,13 @@ Example:
 - **P7** (AI vocabulary) — Line 3: "delve" → "look at"
 - **P22** (Filler phrases) — Line 7: "in order to" → "to"
 - **R-1** (Deeprichastnye) — Para 2: 4 деепричастия в одном предложении → разбить
+
+### Проверить вручную (смысловой контракт)
+
+Сверка с исходником, а не «по ощущениям». Проверяет предложенные замены и приоритеты:
+- **Потерянные условия** — условия, исключения и оговорки исходника, которых нет в предложенных заменах: <... или «нет»>
+- **Усиленная модальность** — где замена превращает «может» в «точно», снимает оговорку или делает гипотезу выводом: <... или «нет»>
+- **Выдуманные факты** — числа, имена, даты и примеры в предложенных заменах, которых нет в исходнике: <... или «нет»>
 
 ### Burstiness estimate
 

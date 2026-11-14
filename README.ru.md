@@ -99,6 +99,8 @@ metadata:
 ## Документация
 
 - **[База знаний](knowledge/README.md)** — паттерны, техники, примеры
+- **[Обзор скилов](docs/ru/skills-overview.md)** — режимы правки и смысловой контракт v7
+- **[Слепая оценка](docs/blind-evaluation.md)** — протокол проверки качества редактуры
 - **[Contributing](CONTRIBUTING.md)** — как добавить скил или промпт
 - **[Changelog](CHANGELOG.md)** — что изменилось
 - **[Ограничения](knowledge/05-References/limits-and-self-critique.md)** — эпистемический анализ

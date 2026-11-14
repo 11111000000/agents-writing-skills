@@ -88,7 +88,7 @@
     {
       "name": "humanize-9-levers",
       "path": "prompts/humanize-9-levers.md",
-      "description": "Humanize using 9-lever system",
+      "description": "Apply the classic 9-lever set within the v7 meaning contract (no invented facts, edit mode required)",
       "target_agents": [
         "pi"
       ]

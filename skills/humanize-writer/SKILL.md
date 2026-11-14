@@ -11,7 +11,7 @@ metadata:
 
 # Humanize-Writer (v7)
 
-Write text that reads like a human wrote it — without invented facts and without a template "humanize style" (рубленые фразы + числа + «я» + вопрос в конце). v7 keeps the explicit **3-pass architecture** (Audit → Rewrite → Verify) and adds the fact contract: конкретика берётся только из входных данных пользователя, приёмы применяются условно, метрики — диагностика, а не цель. 12 levers stay organized into 4 phases (STRIP / TIGHTEN / RELY / REBUILD).
+Write text that reads like a human wrote it — without invented facts and without a template "humanize style" (рубленые фразы + числа + «я» + вопрос в конце). v7 keeps the explicit **3-pass architecture** (Audit → Rewrite → Verify) and adds the fact contract: конкретика берётся только из входных данных пользователя, приёмы применяются условно, метрики — диагностика, а не цель. Проверка результата — **per-claim**: потеря любого утверждения или выдуманный факт = FAIL (порог «10% можно потерять» снят). 12 levers stay organized into 4 phases (STRIP / TIGHTEN / RELY / REBUILD).
 
 > [!info] Knowledge base access
 > All references are GitHub URLs to [`11111000000/agents-writing-skills`](https://github.com/11111000000/agents-writing-skills). They resolve via the GitHub web UI / API. **No local file dependencies** — works on any machine with internet access.
@@ -25,7 +25,9 @@ Write text that reads like a human wrote it — without invented facts and witho
 > [!warning] Фактический контракт (v7)
 > **Запрещено выдумывать** числа, имена, даты, личный опыт и причины. Конкретика берётся только из входных данных пользователя или явно оговорённых источников.
 > Если факта нет — **спросите пользователя**, пометьте `[нужен факт: ...]` или пишите без него.
-> Приёмы (первое лицо, rupture, короткие фразы, тире) — **условные, а не обязательные**: они выбираются под жанр и голос, а не применяются всегда.
+> **Сохраняются** утверждения, числа и их отношения, условия, исключения, отрицания, модальность («может снижать» ≠ «снижает»), терминология, цитаты и регистр формальности.
+> **Потеря любого утверждения — ошибка.** Порога «10% можно потерять» не существует.
+> Приёмы (первое лицо, rupture, короткие фразы, тире, RELY) — **условные, а не обязательные**: они выбираются под жанр и голос, а не применяются всегда.
 > **Хороший исходный текст можно оставить почти без изменений.**
 
 > [!warning] Что этот скил МОЖЕТ и чего НЕ МОЖЕТ
@@ -35,11 +37,12 @@ Write text that reads like a human wrote it — without invented facts and witho
 > См. [`05-References/limits-and-self-critique.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/05-References/limits-and-self-critique.md).
 
 > [!warning] Length bias caveat (v4+)
-> YapBench (Borisov et al., 2026) и Park et al. (2024) показали, что length bias — структурное свойство RLHF preference tuning. **Tighten pass может привести к bias substitution** (Lamparth et al., 2026): сокращение длины → перенос bias на другие proxies (confidence, factual depth). Tighten pass должен сохранять плотность фактов, не только сокращать слова.
+> YapBench (Borisov et al., 2026) и Park et al. (2024) показали, что length bias — структурное свойство RLHF preference tuning. **Tighten pass может привести к bias substitution** (Lamparth et al., 2026): сокращение длины → перенос bias на другие proxies (confidence, factual depth). Tighten pass должен сохранять плотность фактов, не только сокращать слова. Проверка — per-claim (см. 3.1): потеря любого утверждения = ошибка, «потеряли меньше 10%» — не аргумент.
 
 > [!info] Major changes in v7
 > - **Фактический контракт**: запрет на выдуманную конкретику; сбор фактов — обязательный шаг Pass 1
-> - **Условные приёмы**: первое лицо, конкретика, rupture — «если уместно и доступно», без жёстких квот
+> - **Per-claim проверка вместо порога 10%**: потеря любого утверждения = FAIL, выдуманный факт = FAIL, модальность/отрицания/условия сверяются отдельно
+> - **Условные приёмы**: первое лицо, конкретика, rupture, RELY — «если уместно и доступно», без жёстких квот
 > - **Метрики как диагностика**, не как цель: хороший исходный текст можно оставить почти без изменений
 > - **Режимы правки**: proofread / light / style / deep (см. `agent-writing-workflow`)
 
@@ -66,6 +69,7 @@ Write text that reads like a human wrote it — without invented facts and witho
 ┌────────────────────────────────────────────────────────────────┐
 │ PASS 1: AUDIT (identify what to fix)                           │
 │   Output: сбор фактов + список проблем + метрики (AP, D, E…)   │
+│           + режим правки                                        │
 └────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────────┐
@@ -73,11 +77,12 @@ Write text that reads like a human wrote it — without invented facts and witho
 │   Phase STRIP:   Levers 1-9  (remove negative patterns)         │
 │   Phase TIGHTEN: Lever 10   (apply sufficiency / Grice)         │
 │   Phase RELY:    Lever 11   (trust the reader / iceberg)        │
+│                  — только style/deep, условно                   │
 │   Phase REBUILD: Lever 12   (RU grammar — парцелляция/литота)   │
 └────────────────────────────────────────────────────────────────┘
                             ↓
 ┌────────────────────────────────────────────────────────────────┐
-│ PASS 3: VERIFY (final checks, bias substitution check)          │
+│ PASS 3: VERIFY (per-claim meaning check, density, read aloud)  │
 │   Output: готово к публикации ИЛИ список remaining issues       │
 └────────────────────────────────────────────────────────────────┘
 ```
@@ -91,6 +96,21 @@ Write text that reads like a human wrote it — without invented facts and witho
 > [!tip] Когда применять
 > Перед написанием длинного текста. Перед редактированием чужого. Когда нужна отправная точка для оценки длины.
 > Если задача — правка существующего текста, сначала выберите режим: **proofread / light / style / deep** (см. [`02-Techniques/agent-writing-workflow.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/agent-writing-workflow.md)). Хороший исходный текст можно оставить почти без изменений — режим proofread для этого и существует.
+
+### 1.0. Режим правки (объём разрешённого)
+
+Режим определяет, какие фазы и приёмы допустимы. Для нового текста (`greenfield`) режим выбирается по регистру и аудитории; для задачи «перепиши/переделай существующий текст» — по запросу пользователя, иначе по умолчанию `light`.
+
+| Режим | Что разрешено | Когда |
+|---|---|---|
+| `proofread` | Только грамматика, опечатки, пунктуация | юридический текст, цитаты, «просто вычитай» |
+| `light` | proofread + banned lexicon + closing cliché + явные дубликаты | черновик почти хорош, голос важен |
+| `style` | light + STRIP + TIGHTEN + условные rupture/первое лицо | дефолт для постов, писем, README |
+| `deep` | style + RELY + REBUILD (RU) + перестройка структуры | художественный/разговорный регистр, «сделай максимально живо» |
+
+**Умолчание:** `light`, не `deep`. RELY (iceberg) разрешён **только** в `style`/`deep` и **только** для художественного или разговорного регистра — никогда по умолчанию, никогда для технического/делового/юридического текста.
+
+Подробности: [`02-Techniques/editing-modes.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/editing-modes.md).
 
 ### 1.1. Сбор фактов (обязательный шаг)
 
@@ -132,7 +152,10 @@ fact_sheet:
 | **R** (restatement chains) | (повторов смысла / всего предложений) × 100 | <10% | <10% | empirical |
 | **B** (bridging phrases) | (мостиков на границе абзацев) / всего абзацев | <5% | <5% | empirical |
 | **Burstiness std** | std длины предложений (слов) | >3 | >8 (human литературная: 18+, AI маркетинг: 6.5) | empirical |
-| **Specificity** | конкретных фактов на абзац | >0.5 | varies | empirical |
+| **Specificity** | конкретных фактов на абзац (только из входных данных) | >0.5 | varies | empirical |
+
+> [!warning] Specificity — не квота
+> «>0.5 факта на абзац» — это диагностика плотности, а не норма на выдумку. Добавлять число, чтобы попасть в метрику, запрещено: конкретика берётся только из входных данных, иначе — `[нужен факт: ...]`. Низкая плотность = повод спросить пользователя, а не повод придумать.
 
 > [!info] Калибровка порогов
 > Все цифры в таблице получены эмпирически на корпусе 145 размеченных текстов
@@ -200,19 +223,22 @@ audit_report:
 
 ### Phase STRIP (Levers 1-9) — удаление негативных паттернов
 
-> **Цель:** убрать AI-маркеры. Не добавлять ничего.
+> **Цель:** убрать AI-маркеры. Не добавлять ничего, кроме конкретики из входных данных и голоса — и то только если это уместно регистру.
 
 | Lever | Что делает | Когда применять |
 |---|---|---|
 | **1. Perplexity** (непредсказуемость) | Заменить предсказуемые слова на неожиданные | При наличии клише (delve, leverage, robust) |
 | **2. Burstiness** | Чередовать длины предложений (5–25+ слов) | Когда std предложений < 3 |
-| **3. Hedge surgery** | Удалить «можно сказать», «it could be argued» | Когда есть hedging |
+| **3. Hedge surgery** | Удалить «можно сказать», «it could be argued» | Только **страховочное** хеджирование. Честная неуверенность автора («может снижать нагрузку») — не хеджирование, её сохраняем |
 | **4. Structural flatten** | Убрать лишние структурные навороты | Когда bullets перегружены |
-| **5. Specificity** | Заменить абстракции реальными фактами (числа, имена, пути) | Когда мало конкретики (<0.5 факта/абзац) **и факты доступны**; иначе — спросить или пометить `[нужен факт: ...]`. Выдумывать запрещено |
-| **6. Voice** | Добавить «я»/«мы»/«I»/«we» | Когда нет авторского голоса **и жанр/формат это допускает**; если уместно — иначе пропустить |
+| **5. Specificity** | Заменить абстракции реальными фактами (числа, имена, пути) | Когда текст абстрактен **и факты доступны**; иначе — спросить или пометить `[нужен факт: ...]`. Выдумывать запрещено. Не квота: метрика плотности не оправдание для придуманного числа |
+| **6. Voice** | Добавить «я»/«мы»/«I»/«we» | **Только** если формат допускает первое лицо, текст пишется от автора и это не создаёт выдуманный личный опыт. В legal/docs/API-описаниях — пропустить |
 | **7. Discourse** | Убрать «Furthermore», «Moreover» | Когда есть AI-коннекторы |
 | **8. Punctuation** | Em-dash ≤ 1 на 300 слов | Когда em-dash > нормы |
 | **9. RLHF strip** | Убрать polite hedging, balanced framing | Когда есть «Great question!», «I hope this helps» |
+
+> [!info] Первое лицо — приём, а не обязанность
+> Если текст звучит по-человечески без «я»/«мы» — ничего не добавлять. Если формат не предполагает рассказчика (инструкция, отчёт, API-документация, юридический текст) — первое лицо не добавляется вовсе.
 
 **Lexicon** для запрещённых слов: [`references/lexicon.md`](https://github.com/11111000000/agents-writing-skills/blob/main/skills/humanize-writer/references/lexicon.md).
 
@@ -235,9 +261,9 @@ audit_report:
 
 ```diff
 # P-NEW-13 False Agency
-# NB: конкретика в «после» должна быть реальной (от пользователя), не выдуманной
+# NB: конкретика в «после» — только из входных данных; иначе [нужен факт: ...]
 - The market rewards companies that listen.
-+ Customers spend more with companies that answer support tickets within an hour.
++ Customers reward companies that answer support tickets. [нужен факт: как измеряется «reward»]
 ```
 
 ### Phase TIGHTEN (Lever 10) — суффицентность
@@ -262,9 +288,14 @@ for scan in [
     rewrite(text)
 ```
 
+> [!warning] Что TIGHTEN имеет право удалять
+> `anticipatory_hedging` убирает страховку («возможно, стоит рассмотреть»), а **не** честную неуверенность автора («может снижать нагрузку»). Условия, исключения, отрицания и модальность — часть утверждения; их удаление = потеря смысла (см. Pass 3).
+
 #### 10.2. Strunk cut-test
 
 > Удалите любое предложение. Смысл потерялся? Если нет — навсегда удалите.
+
+Оговорка: cut-test применяется к **пустым фразам и явным дубликатам**. Предложение с условием, исключением, отрицанием или модальностью («кроме X», «не работает», «может снижать») не удаляется, даже если кажется избыточным: оно несёт содержание, которое читатель иначе не восстановит.
 
 **Williams 6 операций** (финальный проход):
 
@@ -281,14 +312,23 @@ for scan in [
 - У нас в команде возник вопрос по дедлайну. После обсуждения мы пришли к
 - выводу, что дедлайн нужно перенести. Это связано с тем, что код ещё не
 - закрыт, тесты не прогонялись. Поэтому мы предлагаем сдвинуть срок на неделю.
-+ Дедлайн нереальный. Код не закрыт, тесты не гоняли. Сдвигаем на неделю.
++ Дедлайн нереальный. Код не закрыт, тесты не гоняли. Предлагаем сдвинуть на неделю.
 ```
 
-Word count: 32 → 12 (−63%). Смысл сохранён.
+Word count: 37 → 12 (−68%). Условие («код не закрыт, тесты не гоняли»), модальность («предлагаем») и срок — на месте.
 
 ### Phase RELY (Lever 11) — доверяй читателю
 
 > **Цель:** оставить пробелы, которые читатель заполнит сам. Hemingway iceberg.
+
+> [!warning] RELY запускается не всегда
+> Фаза разрешена **только** если одновременно:
+> 1. Режим правки — `style` или `deep` (см. 1.0);
+> 2. Регистр — художественный или разговорный (пост, эссе, колонка, письмо коллеге).
+>
+> Для технического, делового, юридического, академического текста RELY **не запускается никогда**: iceberg-пробелы там съедают условия и оговорки. В режимах `proofread`/`light` — тоже нет. При сомнении — не запускать.
+>
+> Даже внутри RELY нельзя удалять условия, исключения, отрицания и модальность — это содержание, а не «вода».
 
 **Принцип:** «If a writer of prose knows enough of what he is writing about he may omit things that he knows and the reader... will have a feeling of those things as strongly as though the writer had stated them.»
 
@@ -385,44 +425,89 @@ Word count: 32 → 12 (−63%). Смысл сохранён.
 > [!tip] Когда применять
 > После Pass 2. Перед публикацией.
 
-### 3.1. Bias substitution check
+### 3.1. Per-claim verification (v7) — замена порога «10% потерянных фактов»
 
 > [!warning] Critical (Lamparth et al. 2026)
-> Single-axis mitigation переносит bias на другие proxies. После Tighten pass проверьте, что **не потеряли факты**.
+> Single-axis mitigation переносит bias на другие proxies. После Tighten pass проверяем **каждое утверждение**, а не процент: **потеря любого утверждения = FAIL**, **выдуманный факт = FAIL**. Порога «потерять 10% — можно» не существует.
+
+Проверка двусторонняя: оригинал → текст (ничего не потеряно) и текст → оригинал (ничего не выдумано).
+
+#### 3.1.1. Потеря vs выдумка
 
 ```python
-def check_bias_substitution(original: str, rewritten: str) -> dict:
-    """Сравнить количество конкретных фактов до и после."""
+import re
 
-    facts_original = extract_facts(original)  # числа, имена, команды, пути
-    facts_rewritten = extract_facts(rewritten)
+def extract_facts(text):
+    """Числа, имена собственные, команды, пути, даты."""
+    return set(
+        re.findall(r'\b\d+(?:\.\d+)?(?:[%kmсx]?)\b', text) |           # 14, 30%, 5k, 14ms
+        re.findall(r'`[^`]+`', text) |                                 # `pip install`
+        re.findall(r'[/~][\w./\-]+', text) |                          # ~/Desktop/foo.md
+        re.findall(r'\b[A-Z][a-z]+(?:\s[A-Z][a-z]+)+\b', text) |       # Stripe, PostgreSQL
+        re.findall(r'\b\d{4}\b', text)                                # 2024
+    )
 
-    lost = facts_original - facts_rewritten
-    loss_pct = len(lost) / len(facts_original) * 100
+def extract_claims(text):
+    """Каждое утверждение: субъект + отношение + значение + условие + модальность."""
+    # Для каждого предложения зафиксировать:
+    # - факты (extract_facts)
+    # - модальность: может/возможно/might ≠ точно/will
+    # - отрицания: не/no/never
+    # - условия и исключения: если/при/кроме/за исключением
+    # - термины и цитаты
+    ...
 
-    if loss_pct > 10:
-        return {"status": "FAIL", "lost_facts": lost, "loss_pct": loss_pct}
-
-    return {"status": "PASS", "loss_pct": loss_pct}
+def check_claims_preserved(original: str, rewritten: str) -> dict:
+    """Нулевая потеря по умолчанию: каждое утверждение оригинала должно
+    сохраниться в тексте — с теми же числами, условиями и модальностью."""
+    lost_facts = extract_facts(original) - extract_facts(rewritten)
+    invented_facts = extract_facts(rewritten) - extract_facts(original)
+    lost_claims = [c for c in extract_claims(original)
+                   if not claim_survives(c, rewritten)]
+    # Допустимые исключения: явные дубликаты и пустые фразы
+    # ("важно отметить", "как мы видим") — их удаление не считается потерей.
+    failed = bool(lost_facts or invented_facts or lost_claims)
+    return {
+        "status": "FAIL" if failed else "PASS",
+        "lost_facts": list(lost_facts),
+        "invented_facts": list(invented_facts),   # выдуманные числа/имена = FAIL
+        "lost_claims": lost_claims,
+        "action": "Restore lost, remove invented" if failed else "Proceed",
+    }
 ```
 
-### 3.1.1. Fact-contract check (v7)
-
-Симметричная проверка в обратную сторону: в переписанном тексте не должно появиться фактов, которых не было ни в оригинале, ни в `fact_sheet.known` (см. 1.1).
+Выдумка проверяется и по `fact_sheet`: число, которого нет во входных данных, не считается фактом, даже если правдоподобно.
 
 ```python
 def check_no_invented_facts(rewritten: str, fact_sheet: dict) -> dict:
-    """Каждый факт в тексте должен происходить из fact_sheet.known."""
+    """Каждый факт в тексте должен происходить из fact_sheet.known (см. 1.1)."""
 
     facts = extract_facts(rewritten)
     invented = facts - set(fact_sheet["known"])
 
     if invented:
-        return {"status": "FAIL", "invented_facts": invented,
+        return {"status": "FAIL", "invented_facts": list(invented),
                 "action": "удалить, спросить пользователя или пометить [нужен факт: ...]"}
 
     return {"status": "PASS"}
 ```
+
+#### 3.1.2. Модальность, отрицания, условия и исключения — сверяются отдельно
+
+Regex ловит токены, а не смысл. Эти четыре класса проверяются сверкой каждого утверждения:
+
+| Что | Как | Что сломалось |
+|---|---|---|
+| Модальность | «может снижать» vs «снижает» | Усиление уверенности — это выдумка |
+| Отрицание | «не работает» vs «работает с ограничениями» | Переворот смысла |
+| Условие | «под нагрузкой 5k req/s» vs «всегда» | Из частного случая сделан закон |
+| Исключение | «кроме X» vs «...» | Выдумана универсальность |
+
+Терминология проверяется так же: синоним допустим, только если он полный («rate limiter» → «ограничитель частоты запросов» ок, «rate limiter» → «тормоз» — нет). Цитаты не редактируются.
+
+#### 3.1.3. Что считать допустимым удалением
+
+Только **явные дубликаты** и **пустые фразы** («важно отметить», «как мы видим», «в заключение можно сказать»). Если утверждение удалено и указать, какое другое утверждение несёт то же содержание, нельзя — это потеря смысла (FAIL).
 
 ### 3.2. Final density check
 
@@ -430,15 +515,20 @@ def check_no_invented_facts(rewritten: str, fact_sheet: dict) -> dict:
 
 ```yaml
 final_check:
-  AP: <1                  # target
-  D: <7                   # RU only
-  E: <3                   # global
-  YapScore: 1.0–1.5       # global
-  V: <5%                  # vacuum-filling
-  R: <10%                 # restatement chains
-  B: <5%                  # bridging
-  loss_pct_facts: <10%    # bias substitution
-  invented_facts: 0       # fact contract
+  meaning_contract:
+    status: PASS          # или FAIL
+    lost_claims: []       # потеряно утверждение = FAIL
+    lost_facts: []
+    invented_facts: []    # выдуманные числа/имена/даты = FAIL
+    modality_preserved: true
+  density:                # диагностика, не цель
+    AP: <1                # target
+    D: <7                 # RU only
+    E: <3                 # global
+    YapScore: 1.0–1.5     # global
+    V: <5%                # vacuum-filling
+    R: <10%               # restatement chains
+    B: <5%                # bridging
 ```
 
 ### 3.3. Read aloud test
@@ -461,19 +551,26 @@ verify_failure:
   action: return_to_pass_2_phase_TIGHTEN
 ```
 
+```yaml
+verify_failure:
+  issue: "lost_claims: [C3 — модальность «может снижать» превратилась в «снижает»]"
+  location: para_2_sentence_1
+  action: restore_claim      # вернуть утверждение, а не «компенсировать» новой конкретикой
+```
+
 ---
 
 ## Multi-language support
 
 | Регистр | RU | EN |
 |---|---|---|
-| Conversational | Levers 1-12, кроме Lever 11 | Levers 1-9, 11 |
-| Blog | Levers 1-12 | Levers 1-11 |
-| Email коллеге | Levers 1-9, 11, 12 (без эллипсиса — что делать вместо: парцелляция, литота, нулевая связка) | Levers 1-9, 11 |
+| Conversational | Levers 1-10, 12; **Lever 11 (RELY) — условно (style/deep)** | Levers 1-10; **Lever 11 (RELY) — условно (style/deep)** |
+| Blog | Levers 1-10, 12; **Lever 11 (RELY) — условно (style/deep)** | Levers 1-10; **Lever 11 (RELY) — условно (style/deep)** |
+| Email коллеге | Levers 1-9, 12 (без эллипсиса — что делать вместо: парцелляция, литота, нулевая связка) | Levers 1-9 |
 | README | Levers 1-9 | Levers 1-9 |
 | Marketing | Только Lever 9 (RLHF strip) + P-NEW-13/16/20 strip | Только Lever 9 + P-NEW-13/16/20 |
 | Technical reference | Никакие (нужна точность) | Никакие |
-| Literary prose | Levers 1-9, **сохраняем D 14-30/1000, E >0, вариативность длины std >10** | n/a |
+| Literary prose | Levers 1-9 + **Lever 11 в режиме deep**, сохраняем D 14-30/1000, E >0, вариативность длины std >10 | n/a |
 
 > [!note] Literary RU — отдельный регистр
 > Если пишете в стиле русской литературной прозы (Бунин, Чехов, Толстой):
@@ -499,16 +596,16 @@ Draft full text, monitor: вариативность длины, дееприч�
 Per-paragraph checks: concrete detail (только реальная), sentence length diff, banned lexicon, triple-parallel, abstract sentence.
 
 ### Step 4 — Tighten pass (Pass 2, TIGHTEN)
-8 scans + Strunk cut-test + Williams 6 operations.
+8 scans + Strunk cut-test + Williams 6 operations. Удаляются только дубликаты и пустые фразы — не утверждения.
 
 ### Step 5 — Rupture pass (Pass 2, RELY)
-Insert rupture if smooth, or silence (Lever 11).
+Если текст всё ещё звучит слишком гладко **и rupture уместен регистру** — вставить (one-line aside, вопрос, blunt opinion, конкретное число из входных данных). Иначе — не вставлять. Rupture не обязателен.
 
 ### Step 6 — Trust-the-reader pass (Pass 2, RELY)
-Reader-fill test, distinctive-word test.
+Только в режимах `style`/`deep` и для художественного/разговорного регистра. Reader-fill test, distinctive-word test. Условия, исключения и модальность при этом не удаляются.
 
 ### Step 7 — Density check (Pass 3)
-Count per 1000 words: AP, D, E, V, R, B. Плюс fact-contract check: выдуманных фактов — 0.
+Count per 1000 words: AP, D, E, V, R, B. Плюс per-claim проверка: потерянных утверждений — 0, выдуманных фактов — 0, модальность сохранена.
 
 ---
 
@@ -551,6 +648,8 @@ Always output **only the final text**. No preamble, no "Here's a draft:", no apo
 ## See also
 
 Knowledge base:
+- [`02-Techniques/meaning-preservation.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/meaning-preservation.md)
+- [`02-Techniques/editing-modes.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/editing-modes.md)
 - [`02-Techniques/perplexity-and-burstiness.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/perplexity-and-burstiness.md)
 - [`02-Techniques/voice-and-tone.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/voice-and-tone.md)
 - [`02-Techniques/voice-russian-specifics.md`](https://github.com/11111000000/agents-writing-skills/blob/main/knowledge/02-Techniques/voice-russian-specifics.md)

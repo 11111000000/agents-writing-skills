@@ -172,6 +172,96 @@
       "register": "fact",
       "control": "printf '[[nonexistent-note-xyz]]\\n' >> knowledge/02-Techniques/meaning-preservation.md",
       "waiver": null
+    },
+    {
+      "id": "manifest-versions",
+      "text": "manifest skill versions match the versions declared in SKILL.md",
+      "scope": [
+        "manifest.json", "skills/", "scripts/check-manifest-versions.sh"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/check-manifest-versions.sh"
+        }
+      ],
+      "falsifier": "the manifest advertises a version the skill does not declare",
+      "register": "fact",
+      "control": "sed -i '0,/\"version\": \"7.0.0\"/s//\"version\": \"9.9.9\"/' manifest.json",
+      "waiver": null
+    },
+    {
+      "id": "no-stale-contract",
+      "text": "no stale v6 fact-loss thresholds remain in skills, prompts or scoped knowledge",
+      "scope": [
+        "skills/", "prompts/", "knowledge/02-Techniques/",
+        "knowledge/04-Examples/", "scripts/check-no-stale-contract.sh"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/check-no-stale-contract.sh"
+        }
+      ],
+      "falsifier": "an old loss_pct / check_bias_substitution rule reappears in the contract",
+      "register": "fact",
+      "control": "printf 'loss_pct > 10\\n' >> prompts/humanize.md",
+      "waiver": null
+    },
+    {
+      "id": "examples-coverage",
+      "text": "every example file under knowledge/04-Examples is checked, and the checker still detects violations",
+      "scope": [
+        "knowledge/04-Examples/", "scripts/check-examples-facts.sh",
+        "scripts/check-examples-coverage.sh"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/check-examples-coverage.sh"
+        }
+      ],
+      "falsifier": "a new example file escapes the checker or the checker stops detecting violations",
+      "register": "fact",
+      "control": "sed -i 's|^EXAMPLES_DIR=.*|EXAMPLES_DIR=/tmp/mathc-empty-dir|' scripts/check-examples-facts.sh",
+      "waiver": null
+    },
+    {
+      "id": "editing-output-selftest",
+      "text": "the editing-output validator proves it catches meaning violations",
+      "scope": [
+        "scripts/check-editing-output.sh", "tests/fixtures/editing/"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/check-editing-output.sh --selftest"
+        }
+      ],
+      "falsifier": "the validator silently accepts a broken edit",
+      "register": "fact",
+      "control": "sed -i 's/--selftest/SELFTEST_DISABLED/' scripts/check-editing-output.sh",
+      "waiver": null
     }
   ]
 }
