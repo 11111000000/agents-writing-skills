@@ -130,6 +130,48 @@
       "register": "fact",
       "control": "sed -i 's|skills/humanize-writer/SKILL.md|skills/nonexistent/SKILL.md|' manifest.json",
       "waiver": null
+    },
+    {
+      "id": "scripts-syntax",
+      "text": "all shell scripts in scripts/ parse under bash -n",
+      "scope": [ "scripts/" ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash -c 'for f in scripts/*.sh; do bash -n \"$f\" || exit 1; done'"
+        }
+      ],
+      "falsifier": "a script gains a syntax error and nothing notices",
+      "register": "fact",
+      "control": "printf 'if then\\n' >> scripts/build-corpus.sh",
+      "waiver": null
+    },
+    {
+      "id": "knowledge-links",
+      "text": "every Obsidian wikilink in the knowledge vault resolves to an existing file",
+      "scope": [
+        "knowledge/02-Techniques/", "scripts/check-knowledge-links.sh"
+      ],
+      "source": null,
+      "kind": "acceptance",
+      "phase": "pre-merge",
+      "owner": "az",
+      "review_on": [],
+      "requirements": [
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/check-knowledge-links.sh"
+        }
+      ],
+      "falsifier": "a note is renamed or a link is added pointing nowhere",
+      "register": "fact",
+      "control": "printf '[[nonexistent-note-xyz]]\\n' >> knowledge/02-Techniques/meaning-preservation.md",
+      "waiver": null
     }
   ]
 }
