@@ -3,8 +3,13 @@
   "goal": {
     "text": "Редактура текста сохраняет смысл: факты, условия и оговорки не теряются и не выдумываются",
     "scope": [
-      "skills/", "prompts/", "scripts/", "tests/", "knowledge/04-Examples/",
-      "knowledge/02-Techniques/", "manifest.json"
+      "skills/",
+      "prompts/",
+      "scripts/",
+      "tests/",
+      "knowledge/04-Examples/",
+      "knowledge/02-Techniques/",
+      "manifest.json"
     ],
     "by": "az",
     "at": 1794499000,
@@ -15,7 +20,8 @@
       "id": "bench-golden",
       "text": "golden fixtures classify as expected by benchmark-skill.sh",
       "scope": [
-        "scripts/benchmark-skill.sh", "scripts/test-benchmark.sh",
+        "scripts/benchmark-skill.sh",
+        "scripts/test-benchmark.sh",
         "tests/fixtures/"
       ],
       "source": null,
@@ -24,7 +30,10 @@
       "owner": "az",
       "review_on": [],
       "requirements": [
-        { "kind": "verifier", "spec": "bash scripts/test-benchmark.sh" }
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/test-benchmark.sh"
+        }
       ],
       "falsifier": "fixture expectations drift from script behavior",
       "register": "fact",
@@ -34,14 +43,21 @@
     {
       "id": "skills-valid",
       "text": "all SKILL.md and prompts pass frontmatter and smoke validation",
-      "scope": [ "skills/", "prompts/", "scripts/validate-skills.sh" ],
+      "scope": [
+        "skills/",
+        "prompts/",
+        "scripts/validate-skills.sh"
+      ],
       "source": null,
       "kind": "acceptance",
       "phase": "pre-merge",
       "owner": "az",
       "review_on": [],
       "requirements": [
-        { "kind": "verifier", "spec": "bash scripts/validate-skills.sh" }
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/validate-skills.sh"
+        }
       ],
       "falsifier": "a skill loses its frontmatter or the manifest drifts",
       "register": "fact",
@@ -52,7 +68,8 @@
       "id": "vacuum-detect",
       "text": "benchmark reports non-zero vacuum-filling on the known RU AI fixture",
       "scope": [
-        "scripts/benchmark-skill.sh", "tests/fixtures/ru-ai-typical.txt"
+        "scripts/benchmark-skill.sh",
+        "tests/fixtures/ru-ai-typical.txt"
       ],
       "source": null,
       "kind": "acceptance",
@@ -74,7 +91,8 @@
       "id": "editing-fixtures",
       "text": "editing fixtures are structurally valid and gold edits preserve source numbers",
       "scope": [
-        "tests/fixtures/editing/", "scripts/test-editing-fixtures.sh"
+        "tests/fixtures/editing/",
+        "scripts/test-editing-fixtures.sh"
       ],
       "source": null,
       "kind": "acceptance",
@@ -96,7 +114,8 @@
       "id": "meaning-contract",
       "text": "the examples preserve the source facts: every number in an after block already exists in its before block",
       "scope": [
-        "knowledge/04-Examples/", "scripts/check-examples-facts.sh"
+        "knowledge/04-Examples/",
+        "scripts/check-examples-facts.sh"
       ],
       "source": null,
       "kind": "acceptance",
@@ -117,14 +136,20 @@
     {
       "id": "manifest-valid",
       "text": "every skill path declared in the manifest exists in the repository",
-      "scope": [ "manifest.json", "scripts/validate-manifest.sh" ],
+      "scope": [
+        "manifest.json",
+        "scripts/validate-manifest.sh"
+      ],
       "source": null,
       "kind": "acceptance",
       "phase": "pre-merge",
       "owner": "az",
       "review_on": [],
       "requirements": [
-        { "kind": "verifier", "spec": "bash scripts/validate-manifest.sh" }
+        {
+          "kind": "verifier",
+          "spec": "bash scripts/validate-manifest.sh"
+        }
       ],
       "falsifier": "a manifest declares a skill path that does not exist",
       "register": "fact",
@@ -134,7 +159,9 @@
     {
       "id": "scripts-syntax",
       "text": "all shell scripts in scripts/ parse under bash -n",
-      "scope": [ "scripts/" ],
+      "scope": [
+        "scripts/"
+      ],
       "source": null,
       "kind": "acceptance",
       "phase": "pre-merge",
@@ -155,7 +182,8 @@
       "id": "knowledge-links",
       "text": "every Obsidian wikilink in the knowledge vault resolves to an existing file",
       "scope": [
-        "knowledge/02-Techniques/", "scripts/check-knowledge-links.sh"
+        "knowledge/02-Techniques/",
+        "scripts/check-knowledge-links.sh"
       ],
       "source": null,
       "kind": "acceptance",
@@ -177,7 +205,9 @@
       "id": "manifest-versions",
       "text": "manifest skill versions match the versions declared in SKILL.md",
       "scope": [
-        "manifest.json", "skills/", "scripts/check-manifest-versions.sh"
+        "manifest.json",
+        "skills/",
+        "scripts/check-manifest-versions.sh"
       ],
       "source": null,
       "kind": "acceptance",
@@ -199,8 +229,11 @@
       "id": "no-stale-contract",
       "text": "no stale v6 fact-loss thresholds remain in skills, prompts or scoped knowledge",
       "scope": [
-        "skills/", "prompts/", "knowledge/02-Techniques/",
-        "knowledge/04-Examples/", "scripts/check-no-stale-contract.sh"
+        "skills/",
+        "prompts/",
+        "knowledge/02-Techniques/",
+        "knowledge/04-Examples/",
+        "scripts/check-no-stale-contract.sh"
       ],
       "source": null,
       "kind": "acceptance",
@@ -222,7 +255,8 @@
       "id": "examples-coverage",
       "text": "every example file under knowledge/04-Examples is checked, and the checker still detects violations",
       "scope": [
-        "knowledge/04-Examples/", "scripts/check-examples-facts.sh",
+        "knowledge/04-Examples/",
+        "scripts/check-examples-facts.sh",
         "scripts/check-examples-coverage.sh"
       ],
       "source": null,
@@ -238,14 +272,15 @@
       ],
       "falsifier": "a new example file escapes the checker or the checker stops detecting violations",
       "register": "fact",
-      "control": "sed -i 's|^EXAMPLES_DIR=.*|EXAMPLES_DIR=/tmp/mathc-empty-dir|' scripts/check-examples-facts.sh",
+      "control": "sed -i 's/invented = sorted(numbers(block\\[\\\"text\\\"\\]) - numbers(pending\\[\\\"text\\\"\\]))/invented = []/' scripts/check-examples-facts.sh",
       "waiver": null
     },
     {
       "id": "editing-output-selftest",
       "text": "the editing-output validator proves it catches meaning violations",
       "scope": [
-        "scripts/check-editing-output.sh", "tests/fixtures/editing/"
+        "scripts/check-editing-output.sh",
+        "tests/fixtures/editing/"
       ],
       "source": null,
       "kind": "acceptance",
@@ -260,7 +295,7 @@
       ],
       "falsifier": "the validator silently accepts a broken edit",
       "register": "fact",
-      "control": "sed -i 's/--selftest/SELFTEST_DISABLED/' scripts/check-editing-output.sh",
+      "control": "sed -i 's/if \\[\\[ \"\\${1:-}\" == \"--selftest\" \\]\\]; then/if [[ \"${1:-}\" == \"SELFTEST_DISABLED\" ]]; then/' scripts/check-editing-output.sh",
       "waiver": null
     }
   ]
