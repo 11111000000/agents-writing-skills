@@ -295,7 +295,7 @@
       ],
       "falsifier": "the validator silently accepts a broken edit",
       "register": "fact",
-      "control": "sed -i 's/if \\[\\[ \"\\${1:-}\" == \"--selftest\" \\]\\]; then/if [[ \"${1:-}\" == \"SELFTEST_DISABLED\" ]]; then/' scripts/check-editing-output.sh",
+      "control": "python3 -c \"p='scripts/check-editing-output.sh';s=open(p).read();s=s.replace('  echo \\\"selftest: OK\\\"\\n  return 0','  echo \\\"selftest: OK\\\"\\n  return 1');open(p,'w').write(s)\"",
       "waiver": null
     }
   ]
