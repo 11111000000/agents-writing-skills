@@ -1,6 +1,6 @@
 ---
 title: Getting Started
-description: Install agents-writing-skills in opencode, pi, Claude Code, or any Agent Skills-compatible agent.
+description: Install agents-writing-skills in opencode, pi, Claude Code, or any Agent Skills-compatible agent. v7 skills edit prose in four modes and never invent facts.
 ---
 
 [← Back to Home](index)
@@ -97,7 +97,40 @@ bash scripts/benchmark-skill.sh <(echo "В современном мире ва�
 >
 > **RU:** «Помоги написать README»
 
-The agent should automatically load `humanize-writer`. If it doesn't, your agent doesn't have Agent Skills support — see [Compatibility](#compatibility).
+The agent should automatically load `humanize-writer`. If it doesn't, your agent doesn't have Agent Skills support — see [Compatibility](skills-overview#-compatibility).
+
+### 3. Run the repository validators
+
+The scripts in `scripts/` check that the copy you installed is intact. Run them from the repository root; each one must exit with code `0`:
+
+```bash
+bash scripts/validate-skills.sh             # SKILL.md frontmatter, prompts, benchmark smoke test
+bash scripts/check-examples-facts.sh        # no example "after" block invents a number
+bash scripts/check-knowledge-links.sh       # every [[wikilink]] in knowledge/ resolves to a file
+bash scripts/check-editing-output.sh --selftest   # the meaning-contract validator catches a broken edit
+```
+
+`check-editing-output.sh --selftest` proves the validator is not a rubber stamp: it feeds it a faithful edit (must pass) and a broken one (must be caught). The validator itself works against the 24 behavioural fixtures in `tests/fixtures/editing/` (source text, gold edit, and the claims that have to survive). `validate-skills.sh` runs the remaining checks too (manifest versions, stale contracts, example coverage, editing fixtures).
+
+<br>
+
+## 🎛 How the editor behaves (v7)
+
+Before touching the text, the editor picks one of four depths. A deeper mode includes the powers of the shallower ones, and the mode never changes *what has to be preserved*.
+
+| Mode | What it does | Typical request |
+|---|---|---|
+| **proofread** | Typos, grammar, punctuation, agreement | «вычитай», «check the errors» |
+| **light** | Clarity: ambiguity, heavy constructions, office-speak | «поправь, чтобы читалось» |
+| **style** | Rhythm and naturalness: sentence length, transitions | «сделай живее», «убери AI-шность» |
+| **deep** | Restructure: order, merging paragraphs, sharper argument | «перепиши», «сделай из этого статью» |
+
+- **RELY (iceberg deletions) runs only in `style`/`deep`**, and only for literary or conversational register.
+- **An ambiguous request takes the shallower mode**: `light` unless the text or the user says otherwise, and the agent says which mode it picked.
+- **The meaning contract holds in every mode.** Claims, numbers and the relations between them, conditions, exceptions, negations, modality, terminology, quotations and register survive the edit. Losing a claim, inventing a fact, or turning «может» into «снижает» is an error, not a stylistic trade-off.
+- **A missing fact stays missing.** If a claim needs data the text does not contain, the edit marks `[нужен факт: ...]` instead of inventing a plausible number.
+
+The mode table, the phase rules and the already-good-text rule are canonical on the [Skills Overview](skills-overview#-режимы-правки-editing-modes). Full spec: [`editing-modes`](02-techniques/editing-modes) · [`meaning-preservation`](02-techniques/meaning-preservation)
 
 <br>
 
@@ -123,10 +156,12 @@ The agent should automatically load `humanize-writer`. If it doesn't, your agent
 ### Diagnose
 
 ```
-> Is this too AI? [paste text]
+> Where does this draft sound AI-like? [paste text]
 > Why does my draft sound so generic?
 > Compare version A and version B for AI tells
 ```
+
+The auditor reports metrics (AP, D, E, YapScore, burstiness, specificity) as **diagnostics**: they show where to look, they do not deliver a verdict of "AI" or "human".
 
 <br>
 
@@ -145,8 +180,9 @@ The agent picks up changes on next skill load.
 
 | Document | What it covers |
 |---|---|
-| [Skills Overview](skills-overview) | 4 skills, 4 phases, 12 levers, when to use which |
-| [Knowledge Base](knowledge-base) | Tour of 37+ notes (patterns, techniques, sources) |
+| [Skills Overview](skills-overview) | 4 skills, 4 editing modes, 4 phases, when to use which |
+| [Knowledge Base](knowledge-base) | Tour of 41 notes (patterns, techniques, sources) |
+| [Blind evaluation](blind-evaluation) | How the meaning contract is checked with human readers |
 | [Limitations](limitations) | What these skills can and cannot do |
 | [Contributing](contributing) | Add new skills, prompts, notes |
 

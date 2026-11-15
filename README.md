@@ -56,7 +56,7 @@ Works in any language, on any agent, any OS.
 | 🧊 **RELY** (11) | Leave gaps, trust the reader (Hemingway iceberg) |
 | 🇷🇺 **REBUILD** (12) | Russian brevity grammar (парцелляция, эллипсис, литота) |
 
-### 41+ knowledge notes
+### 41 knowledge notes
 
 - 43-pattern catalogue (from Aboudjem/humanizer-skill)
 - Russian-specific patterns (деепричастия, парные синонимы, канцелярит)
@@ -89,7 +89,7 @@ See [**Getting Started**](docs/getting-started.md) for three install methods:
 | [Getting Started](docs/getting-started.md) | Three install methods + verification |
 | [Blind evaluation](docs/blind-evaluation.md) | Protocol for checking that edits preserve meaning |
 | [Skills Overview](docs/skills-overview.md) | 4 skills, 4 phases, 12 levers — when to use which |
-| [Knowledge Base tour](docs/knowledge-base.md) | Walk through 41+ notes by category |
+| [Knowledge Base tour](docs/knowledge-base.md) | Walk through 41 notes by category |
 | [Limitations](docs/limitations.md) | What these skills can and cannot do |
 | [Contributing](CONTRIBUTING.md) | How to add new skills, prompts, notes |
 

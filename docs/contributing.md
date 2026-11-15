@@ -16,7 +16,7 @@ description: How to add new skills, prompts, knowledge notes to the agents-writi
 - 📋 [GitHub repo](https://github.com/11111000000/agents-writing-skills)
 - 🐛 [Issue tracker](https://github.com/11111000000/agents-writing-skills/issues)
 - 💬 [Discussions](https://github.com/11111000000/agents-writing-skills/discussions)
-- 📝 [License (skills + prompts)](LICENSE) · [CC-BY-SA-4.0 (knowledge)](knowledge)
+- 📝 [License (skills + prompts)](https://github.com/11111000000/agents-writing-skills/blob/main/LICENSE) · [CC-BY-SA-4.0 (knowledge)](https://github.com/11111000000/agents-writing-skills/tree/main/knowledge)
 
 <br>
 

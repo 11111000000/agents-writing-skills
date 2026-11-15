@@ -257,6 +257,6 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses, mean
 - [[em-dash]]
 - [[parallel-clauses]]
 - [[../01-Patterns/rhetorical/negative-parallelisms]] — **главный AI-маркер**
-- [[../../02-Techniques/voice-russian-specifics]]
-- [[../../02-Techniques/show-dont-tell]]
-- [[../../02-Techniques/perplexity-and-burstiness]]
+- [[../02-Techniques/voice-russian-specifics]]
+- [[../02-Techniques/show-dont-tell]]
+- [[../02-Techniques/perplexity-and-burstiness]]

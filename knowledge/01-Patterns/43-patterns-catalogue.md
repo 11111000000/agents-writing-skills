@@ -146,7 +146,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 **EN:** "could potentially possibly"
 **RU:** «мог бы, возможно, потенциально»
 
-→ Подробнее: [[../../01-Patterns/rhetorical/hedging-language]]
+→ Подробнее: [[../01-Patterns/rhetorical/hedging-language]]
 
 ## P24 — Generic Conclusions (Шаблонные заключения)
 
@@ -180,7 +180,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 
 **EN/RU:** все предложения 15–20 слов, нет разнообразия
 
-→ Подробнее: [[../../02-Techniques/perplexity-and-burstiness]]
+→ Подробнее: [[../02-Techniques/perplexity-and-burstiness]]
 
 ## P31 — Elegant Variation (Изящное варьирование)
 
@@ -284,6 +284,6 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 - [[../structural/three-part-lists]]
 - [[../rhetorical/hedging-language]]
 - [[../rhetorical/negative-parallelisms]] — **главный AI-маркер**
-- [[../../02-Techniques/perplexity-and-burstiness]]
-- [[../../02-Techniques/voice-and-tone]]
-- [[../../02-Techniques/show-dont-tell]]
+- [[../02-Techniques/perplexity-and-burstiness]]
+- [[../02-Techniques/voice-and-tone]]
+- [[../02-Techniques/show-dont-tell]]

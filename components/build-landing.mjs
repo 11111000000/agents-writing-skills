@@ -15,7 +15,7 @@
  * Quartz's tmp directory's node_modules (which is set up by scripts/build-site.sh).
  */
 
-import { writeFileSync, mkdirSync } from "node:fs"
+import { writeFileSync, mkdirSync, readFileSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { pathToFileURL, fileURLToPath } from "node:url"
 import { createRequire } from "node:module"
@@ -127,6 +127,30 @@ function absUrl(root, slug) {
   return "https://11111000000.github.io" + root + slug
 }
 
+/**
+ * Read `title` / `description` from a docs page's YAML frontmatter.
+ *
+ * The landing page is written here as a complete HTML file, so Quartz's own
+ * frontmatter handling never reaches it — a frontmatter `description` that is
+ * edited in docs/index.md is silently dropped unless this script reads it.
+ * Sourcing both fields from the frontmatter keeps one source of truth.
+ */
+function readFrontmatter(file) {
+  try {
+    const raw = readFileSync(file, "utf8")
+    const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+    if (!match) return {}
+    const fields = {}
+    for (const line of match[1].split(/\r?\n/)) {
+      const field = line.match(/^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$/)
+      if (field) fields[field[1]] = field[2].trim().replace(/^["'](.*)["']$/, "$1")
+    }
+    return fields
+  } catch {
+    return {}
+  }
+}
+
 const EN = {
   lang: "en",
   slug: "",
@@ -143,6 +167,19 @@ const RU = {
   title: "Agents Writing Skills — Писать меньше, как модель",
   description:
     "Skills, prompts и Obsidian-база знаний для агентов, которые пишут, правят и проверяют прозу по измеримым AI-маркерам.",
+}
+
+// The frontmatter of docs/index.md and docs/ru/index.md wins over the
+// fallbacks above; they are the same files the site copies into Quartz's
+// content directory, so the shipped <title> and <meta name="description">
+// stay in step with the repo's source of truth.
+for (const [page, source] of [
+  [EN, join(REPO_ROOT, "docs", "index.md")],
+  [RU, join(REPO_ROOT, "docs", "ru", "index.md")],
+]) {
+  const fields = readFrontmatter(source)
+  if (fields.title) page.title = fields.title
+  if (fields.description) page.description = fields.description
 }
 
 async function writeOne(page, baseHref) {
@@ -179,7 +216,7 @@ async function writeOne(page, baseHref) {
 <meta name="twitter:title" content="${page.title.replace(/"/g, "&quot;")}" />
 <meta name="twitter:description" content="${page.description.replace(/"/g, "&quot;")}" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" href="${pageRoot}static/icon.png" />
+<link rel="icon" href="${root}static/icon.png" />
 <link rel="alternate" hreflang="en" href="${enUrl}" />
 <link rel="alternate" hreflang="ru" href="${ruUrl}" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />

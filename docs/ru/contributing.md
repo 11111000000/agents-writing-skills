@@ -16,7 +16,7 @@ description: Как добавлять новые скилы, промпты и 
 - 📋 [GitHub-репозиторий](https://github.com/11111000000/agents-writing-skills)
 - 🐛 [Трекер задач](https://github.com/11111000000/agents-writing-skills/issues)
 - 💬 [Discussions](https://github.com/11111000000/agents-writing-skills/discussions)
-- 📝 [Лицензия (скилы + промпты)](LICENSE) · [CC-BY-SA-4.0 (база знаний)](knowledge)
+- 📝 [Лицензия (скилы + промпты)](https://github.com/11111000000/agents-writing-skills/blob/main/LICENSE) · [CC-BY-SA-4.0 (база знаний)](https://github.com/11111000000/agents-writing-skills/tree/main/knowledge)
 
 <br>
 
