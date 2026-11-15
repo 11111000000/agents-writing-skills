@@ -92,6 +92,6 @@ LLM добавляет синоним «на всякий случай», что
 
 - [[lexicon-ru-v2]]
 - [[em-dash]]
-- [[lexicon-ru]]
-- [[three-part-lists]]
-- [[before-after]]
+- [[../lexical/lexicon-ru]]
+- [[../structural/three-part-lists]]
+- [[../../04-Examples/before-after]]

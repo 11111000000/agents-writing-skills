@@ -92,6 +92,6 @@ LLM иногда использует деепричастие там, где п
 ## Связанные заметки
 
 - [[lexicon-ru-v2]]
-- [[lexicon-ru]]
-- [[three-part-lists]]
-- [[voice-and-tone]]
+- [[../lexical/lexicon-ru]]
+- [[../structural/three-part-lists]]
+- [[../../02-Techniques/voice-and-tone]]

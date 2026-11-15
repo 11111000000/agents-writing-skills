@@ -70,4 +70,4 @@ related: [perplexity-and-burstiness, public-detectors]
 
 - [[perplexity-and-burstiness]]
 - [[public-detectors]]
-- [[agent-writing-workflow]]
+- [[../02-Techniques/agent-writing-workflow]]

@@ -10,13 +10,13 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 # Полный каталог: 43 паттерна AI-текста
 
 > [!warning] Про методологию и ограничения
-> Каталог собран из  (43 паттерна, MIT, 98 ★), , Wikipedia EN/RU, академической литературы.
+> Каталог собран из `Aboudjem/humanizer-skill` (43 паттерна, MIT, 98 ★), `harshaneel/humanize`, Wikipedia EN/RU, академической литературы.
 >
 > Паттерны помогают читателю-человеку не считать текст AI-генерацией. Они не гарантируют прохождение обученных детекторов (Pangram, GPTZero, Grammarly). Против них статические правила имеют ceiling. MASH (ACL 2026) показал, что лучший hybrid подход даёт максимум 92% ASR на старых детекторах, и почти не работает на новых.
 >
 > Применяйте для собственного текста в повседневном стиле. Не применяйте для академического, юридического, политического/дипломатического текста или переводов.
 >
-> См.  для полной самокритики.
+> См. `05-References/limits-and-self-critique.md` для полной самокритики.
 
 ## P1 — Significance Inflation (Раздувание значимости)
 
@@ -72,14 +72,14 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 >
 > **Пример:** «MathCodingFractal — это не „ещё одна методология". Это инфраструктура...» — катастрофический AI-сигнал (AP = 83).
 >
-> → Подробная методичка и алгоритм замены: [[negative-parallelisms]]
+> → Подробная методичка и алгоритм замены: [[01-Patterns/rhetorical/negative-parallelisms]]
 
 ## P10 — Rule of Three (Правило трёх)
 
 **EN:** "innovation, inspiration, and insights"
 **RU:** «быстро, надёжно, безопасно»
 
-→ Подробнее: [[three-part-lists]]
+→ Подробнее: [[01-Patterns/structural/three-part-lists]]
 
 ## P11 — Synonym Cycling (Синоним-цикл)
 
@@ -146,7 +146,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 **EN:** "could potentially possibly"
 **RU:** «мог бы, возможно, потенциально»
 
-→ Подробнее: [[hedging-language]]
+→ Подробнее: [[../01-Patterns/rhetorical/hedging-language]]
 
 ## P24 — Generic Conclusions (Шаблонные заключения)
 
@@ -169,7 +169,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 
 ## P28 — Markdown Bleeding (Утечка Markdown)
 
-**EN/RU:**  в email, Word, обычных сообщениях
+**EN/RU:** `**жирный**` в email, Word, обычных сообщениях
 
 ## P29 — "Comprehensive Overview" («Полный обзор»)
 
@@ -180,7 +180,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 
 **EN/RU:** все предложения 15–20 слов, нет разнообразия
 
-→ Подробнее: [[perplexity-and-burstiness]]
+→ Подробнее: [[../02-Techniques/perplexity-and-burstiness]]
 
 ## P31 — Elegant Variation (Изящное варьирование)
 
@@ -194,17 +194,17 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 
 ## P33 — Placeholder Text / Mad Libs (Заполнители)
 
-**EN:** , 
-**RU:** , 
+**EN:** `[Your Name]`, `[INSERT SOURCE URL]`
+**RU:** `[Ваше имя]`, `[ВСТАВИТЬ ССЫЛКУ]`
 
 ## P34 — Chatbot Reference Markup Leaking (Утечка разметки чатбота)
 
-**EN:** , , broken footnote refs
+**EN:** `citeturn0search0`, `oai_citation`, broken footnote refs
 **RU:** редко, но бывает в переводах с английского
 
 ## P35 — UTM Source Parameters (UTM-метки)
 
-**EN:** 
+**EN:** `utm_source=chatgpt.com`
 **RU:** нерелевантно
 
 ## P36 — Sudden Style/Register Shift (Резкий сдвиг стиля)
@@ -256,7 +256,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 
 ## Open-ended: P-NEW-8…P-NEW-12
 
-Каталог P43 закрыт в 2026-07; нижеприведённые паттерны выявлены в академической литературе 2023-2026 и продолжают пополняться. Это **формат-bias** и **RLHF-fingerprint**. Лечатся не запретами, а перестройкой каркаса и выбором языкового режима (RU/EN). Подробнее: [[format-and-rlhf-bias]] и [[over-generation]].
+Каталог P43 закрыт в 2026-07; нижеприведённые паттерны выявлены в академической литературе 2023-2026 и продолжают пополняться. Это **формат-bias** и **RLHF-fingerprint**. Лечатся не запретами, а перестройкой каркаса и выбором языкового режима (RU/EN). Подробнее: [[01-Patterns/structural/format-and-rlhf-bias]] и [[01-Patterns/structural/over-generation]].
 
 | ID | Маркер | Решение |
 |---|---|---|
@@ -264,7 +264,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 | P-NEW-9 | Polite-hedge bleed | Удалить «Great question»/«Happy to help» обёртку |
 | P-NEW-10 | Biased hedge | Заменить «might be worth considering» на действие |
 | P-NEW-11 | Format-uniformity block | Формат выбирать под жанр (RFC/incident/email) |
-| P-NEW-12 | Mixed-language bleed | Сверить с ; заменить английский термин |
+| P-NEW-12 | Mixed-language bleed | Сверить с `lexicon-ru-v2.md`; заменить английский термин |
 
 ## Метрика
 
@@ -281,9 +281,9 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses]
 - [[deeprichastnye-oboroty]]
 - [[em-dash]]
 - [[parallel-clauses]]
-- [[three-part-lists]]
-- [[hedging-language]]
-- [[negative-parallelisms]] — **главный AI-маркер**
-- [[perplexity-and-burstiness]]
-- [[voice-and-tone]]
-- [[show-dont-tell]]
+- [[01-Patterns/structural/three-part-lists]]
+- [[01-Patterns/rhetorical/hedging-language]]
+- [[01-Patterns/rhetorical/negative-parallelisms]] — **главный AI-маркер**
+- [[../02-Techniques/perplexity-and-burstiness]]
+- [[../02-Techniques/voice-and-tone]]
+- [[../02-Techniques/show-dont-tell]]

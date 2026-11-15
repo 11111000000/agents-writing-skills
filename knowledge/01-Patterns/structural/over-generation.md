@@ -86,7 +86,7 @@ sources: [grice-1975, hemingway-iceberg, chekhov-gun, yapterch-2026]
 **Пример:**
 > ❌ «Чтобы установить библиотеку, вам нужно выполнить команду pip install. Команда pip install — это стандартный способ установки Python-пакетов. После выполнения библиотека будет установлена в ваше окружение.»
 
-> ✅ «»
+> ✅ «`pip install foo`»
 
 **Плотность:** зависит от аудитории. Для новичков — нормально. Для опытных — пере-говорение. LLM пишет «для новичков» по умолчанию, даже когда аудитория опытная.
 
@@ -171,13 +171,13 @@ sources: [grice-1975, hemingway-iceberg, chekhov-gun, yapterch-2026]
 
 ## Связанные заметки
 
-- [[sufficiency-and-underspecification]] — положительный принцип
+- [[../../02-Techniques/sufficiency-and-underspecification]] — положительный принцип
 - [[lexicon-ru-v2]] — словарь клише (vacuum-filling использует многие из них)
 - [[hedging-language]] — anticipatory hedging
 - [[negative-parallelisms]] — restatement через антитезис
-- [[three-part-lists]] — rule of three
-- [[show-dont-tell]] — конкретика вместо абстракции
-- [[perplexity-and-burstiness]] — суффицентность создаёт burstiness
+- [[../structural/three-part-lists]] — rule of three
+- [[../../02-Techniques/show-dont-tell]] — конкретика вместо абстракции
+- [[../../02-Techniques/perplexity-and-burstiness]] — суффицентность создаёт burstiness
 
 ## Источники
 

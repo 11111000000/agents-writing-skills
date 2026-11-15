@@ -26,7 +26,7 @@ related: [how-detectors-work, negative-parallelisms, public-detectors, russian-d
 | **DetectGPT** (Mitchell et al. 2023) | Perturbation-based zero-shot detection. AUROC 0.80–0.90 в clean conditions. |
 | **YapBench** (arXiv 2601.00624, январь 2026) | Over-generation в 76 LLM. Порядок величин разброса. Vacuum-filling, explanation overhead. **Подтверждает, что length bias — структурное свойство preference tuning, не стилистический артефакт.** |
 
-Где используем каждое: Binoculars и Watermarking описаны в , MASH в , DetectGPT там же.
+Где используем каждое: Binoculars и Watermarking описаны в `03-Detection/how-detectors-work.md`, MASH в `02-Techniques/perplexity-and-burstiness.md`, DetectGPT там же.
 
 ### Корпоративные источники
 
@@ -87,7 +87,7 @@ AI-тексты содержат больше em-dash, больше деепри
 - «Деепричастие = AI». Нет, в академическом русском это норма.
 - «Burstiness < 3 = AI». Нет, есть жанры с низкой burstiness.
 - «Длинный текст = AI». Нет, есть жанры, где длинные тексты уместны (диссертации, годовые отчёты). YapScore работает только как сравнение с baseline, не как абсолютная метрика.
-- «Underspecification всегда хорошо». Нет, в technical reference, legal text, onboarding — пропущенная информация ломает смысл. См. [[sufficiency-and-underspecification]] раздел 6 «Когда недосказанность НЕ работает».
+- «Underspecification всегда хорошо». Нет, в technical reference, legal text, onboarding — пропущенная информация ломает смысл. См. [[../02-Techniques/sufficiency-and-underspecification]] раздел 6 «Когда недосказанность НЕ работает».
 
 ## Где наши skill'ы работают
 
@@ -123,12 +123,12 @@ AI-тексты содержат больше em-dash, больше деепри
 
 ## Что нужно улучшить в будущем
 
-1. ~~Бенчмарк на наших собственных данных~~ **Сделано (2026-09):** benchmark прогнан на собственном корпусе n=145 (HC3 / RAID / Wikisource RU + synthetic RU-AI), метрики и Cohen's d в . Оговорка: RU-плечо маленькое (8 human / 12 AI).
-2. ~~Валидация порогов~~ **Частично сделано (2026-09):** пороги откалиброваны на n=145 и стали языково-зависимыми (RU/EN) в ; regression-тесты в . Не сделано: корпус 1000+ текстов, AUC/KS-анализ (считался только Cohen's d).
+1. ~~Бенчмарк на наших собственных данных~~ **Сделано (2026-09):** benchmark прогнан на собственном корпусе n=145 (HC3 / RAID / Wikisource RU + synthetic RU-AI), метрики и Cohen's d в `02-Techniques/metric-validation.md`. Оговорка: RU-плечо маленькое (8 human / 12 AI).
+2. ~~Валидация порогов~~ **Частично сделано (2026-09):** пороги откалиброваны на n=145 и стали языково-зависимыми (RU/EN) в `benchmark-skill.sh`; regression-тесты в `test-benchmark.sh`. Не сделано: корпус 1000+ текстов, AUC/KS-анализ (считался только Cohen's d).
 3. Сравнение с детекторами: прогнать humanized vs original через GPTZero, Originality.ai, ZeroGPT, измерить, насколько снижается AI-score.
 4. Жанровая адаптация: разные skill'ы для разных жанров (документация vs маркетинг vs академия).
 5. RU-валидация: проверить, насколько наши паттерны работают для русских LLM-генераций (GigaChat, YandexGPT), а не только для переводов с EN.
-6. **Поведенческий корпус редактуры (следующий шаг):** пары «до/после» правки skill'ами в  — измерить, что правка реально сдвигает метрики (V, R, YapScore, burstiness) без потери фактов. Текущий корпус измеряет только детекцию, не эффект редактуры.
+6. **Поведенческий корпус редактуры (следующий шаг):** пары «до/после» правки skill'ами в `tests/fixtures/editing/` — измерить, что правка реально сдвигает метрики (V, R, YapScore, burstiness) без потери фактов. Текущий корпус измеряет только детекцию, не эффект редактуры.
 
 ## Этический disclaimer
 

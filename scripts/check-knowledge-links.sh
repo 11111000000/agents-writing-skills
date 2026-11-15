@@ -2,11 +2,17 @@
 # scripts/check-knowledge-links.sh
 # Every Obsidian wikilink [[...]] inside knowledge/ must resolve to a file
 # that exists in the vault. Resolution rules:
-#   - [[note]], [[dir/note]], [[../../dir/note]] with a path separator resolve
-#     relative to the vault root (any extension; covers 06-Sources raw files)
+#   - [[dir/note]] with a path separator resolves either relative to the note's
+#     own folder (how Quartz renders it on the site) or relative to the vault
+#     root (how Obsidian resolves it). Both are accepted; a link that resolves
+#     under neither is broken in at least one reader and is reported.
 #   - bare [[note]] resolves by basename against knowledge/**/*.md
 #   - aliases [[note\|alias]] (escaped pipe inside tables) are stripped
 # templates/ is excluded: its links are fill-in placeholders, not references.
+#
+# The previous rule accepted any link whose *basename* existed, which let a
+# link with a wrong directory ([[../rhetorical/x]] from 01-Patterns/) pass
+# while rendering as a dead href on the site.
 #
 # Usage: ./scripts/check-knowledge-links.sh
 # Exit: 0 = all links resolve, 1 = broken links found, 2 = usage error.
@@ -46,6 +52,7 @@ for root, dirs, files in os.walk(vault):
         if not f.endswith(".md"):
             continue
         path = os.path.join(root, f)
+        rel = os.path.relpath(path, vault)
         text = open(path, encoding="utf-8").read()
         # Wikilinks inside inline code are mentions of the syntax, not links.
         text = re.sub(r"`[^`\n]*`", "", text)
@@ -54,11 +61,21 @@ for root, dirs, files in os.walk(vault):
             target = raw.rstrip("/")
             norm = os.path.normpath(target)
             if "/" in norm:
-                ok = norm in all_files or os.path.basename(norm) in md_notes
+                # Resolve the way Quartz renders it: relative to this note's folder.
+                note_rel = os.path.normpath(os.path.join(os.path.dirname(rel), target))
+                # ...or the way Obsidian resolves it: relative to the vault root.
+                root_rel = os.path.normpath(target)
+                while root_rel.startswith("../"):
+                    root_rel = root_rel[3:]
+                ok = (
+                    note_rel in all_files
+                    or root_rel in all_files
+                    or os.path.splitext(note_rel)[0] in all_files
+                    or os.path.splitext(root_rel)[0] in all_files
+                )
             else:
                 ok = norm in md_notes
             if not ok:
-                rel = os.path.relpath(path, vault)
                 print(f"FAIL {rel}: broken wikilink [[{raw}]]")
                 fail = 1
 
