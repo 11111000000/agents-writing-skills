@@ -10,7 +10,7 @@ related: [lexicon-ru, hedging-language]
 # AI-clichés lexicon (English)
 
 > [!info] Sources
-> Patterns synthesized from: OpenAI/GPT system behavior analysis, GPTZero documentation, MIT "Real or Fake Text" research (2024), community findings on Reddit r/ChatGPT and LessWrong. Many of these strings are in published AI-text datasets (e.g., `Hello-SimpleAI/HC3`).
+> Patterns synthesized from: OpenAI/GPT system behavior analysis, GPTZero documentation, MIT "Real or Fake Text" research (2024), community findings on Reddit r/ChatGPT and LessWrong. Many of these strings are in published AI-text datasets (e.g., ).
 
 ## 1. Sentence starters that scream LLM
 
@@ -105,14 +105,14 @@ LLM applies "rule of three" (three parallel items) almost robotically:
 - "Final thoughts:"
 
 The best closings either:
-- end with a concrete next step ("Run `make test` to see it work."),
+- end with a concrete next step ("Run  to see it work."),
 - end with a question or call to action,
 - or just stop — when the last point is the last point.
 
 ## See also
 
 - [[lexicon-ru]]
-- [[../structural/three-part-lists]]
-- [[../rhetorical/hedging-language]]
-- [[../../02-Techniques/perplexity-and-burstiness]]
-- [[../../03-Detection/how-detectors-work]]
+- [[three-part-lists]]
+- [[hedging-language]]
+- [[perplexity-and-burstiness]]
+- [[how-detectors-work]]

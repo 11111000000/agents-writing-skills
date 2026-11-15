@@ -145,9 +145,9 @@ Vacuum-filling — заполнение пустоты вводными пред
 
 > ❌ «Чтобы установить библиотеку, вам нужно выполнить команду pip install. Команда pip install — это стандартный способ установки Python-пакетов. После этого библиотека будет установлена в ваше окружение.»
 
-> ✅ «`pip install foo`»
+> ✅ «»
 
-LLM объясняет то, что очевидно. Целевая аудитория часто знает `pip install`. Объяснение «что такое pip» — over-explanation.
+LLM объясняет то, что очевидно. Целевая аудитория часто знает . Объяснение «что такое pip» — over-explanation.
 
 ### 3.5. Anticipatory hedging (P-NEW-5)
 
@@ -302,9 +302,9 @@ LLM часто объясняет абстрактно: «система раб�
 - [[show-dont-tell]] — конкретика
 - [[perplexity-and-burstiness]] — фундаментальные метрики
 - [[agent-writing-workflow]] — алгоритм
-- [[../01-Patterns/structural/over-generation]] — антипаттерны пере-говорения (P-NEW)
-- [[../01-Patterns/43-patterns-catalogue]] — общий каталог
-- [[../05-References/limits-and-self-critique]] — границы применимости
+- [[over-generation]] — антипаттерны пере-говорения (P-NEW)
+- [[43-patterns-catalogue]] — общий каталог
+- [[limits-and-self-critique]] — границы применимости
 
 ## 10. Источники
 

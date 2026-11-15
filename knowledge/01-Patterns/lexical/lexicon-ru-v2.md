@@ -12,8 +12,8 @@ sources: [ru-wikipedia-ai-signs, Aboudjem-humanizer]
 > [!info] Источники
 > Первая версия — собственные наблюдения. Эта версия дополнена и сверена с:
 > - [Википедия:Признаки сгенерированности текста](https://ru.wikipedia.org/wiki/Википедия:Признаки_сгенерированности_текста) (ВП:ПРГЕН, обновляется сообществом)
-> - `Aboudjem/humanizer-skill` (43 паттерна, MIT, 98 ★)
-> - `harshaneel/humanize` (9 «levers» из detection-литературы, MIT, 56 ★)
+> -  (43 паттерна, MIT, 98 ★)
+> -  (9 «levers» из detection-литературы, MIT, 56 ★)
 >
 > Замечания, не вошедшие в первую версию, помечены как **+RU**.
 
@@ -212,7 +212,7 @@ LLM обожает превращать текст в списки и подза
 
 ### Бессмысленные категории (Wikipedia RU)
 
-LLM может оставлять маркеры категорий из Википедии (вроде `[[Категория:...]]`) или UTM-метки.
+LLM может оставлять маркеры категорий из Википедии (вроде ) или UTM-метки.
 
 ## 10. Маркеры коммуникации с пользователем (P19, P21, P32)
 
@@ -298,9 +298,9 @@ Wikipedia RU отмечает важное различие:
 ## Связанные заметки
 
 - [[lexicon-ru]] — базовая версия
-- [[../rhetorical/hedging-language]] — риторика хеджирования
-- [[../structural/three-part-lists]] — структура троек
-- [[../rhetorical/deeprichastnye-oboroty]] — русские деепричастные
-- [[../../02-Techniques/perplexity-and-burstiness]]
-- [[../../02-Techniques/voice-and-tone]]
-- [[../../04-Examples/before-after]]
+- [[hedging-language]] — риторика хеджирования
+- [[three-part-lists]] — структура троек
+- [[deeprichastnye-oboroty]] — русские деепричастные
+- [[perplexity-and-burstiness]]
+- [[voice-and-tone]]
+- [[before-after]]

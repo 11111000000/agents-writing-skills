@@ -67,5 +67,5 @@ related: [voice-and-tone, show-dont-tell, three-part-lists]
 
 - [[voice-and-tone]]
 - [[show-dont-tell]]
-- [[../01-Patterns/structural/three-part-lists]]
-- [[../03-Detection/how-detectors-work]]
+- [[three-part-lists]]
+- [[how-detectors-work]]
