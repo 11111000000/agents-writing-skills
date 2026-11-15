@@ -61,7 +61,7 @@ Works in any language, on any agent, any OS.
 - 43-pattern catalogue (from Aboudjem/humanizer-skill)
 - Russian-specific patterns (деепричастия, парные синонимы, канцелярит)
 - 5 academic papers on length bias (Park, Shen, Zhang, Lamparth, Huang)
-- 13 worked examples with measured metrics
+- 27 worked before/after examples across 6 notes, 8 with measured metrics
 - Laconic prose models (Tolstoy, Dovlatov, Shklovsky, Bunin)
 - Raw source-notes for every claim
 

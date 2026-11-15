@@ -148,4 +148,4 @@ related: [editing-modes, meaning-preservation, russian-copyediting, voice-and-to
 - [[agent-writing-workflow]] — общий пайплайн редактуры, к которому добавляется жанровый профиль
 - [[voice-russian-specifics]] — русский регистр: официально-деловой стиль как норма, а не канцелярит
 - [[show-dont-tell]] — конкретика без выдумки
-- [[../05-References/limits-and-self-critique]] — жанровая адаптация как известное ограничение базы
+- [[05-References/limits-and-self-critique]] — жанровая адаптация как известное ограничение базы

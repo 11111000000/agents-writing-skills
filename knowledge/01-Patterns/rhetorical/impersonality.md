@@ -45,7 +45,7 @@ AI не ссылается на «вчерашний разговор с кол�
 ## Связанные заметки
 
 - [[hedging-language]]
-- [[../lexical/lexicon-ru]]
-- [[../lexical/lexicon-en]]
-- [[../../02-Techniques/voice-and-tone]]
-- [[../../02-Techniques/show-dont-tell]]
+- [[01-Patterns/lexical/lexicon-ru]]
+- [[01-Patterns/lexical/lexicon-en]]
+- [[02-Techniques/voice-and-tone]]
+- [[02-Techniques/show-dont-tell]]

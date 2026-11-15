@@ -89,5 +89,5 @@ LLM часто пишет пункты по одной и той же схеме
 
 - [[lexicon-ru]]
 - [[lexicon-en]]
-- [[../rhetorical/hedging-language]]
-- [[../../02-Techniques/perplexity-and-burstiness]]
+- [[01-Patterns/rhetorical/hedging-language]]
+- [[02-Techniques/perplexity-and-burstiness]]

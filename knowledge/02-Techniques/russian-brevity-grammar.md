@@ -241,9 +241,9 @@ sources: [parcelyaciya-wikipedia, ellipsis-wikipedia, litota-wikipedia]
 - [[russian-copyediting]] — этап языковой редактуры: что исправлять, а что считать авторским выбором
 - [[voice-russian-specifics]] — общий голос на русском
 - [[sufficiency-and-underspecification]] — Lever 10 (теоретическая база)
-- [[../01-Patterns/structural/three-part-lists]] — P10, связанный с парцелляцией
-- [[../01-Patterns/rhetorical/deeprichastnye-oboroty]] — P3, который парцелляция устраняет
-- [[../01-Patterns/structural/over-generation]] — антипаттерны LLM
+- [[01-Patterns/structural/three-part-lists]] — P10, связанный с парцелляцией
+- [[01-Patterns/rhetorical/deeprichastnye-oboroty]] — P3, который парцелляция устраняет
+- [[01-Patterns/structural/over-generation]] — антипаттерны LLM
 - [[parcelyaciya-wikipedia]] — источник по парцелляции
 - [[ellipsis-wikipedia]] — источник по эллипсису
 - [[litota-wikipedia]] — источник по литоте

@@ -105,5 +105,5 @@ Em-dash (—) — длинное тире, U+2014. В русском испол�
 
 - [[lexicon-ru-v2]]
 - [[parallel-clauses]]
-- [[../../02-Techniques/perplexity-and-burstiness]]
-- [[../../04-Examples/before-after]]
+- [[02-Techniques/perplexity-and-burstiness]]
+- [[04-Examples/before-after]]

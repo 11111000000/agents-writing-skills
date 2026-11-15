@@ -302,9 +302,9 @@ LLM часто объясняет абстрактно: «система раб�
 - [[show-dont-tell]] — конкретика
 - [[perplexity-and-burstiness]] — фундаментальные метрики
 - [[agent-writing-workflow]] — алгоритм
-- [[../01-Patterns/structural/over-generation]] — антипаттерны пере-говорения (P-NEW)
-- [[../01-Patterns/43-patterns-catalogue]] — общий каталог
-- [[../05-References/limits-and-self-critique]] — границы применимости
+- [[01-Patterns/structural/over-generation]] — антипаттерны пере-говорения (P-NEW)
+- [[01-Patterns/43-patterns-catalogue]] — общий каталог
+- [[05-References/limits-and-self-critique]] — границы применимости
 
 ## 10. Источники
 

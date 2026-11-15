@@ -61,18 +61,14 @@ for root, dirs, files in os.walk(vault):
             target = raw.rstrip("/")
             norm = os.path.normpath(target)
             if "/" in norm:
-                # Resolve the way Quartz renders it: relative to this note's folder.
-                note_rel = os.path.normpath(os.path.join(os.path.dirname(rel), target))
-                # ...or the way Obsidian resolves it: relative to the vault root.
+                # Quartz resolves a wikilink by matching the target as a suffix of a
+                # real slug; a "../" prefix makes that match impossible, and the
+                # link then renders as a dead href on the site. Require the
+                # vault-root-relative form, which resolves in Obsidian and on the site.
                 root_rel = os.path.normpath(target)
                 while root_rel.startswith("../"):
                     root_rel = root_rel[3:]
-                ok = (
-                    note_rel in all_files
-                    or root_rel in all_files
-                    or os.path.splitext(note_rel)[0] in all_files
-                    or os.path.splitext(root_rel)[0] in all_files
-                )
+                ok = root_rel in all_files or os.path.splitext(root_rel)[0] in all_files
             else:
                 ok = norm in md_notes
             if not ok:

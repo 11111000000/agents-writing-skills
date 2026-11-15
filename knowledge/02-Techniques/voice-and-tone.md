@@ -97,4 +97,4 @@ AI почти никогда не «теряет нить». Человек — 
 
 - [[perplexity-and-burstiness]]
 - [[show-dont-tell]]
-- [[../01-Patterns/rhetorical/impersonality]]
+- [[01-Patterns/rhetorical/impersonality]]

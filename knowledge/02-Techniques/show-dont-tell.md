@@ -61,5 +61,5 @@ LLM пишет абстрактно:
 
 - [[voice-and-tone]]
 - [[perplexity-and-burstiness]]
-- [[../01-Patterns/rhetorical/impersonality]]
-- [[../04-Examples/before-after]]
+- [[01-Patterns/rhetorical/impersonality]]
+- [[04-Examples/before-after]]

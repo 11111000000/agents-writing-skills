@@ -56,4 +56,4 @@ GPTZero показывает график. Если std перплексии н�
 ## Связанные заметки
 
 - [[how-detectors-work]]
-- [[../02-Techniques/agent-writing-workflow]]
+- [[02-Techniques/agent-writing-workflow]]

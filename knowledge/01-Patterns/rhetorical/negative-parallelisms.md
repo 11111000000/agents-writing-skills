@@ -302,10 +302,10 @@ LLM использует антитезис как **заменитель уве
 
 - [[43-patterns-catalogue]] — каталог P1–P43, где P9 = Negative Parallelisms
 - [[lexicon-ru-v2]] — общий словарь AI-клише
-- [[../structural/three-part-lists]] — rule of three
-- [[../../02-Techniques/voice-and-tone]] — голос автора
-- [[../../04-Examples/before-after-ru-advanced]] — примеры переписывания
-- [[../../02-Techniques/show-dont-tell]] — конкретика вместо абстракций
+- [[01-Patterns/structural/three-part-lists]] — rule of three
+- [[02-Techniques/voice-and-tone]] — голос автора
+- [[04-Examples/before-after-ru-advanced]] — примеры переписывания
+- [[02-Techniques/show-dont-tell]] — конкретика вместо абстракций
 
 ## Источники
 

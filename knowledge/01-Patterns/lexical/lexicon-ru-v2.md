@@ -298,9 +298,9 @@ Wikipedia RU отмечает важное различие:
 ## Связанные заметки
 
 - [[lexicon-ru]] — базовая версия
-- [[../rhetorical/hedging-language]] — риторика хеджирования
-- [[../structural/three-part-lists]] — структура троек
-- [[../rhetorical/deeprichastnye-oboroty]] — русские деепричастные
-- [[../../02-Techniques/perplexity-and-burstiness]]
-- [[../../02-Techniques/voice-and-tone]]
-- [[../../04-Examples/before-after]]
+- [[01-Patterns/rhetorical/hedging-language]] — риторика хеджирования
+- [[01-Patterns/structural/three-part-lists]] — структура троек
+- [[01-Patterns/rhetorical/deeprichastnye-oboroty]] — русские деепричастные
+- [[02-Techniques/perplexity-and-burstiness]]
+- [[02-Techniques/voice-and-tone]]
+- [[04-Examples/before-after]]

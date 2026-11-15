@@ -53,5 +53,5 @@ related: [lexicon-ru, lexicon-en, three-part-lists]
 
 - [[lexicon-ru]]
 - [[lexicon-en]]
-- [[../structural/three-part-lists]]
-- [[../../02-Techniques/voice-and-tone]]
+- [[01-Patterns/structural/three-part-lists]]
+- [[02-Techniques/voice-and-tone]]

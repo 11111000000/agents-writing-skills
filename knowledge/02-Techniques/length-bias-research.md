@@ -132,8 +132,8 @@ RLHF-COV can't easily fix (Lamparth: bias substitution)
 - [[editing-modes]] — режимы правки: proofread/light/style/deep; RELY только в style/deep
 - [[hc3-english]] — эталонный датасет для измерения length bias на практике
 - [[raid-multi-domain]] — multi-model benchmark для stress-теста
-- [[../01-Patterns/structural/over-generation]] — P-NEW-1…P-NEW-7
-- [[../05-References/limits-and-self-critique]] — эпистемическая честность
+- [[01-Patterns/structural/over-generation]] — P-NEW-1…P-NEW-7
+- [[05-References/limits-and-self-critique]] — эпистемическая честность
 
 ## 9. Raw notes
 

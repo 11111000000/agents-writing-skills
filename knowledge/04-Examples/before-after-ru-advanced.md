@@ -12,7 +12,7 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses, mean
 > Примеры составлены на основе наблюдений Wikipedia RU, Aboudjem catalogue P1–P43 и нашего опыта работы с LLM в проектах.
 
 > [!warning] Принцип v7: редактура не выдумывает факты
-> Версии «после» ниже используют **только то, что есть в исходнике**. Там, где тексту не хватает конкретики, стоит маркер `[нужен факт: ...]` — это сигнал спросить у автора, а не лицензия выдумать число. Подробнее: [[../02-Techniques/meaning-preservation]].
+> Версии «после» ниже используют **только то, что есть в исходнике**. Там, где тексту не хватает конкретики, стоит маркер `[нужен факт: ...]` — это сигнал спросить у автора, а не лицензия выдумать число. Подробнее: [[02-Techniques/meaning-preservation]].
 >
 > Старая версия этой заметки превращала абстрактный исходник в текст с вымышленными числами и личным опытом («47 задач», «p99 14 мс»). Это нарушало смысловой контракт: текст выглядел убедительнее, но становился менее достоверным. Таблицы формул в конце файла сохранены как иллюстрации приёмов — с явной пометкой о вымышленных данных.
 
@@ -246,17 +246,17 @@ related: [lexicon-ru-v2, deeprichastnye-oboroty, em-dash, parallel-clauses, mean
 
 **Принцип:** антитезис заменяется прямым утверждением о том, что **есть**, — а факты берутся из реальности проекта, а не из головы редактора.
 
-Подробнее: [[../01-Patterns/rhetorical/negative-parallelisms]]
+Подробнее: [[01-Patterns/rhetorical/negative-parallelisms]]
 
 ## Связанные заметки
 
-- [[../02-Techniques/meaning-preservation]] — почему выдуманная конкретика хуже абстракции
-- [[../02-Techniques/editing-modes]] — какой режим правки выбрать
+- [[02-Techniques/meaning-preservation]] — почему выдуманная конкретика хуже абстракции
+- [[02-Techniques/editing-modes]] — какой режим правки выбрать
 - [[lexicon-ru-v2]]
 - [[deeprichastnye-oboroty]]
 - [[em-dash]]
 - [[parallel-clauses]]
-- [[../01-Patterns/rhetorical/negative-parallelisms]] — **главный AI-маркер**
-- [[../02-Techniques/voice-russian-specifics]]
-- [[../02-Techniques/show-dont-tell]]
-- [[../02-Techniques/perplexity-and-burstiness]]
+- [[01-Patterns/rhetorical/negative-parallelisms]] — **главный AI-маркер**
+- [[02-Techniques/voice-russian-specifics]]
+- [[02-Techniques/show-dont-tell]]
+- [[02-Techniques/perplexity-and-burstiness]]

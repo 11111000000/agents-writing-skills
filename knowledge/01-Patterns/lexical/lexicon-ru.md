@@ -97,6 +97,6 @@ LLM любит выделять последнее предложение абз
 ## Связанные заметки
 
 - [[lexicon-en]] — английский аналог
-- [[../structural/three-part-lists]] — структурный аналог «rule of three»
-- [[../rhetorical/hedging-language]] — хеджирование как маркер LLM
-- [[../../02-Techniques/voice-and-tone]] — как писать своим голосом
+- [[01-Patterns/structural/three-part-lists]] — структурный аналог «rule of three»
+- [[01-Patterns/rhetorical/hedging-language]] — хеджирование как маркер LLM
+- [[02-Techniques/voice-and-tone]] — как писать своим голосом

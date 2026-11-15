@@ -112,7 +112,7 @@ The best closings either:
 ## See also
 
 - [[lexicon-ru]]
-- [[../structural/three-part-lists]]
-- [[../rhetorical/hedging-language]]
-- [[../../02-Techniques/perplexity-and-burstiness]]
-- [[../../03-Detection/how-detectors-work]]
+- [[01-Patterns/structural/three-part-lists]]
+- [[01-Patterns/rhetorical/hedging-language]]
+- [[02-Techniques/perplexity-and-burstiness]]
+- [[03-Detection/how-detectors-work]]

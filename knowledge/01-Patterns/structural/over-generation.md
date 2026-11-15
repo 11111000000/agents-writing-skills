@@ -171,13 +171,13 @@ sources: [grice-1975, hemingway-iceberg, chekhov-gun, yapterch-2026]
 
 ## Связанные заметки
 
-- [[../../02-Techniques/sufficiency-and-underspecification]] — положительный принцип
+- [[02-Techniques/sufficiency-and-underspecification]] — положительный принцип
 - [[lexicon-ru-v2]] — словарь клише (vacuum-filling использует многие из них)
 - [[hedging-language]] — anticipatory hedging
 - [[negative-parallelisms]] — restatement через антитезис
-- [[../structural/three-part-lists]] — rule of three
-- [[../../02-Techniques/show-dont-tell]] — конкретика вместо абстракции
-- [[../../02-Techniques/perplexity-and-burstiness]] — суффицентность создаёт burstiness
+- [[01-Patterns/structural/three-part-lists]] — rule of three
+- [[02-Techniques/show-dont-tell]] — конкретика вместо абстракции
+- [[02-Techniques/perplexity-and-burstiness]] — суффицентность создаёт burstiness
 
 ## Источники
 

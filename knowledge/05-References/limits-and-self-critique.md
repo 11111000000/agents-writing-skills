@@ -87,7 +87,7 @@ AI-тексты содержат больше em-dash, больше деепри
 - «Деепричастие = AI». Нет, в академическом русском это норма.
 - «Burstiness < 3 = AI». Нет, есть жанры с низкой burstiness.
 - «Длинный текст = AI». Нет, есть жанры, где длинные тексты уместны (диссертации, годовые отчёты). YapScore работает только как сравнение с baseline, не как абсолютная метрика.
-- «Underspecification всегда хорошо». Нет, в technical reference, legal text, onboarding — пропущенная информация ломает смысл. См. [[../02-Techniques/sufficiency-and-underspecification]] раздел 6 «Когда недосказанность НЕ работает».
+- «Underspecification всегда хорошо». Нет, в technical reference, legal text, onboarding — пропущенная информация ломает смысл. См. [[02-Techniques/sufficiency-and-underspecification]] раздел 6 «Когда недосказанность НЕ работает».
 
 ## Где наши skill'ы работают
 

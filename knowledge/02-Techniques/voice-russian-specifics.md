@@ -184,8 +184,8 @@ LLM держит ровный тон. Человек периодически с
 
 - [[lexicon-ru-v2]]
 - [[01-Patterns/lexical/lexicon-ru]]
-- [[../02-Techniques/voice-and-tone]]
-- [[../02-Techniques/show-dont-tell]]
-- [[../02-Techniques/russian-copyediting]]
-- [[../02-Techniques/russian-brevity-grammar]]
-- [[../04-Examples/before-after]]
+- [[02-Techniques/voice-and-tone]]
+- [[02-Techniques/show-dont-tell]]
+- [[02-Techniques/russian-copyediting]]
+- [[02-Techniques/russian-brevity-grammar]]
+- [[04-Examples/before-after]]

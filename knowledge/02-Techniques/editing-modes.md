@@ -144,4 +144,4 @@ related: [meaning-preservation, sufficiency-and-underspecification, agent-writin
 - [[voice-and-tone]] — голос как цель style/deep
 - [[voice-russian-specifics]] — голос в русском
 - [[agent-writing-workflow]] — пайплайн фаз STRIP/TIGHTEN/RELY/REBUILD
-- [[../01-Patterns/structural/over-generation]] — антипаттерны пере-говорения (фон для RELY)
+- [[01-Patterns/structural/over-generation]] — антипаттерны пере-говорения (фон для RELY)
