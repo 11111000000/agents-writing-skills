@@ -24,8 +24,9 @@ At the end of the task, create a draft — the machine fields are filled for you
 ~/Projects/math-coding-field-lab/scripts/record draft agents-writing-skills --kind <kind> --base <revision-at-task-start>
 ```
 
-Fill the fields marked `TODO` in the draft (model, time, counters, outcome,
-`accepted_by` — the owner decides the outcome), then write the record:
+Fill the fields marked `TODO`: the model, the time, the counters. Leave `outcome`
+as `pending` and `accepted_by` empty — the owner decides the outcome and records
+the acceptance, and that is not the agent's call. Then write the record:
 
 ```sh
 ~/Projects/math-coding-field-lab/scripts/record commit agents-writing-skills --task-id <id>
@@ -33,5 +34,7 @@ Fill the fields marked `TODO` in the draft (model, time, counters, outcome,
 
 Rules: do not choose tasks by their result, do not rewrite a written record to
 make it look better, and do not drop unsuccessful ones — the pilot publishes
-every outcome. If the lab is not available, finish the task as usual: a missing
-record is a gap in the measurement, not a reason to change the work.
+every outcome. The lab records every task that starts after the declared rule:
+it never stops asking and it never filters by result. If the lab is not
+available, finish the task as usual: a missing record is a gap in the
+measurement, not a reason to change the work.
