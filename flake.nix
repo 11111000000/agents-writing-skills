@@ -86,7 +86,11 @@
           # The method binary, built from source at the revision this flake
           # pins. A downloaded release lags behind the repository and then
           # generates a different agent page, which fails `mathc doctor`.
-          mathc = math-coding.packages.${system}.default;
+          # On Linux it is the portable build: the very build the agents
+          # install, byte for byte, so the gate and the live agent measure
+          # one environment and neither invalidates the evidence of the
+          # other. The portable build exists for Linux alone.
+          mathc = math-coding.packages.${system}.portable;
         }
       );
 

@@ -24,6 +24,8 @@ on:
       - 'scripts/check-no-stale-contract.sh'
       - 'scripts/collect-ru-corpus.sh'
       - 'docs/**'
+      - 'flake.nix'
+      - 'flake.lock'
       - '.github/workflows/validate-skills.yml'
   pull_request:
     branches: [main, master]
@@ -48,6 +50,8 @@ on:
       - 'scripts/check-no-stale-contract.sh'
       - 'scripts/collect-ru-corpus.sh'
       - 'docs/**'
+      - 'flake.nix'
+      - 'flake.lock'
       - '.github/workflows/validate-skills.yml'
 
 jobs:
