@@ -71,6 +71,32 @@ else
   exit 2
 fi
 
+# --- Normalise the input stream ---
+# Детекторы не должны зависеть от того, как текст нарезан на строки.
+# Мягкий перенос внутри абзаца раньше делал паттерн невидимым: один и тот же
+# текст давал AP 0.0 с переносом и 166.67 без него. Два рендера:
+#   INPUT_NORM — абзац на строку (рамочные детекторы, метрики по абзацам);
+#   INPUT_SENT — предложение на строку (shell-детекторы с якорем `^`).
+# Если python3 недоступен, оба рендера = исходный текст: метрики не падают,
+# а точность снижается — об этом честно говорит флаг frame_detectors.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PATTERNS_PY="$SCRIPT_DIR/patterns.py"
+PYTHON_BIN=""
+for _py in python3 python; do
+  if command -v "$_py" >/dev/null 2>&1; then PYTHON_BIN="$_py"; break; fi
+done
+
+INPUT_NORM="$INPUT"
+INPUT_SENT="$INPUT"
+FRAME_DETECTORS=false
+if [[ -n "$PYTHON_BIN" && -f "$PATTERNS_PY" ]]; then
+  _norm=$(printf '%s' "$INPUT" | "$PYTHON_BIN" "$PATTERNS_PY" --normalize 2>/dev/null)
+  if [[ -n "$_norm" ]]; then INPUT_NORM="$_norm"; fi
+  _sent=$(printf '%s' "$INPUT" | "$PYTHON_BIN" "$PATTERNS_PY" --sentences 2>/dev/null)
+  if [[ -n "$_sent" ]]; then INPUT_SENT="$_sent"; fi
+  FRAME_DETECTORS=true
+fi
+
 # --- Helper functions ---
 count_words() { echo "$1" | wc -w | tr -d ' '; }
 count_chars() { echo "$1" | wc -c | tr -d ' '; }
@@ -93,21 +119,34 @@ sentence_lengths() {
 # byte-range, count_sentences).
 
 # --- Compute metrics ---
-WORDS=$(count_words "$INPUT")
-SENTENCES=$(count_sentences "$INPUT")
-PARAS=$(count_paragraphs "$INPUT")
-CHARS=$(count_chars "$INPUT")
+WORDS=$(count_words "$INPUT_NORM")
+SENTENCES=$(count_sentences "$INPUT_NORM")
+PARAS=$(count_paragraphs "$INPUT_NORM")
+CHARS=$(count_chars "$INPUT_NORM")
 
-# AP: negative parallelism (RU)
-AP_RU=$(echo "$INPUT" | grep -coE '(это|такое|так)\s+не\s+[[:alpha:]]+,?\s+(а|это|скорее)\s+[[:alpha:]]+' || true)
-# AP: negative parallelism (EN)
-AP_EN=$(echo "$INPUT" | grep -coE "it's not|this is not|that is not" || true)
-AP_TOTAL=$((AP_RU + AP_EN))
-if [[ $WORDS -gt 0 ]]; then
-  AP=$(awk "BEGIN {printf \"%.2f\", $AP_TOTAL * 1000 / $WORDS}")
-else
-  AP="0.00"
+# AP: negative parallelism (P9).
+# Старый детектор ловил ОДИН лексический якорь («это не X, а Y») и находил
+# 0 из 8 канонических примеров каталога: «Это» в начале фразы не матчилось.
+# Новый меряет риторическую рамку во всех формах (A, A_graded, A_excl,
+# кросс-предложная, иерархическая) и не теряет рамку, когда лечение убирает
+# лексический якорь («нулевая связка»).
+AP_STRONG=0
+AP_WEAK=0
+AP_STRONG_PER_1K=0
+AP_WEAK_PER_1K=0
+AP_FRAMES=""
+if [[ "$FRAME_DETECTORS" == "true" ]]; then
+  _frame_env=$(printf '%s' "$INPUT_NORM" | "$PYTHON_BIN" "$PATTERNS_PY" --env 2>/dev/null)
+  if [[ -n "$_frame_env" ]]; then
+    eval "$_frame_env"
+    AP_STRONG="${AP_STRONG:-0}"
+    AP_WEAK="${AP_WEAK:-0}"
+    AP_STRONG_PER_1K="${AP_STRONG_PER_1K:-0}"
+    AP_WEAK_PER_1K="${AP_WEAK_PER_1K:-0}"
+  fi
 fi
+AP=$AP_STRONG_PER_1K
+AP_TOTAL=$AP_STRONG
 
 # D: деепричастия (RU) — heuristic on context + suffix.
 # Real деепричастия in Russian prose are overwhelmingly comma- or
@@ -120,7 +159,7 @@ fi
 # is missed. Empirically this is <15% of real cases in literary prose.
 # See knowledge/01-Patterns/structural/deeprichastnye-oboroty.md for
 # discussion of false-positive rate.
-D_RU=$(echo "$INPUT" | grep -oE '(^|[,.;:][[:space:]]+)([АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]{4,}(ив|вши|а|в|я))(ся)?[[:space:]]' | wc -l | tr -d ' ')
+D_RU=$(echo "$INPUT_SENT" | grep -oE '(^|[,.;:][[:space:]]+)([АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]{4,}(ив|вши|а|в|я))(ся)?[[:space:]]' | wc -l | tr -d ' ')
 D=$(awk "BEGIN {printf \"%.1f\", $D_RU * 1000 / $WORDS}")
 
 # E: em-dash
@@ -128,8 +167,8 @@ E_COUNT=$(echo "$INPUT" | grep -o '—' | wc -l | tr -d ' ')
 E=$(awk "BEGIN {printf \"%.1f\", $E_COUNT * 300 / $WORDS}")
 
 # V: vacuum-filling openers
-V_OPENER_RU=$(echo "$INPUT" | grep -coE '^(У нас в команде|В текущей работе|Стоит отметить|Необходимо подчеркнуть|В современном мире|В данной статье)' || true)
-V_OPENER_EN=$(echo "$INPUT" | grep -coE '^(In today.s|It is worth noting|Let me explain|It.s important to)' || true)
+V_OPENER_RU=$(echo "$INPUT_SENT" | grep -coE '^(У нас в команде|В текущей работе|Стоит отметить|Необходимо подчеркнуть|В современном мире|В данной статье)' || true)
+V_OPENER_EN=$(echo "$INPUT_SENT" | grep -coE '^(In today.s|It is worth noting|Let me explain|It.s important to)' || true)
 V_OPENER_TOTAL=$((V_OPENER_RU + V_OPENER_EN))
 if [[ $SENTENCES -gt 0 ]]; then
   V=$(awk "BEGIN {printf \"%.1f\", $V_OPENER_TOTAL * 100 / $SENTENCES}")
@@ -142,7 +181,7 @@ fi
 # more than 50% of their trigrams (overlap coefficient over the smaller set).
 # Normalization: lowercase, whitespace-split; sentence split on .!?
 # R% = restated pairs / all adjacent pairs.
-R=$(echo "$INPUT" | tr '\n' ' ' | sed 's/[.!?]\+/&\n/g' | awk '
+R=$(echo "$INPUT_NORM" | tr '\n' ' ' | sed 's/[.!?]\+/&\n/g' | awk '
   {
     sub(/^[[:space:]]+/, "")
     sub(/[[:space:]]+$/, "")
@@ -172,8 +211,8 @@ R=$(echo "$INPUT" | tr '\n' ' ' | sed 's/[.!?]\+/&\n/g' | awk '
 ')
 
 # B: bridging phrases at para starts
-B_RU=$(echo "$INPUT" | grep -coE '^(Как упоминалось выше|Это подводит нас к|В свою очередь|Кроме того)' || true)
-B_EN=$(echo "$INPUT" | grep -coE '^(As mentioned above|This brings us to|In addition|Furthermore|Moreover)' || true)
+B_RU=$(echo "$INPUT_NORM" | grep -coE '^(Как упоминалось выше|Это подводит нас к|В свою очередь|Кроме того)' || true)
+B_EN=$(echo "$INPUT_NORM" | grep -coE '^(As mentioned above|This brings us to|In addition|Furthermore|Moreover)' || true)
 B_TOTAL=$((B_RU + B_EN))
 if [[ $PARAS -gt 0 ]]; then
   B=$(awk "BEGIN {printf \"%.1f\", $B_TOTAL * 100 / $PARAS}")
@@ -188,21 +227,23 @@ fi
 # bridging, negative parallelism, лексические fillers). Значение ~1.0 означает
 # «мало маркеров», а не «текст достаточной длины». Использовать только как
 # сигнал over-generation, не как меру качества.
-YAP_FILLER=$(echo "$INPUT" | grep -Eio '(современн(ое|ый|ая)|Стоит отметить|Более того|значительных результатов|эффективное решение|оптимизаци[яи]|интуитивн|продуманн|comprehensive|seamless|robust|cutting-edge|It is worth noting|In today.s|Moreover|Furthermore)' | wc -l | tr -d ' ')
+YAP_FILLER=$(echo "$INPUT_NORM" | grep -Eio '(современн(ое|ый|ая)|Стоит отметить|Более того|значительных результатов|эффективное решение|оптимизаци[яи]|интуитивн|продуманн|comprehensive|seamless|robust|cutting-edge|It is worth noting|In today.s|Moreover|Furthermore)' | wc -l | tr -d ' ')
 YAP_REDUNDANT=$(( (V_OPENER_TOTAL + B_TOTAL) * 8 + AP_TOTAL * 6 + YAP_FILLER * 4 ))
 if [[ $WORDS -gt 0 ]]; then
-  # baseline = words minus weighted filler markers; floor at 1 to avoid
-  # div-by-zero. (An earlier formula floored at 60% of WORDS, which silently
-  # capped YapScore at 1.67 — making it impossible to flag severely
-  # over-generated text.)
-  YAP_BASELINE=$(awk "BEGIN {b=$WORDS-$YAP_REDUNDANT; if (b<1) b=1; printf \"%d\", b}")
+  # baseline = words minus weighted filler markers; floor at 10% of WORDS so a
+  # text that is almost entirely markers cannot blow the ratio up to hundreds
+  # (measured: over-generated fixture gave 310.0 before the floor). The floor
+  # caps YapScore at 10 — a saturated value that still flags over-generation,
+  # unlike the old 60% floor which silently capped it at 1.67 and made severe
+  # over-generation undetectable.
+  YAP_BASELINE=$(awk "BEGIN {b=$WORDS-$YAP_REDUNDANT; f=$WORDS*0.10; if (b<f) b=f; if (b<1) b=1; printf \"%d\", b}")
   YAP=$(awk "BEGIN {printf \"%.2f\", $WORDS / $YAP_BASELINE}")
 else
   YAP="0.00"
 fi
 
 # Burstiness: mean & std of sentence length
-LENGTHS=$(sentence_lengths "$INPUT")
+LENGTHS=$(sentence_lengths "$INPUT_NORM")
 if [[ -n "$LENGTHS" ]]; then
   BURST_MEAN=$(echo "$LENGTHS" | awk '{s+=$1; n++} END{printf "%.1f", s/n}')
   BURST_STD=$(echo "$LENGTHS" | awk -v mean="$BURST_MEAN" '{d=$1-mean; s+=d*d; n++} END{printf "%.1f", sqrt(s/n)}')
@@ -212,16 +253,16 @@ else
 fi
 
 # Specificity: concrete facts per paragraph
-FACTS=$(echo "$INPUT" | grep -coE '\b[0-9]+(\.[0-9]+)?(%|ms|sec|req|GB|MB|KB|s|m|h)?\b' || true)
+FACTS=$(echo "$INPUT_NORM" | grep -coE '\b[0-9]+(\.[0-9]+)?(%|ms|sec|req|GB|MB|KB|s|m|h)?\b' || true)
 SPECIFICITY=$(awk "BEGIN {printf \"%.2f\", $FACTS / $PARAS}")
 
 # Format bias
 # Emoji heuristic: count chars in known emoji Unicode blocks.
 # Earlier versions used `[^[:ascii:]]` (counted Cyrillic too — wrong) and
 # also threw "Invalid character class name" on some grep versions.
-EMOJI=$(echo "$INPUT" | grep -oP '[\x{1F000}-\x{1FFFF}\x{2600}-\x{27BF}\x{1F300}-\x{1F5FF}\x{1F600}-\x{1F64F}\x{1F680}-\x{1F6FF}\x{1F900}-\x{1F9FF}\x{2700}-\x{27BF}]' | wc -l | tr -d ' ')
-BOLD=$(echo "$INPUT" | grep -coE '\*\*[^*]+\*\*' || true)
-LISTS=$(echo "$INPUT" | grep -coE '^[[:space:]]*[-*][[:space:]]' || true)
+EMOJI=$(echo "$INPUT_NORM" | grep -oP '[\x{1F000}-\x{1FFFF}\x{2600}-\x{27BF}\x{1F300}-\x{1F5FF}\x{1F600}-\x{1F64F}\x{1F680}-\x{1F6FF}\x{1F900}-\x{1F9FF}\x{2700}-\x{27BF}]' | wc -l | tr -d ' ')
+BOLD=$(echo "$INPUT_NORM" | grep -coE '\*\*[^*]+\*\*' || true)
+LISTS=$(echo "$INPUT_SENT" | grep -coE '^[[:space:]]*[-*][[:space:]]' || true)
 EMOJI_PER_1K=$(awk "BEGIN {printf \"%.1f\", $EMOJI * 1000 / $WORDS}")
 BOLD_PCT=$(awk "BEGIN {printf \"%.1f\", $BOLD * 100 / $WORDS}")
 LISTS_PER_1K=$(awk "BEGIN {printf \"%.1f\", $LISTS * 1000 / $WORDS}")
@@ -236,47 +277,39 @@ OPINION_PRESENT=$([ $OPINION -gt 0 ] && echo "true" || echo "false")
 # Lexical-realizable subset. Each emits density per 1000 words.
 
 # P-NEW-13 False Agency: abstract subjects with volitional verbs
-FALSE_AGENCY=$(echo "$INPUT" | grep -coEi '\b(market|system|algorithm|trend|security|performance|the (api|cli|app)|api|cli|architecture|design|data|model|policy|strategy)\s+(decides?|demands?|requires?|rewards?|says?|wants?|chooses?|drives?|forces?|rejects?|insists?)\b' || true)
+FALSE_AGENCY=$(echo "$INPUT_SENT" | grep -coEi '\b(market|system|algorithm|trend|security|performance|the (api|cli|app)|api|cli|architecture|design|data|model|policy|strategy)\s+(decides?|demands?|requires?|rewards?|says?|wants?|chooses?|drives?|forces?|rejects?|insists?)\b' || true)
 P13=$(awk "BEGIN {printf \"%.2f\", $FALSE_AGENCY * 1000 / $WORDS}")
 
-# P-NEW-16 Argument Residue: rebuttal-to-nobody chains
-ARG_RESIDUE=$(echo "$INPUT" | grep -coEi '\b(however|though|yet|still|nonetheless),[^.]+\b(however|though|yet|still|nonetheless)\b' || true)
-P16=$(awk "BEGIN {printf \"%.2f\", $ARG_RESIDUE * 1000 / $WORDS}")
+# P-NEW-16 Argument Residue: возражение позиции, которой в тексте нет.
+# Старый детектор знал только английский и считал «два контрастивных
+# коннектора в предложении». Новый ищет оппонента без имени (по каталогу:
+# hypothetical opponents without named referents) — на RU и EN.
+P16_UNNAMED=${P16_UNNAMED_OPPONENT:-0}
+P16_DOUBLES=${P16_DOUBLE_CONNECTORS:-0}
+P16=$(awk "BEGIN {printf \"%.2f\", $P16_UNNAMED * 1000 / $WORDS}")
 
-# P-NEW-18 Asyndeton Tricolon: three 5+ word clauses joined by "," without conjunction
-# Approximation: sentences containing two commas separating long phrases
-ASYN_TRICOLON=$(echo "$INPUT" | grep -coE '[^.!?]{20,},[^.!?]{20,},[^.!?]{20,}[.!?]' || true)
-P18=$(awk "BEGIN {printf \"%.2f\", $ASYN_TRICOLON * 1000 / $WORDS}")
+# P-NEW-18 Asyndeton Tricolon: бессоюзное трикольцо с НАРАСТАЮЩЕЙ длиной
+# членов. Прежняя реализация считала любую фразу с двумя запятыми: на
+# «Даме с собакой» давала 47 срабатываний, на AI-тексте — 1. Разница в
+# сигнале была нулевой, то есть метрика ничего не измеряла.
+P18_TRICOLONS=${P18_TRICOLONS:-0}
+P18=$(awk "BEGIN {printf \"%.2f\", $P18_TRICOLONS * 1000 / $WORDS}")
 
-# P-NEW-19 Mini-Aphorism Closer: last sentence ≤ 6 words and ends with period
-# Compute via awk on sentences
-P19=$(echo "$INPUT" | awk '
-  BEGIN { last_short = 0 }
-  {
-    # Approximate sentence split
-    n = gsub(/[.!?]+/, "&")
-  }
-  {
-    sent = $0
-    if (match(sent, /[.!?]+[^.!?]*$/)) {
-      closer = substr(sent, RSTART)
-      gsub(/[.!?]/, " ", closer)
-      nwords = split(closer, w, /[[:space:]]+/); wc = 0
-      for (i=1; i<=nwords; i++) if (length(w[i]) > 0) wc++
-      if (wc > 0 && wc <= 6) last_short++
-    }
-  }
-  END { printf "%d", last_short }
-')
+# P-NEW-19 Mini-Aphorism Closer: абзац заканчивается коротким предложением.
+# Прежний awk не мог сработать никогда: /[.!?]+[^.!?]*$/ откатывался на
+# последнюю точку, поэтому «closer» всегда оказывался пустым.
+P19_CLOSERS=${P19_CLOSERS:-0}
+P19_APHORISTIC=${P19_APHORISTIC:-0}
+P19=$P19_CLOSERS
 
 # P-NEW-20 Hedged-Enumeration Openers: "From X to Y, ..." or "Whether A or B, ..."
-HEDGED_OPENER=$(echo "$INPUT" | grep -coEi '^[[:space:]]*(from[[:space:]]+[^.]+[[:space:]]+to[[:space:]]+[^,.]+,|whether[[:space:]]+[^.]+[[:space:]]+or[[:space:]]+[^,.]+,|as[[:space:]]+(both|well)|not[[:space:]]+just[[:space:]]+[^.]+,)' || true)
+HEDGED_OPENER=$(echo "$INPUT_SENT" | grep -coEi '^[[:space:]]*(from[[:space:]]+[^.]+[[:space:]]+to[[:space:]]+[^,.]+,|whether[[:space:]]+[^.]+[[:space:]]+or[[:space:]]+[^,.]+,|as[[:space:]]+(both|well)|not[[:space:]]+just[[:space:]]+[^.]+,)' || true)
 P20=$(awk "BEGIN {printf \"%.2f\", $HEDGED_OPENER * 1000 / $WORDS}")
 
 # --- Language detection for calibrated thresholds ---
 # Cyrillic ratio > 0.3 → RU mode (applies RU-specific thresholds).
-CYR_COUNT=$(echo "$INPUT" | grep -oE '[АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]' | wc -l | tr -d ' ')
-LETTER_COUNT=$(echo "$INPUT" | grep -oE '[A-Za-zАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]' | wc -l | tr -d ' ')
+CYR_COUNT=$(echo "$INPUT_NORM" | grep -oE '[АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]' | wc -l | tr -d ' ')
+LETTER_COUNT=$(echo "$INPUT_NORM" | grep -oE '[A-Za-zАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяёЁ]' | wc -l | tr -d ' ')
 if [[ "$LETTER_COUNT" -gt 0 ]]; then
     CYR_RATIO=$(awk "BEGIN {printf \"%.3f\", $CYR_COUNT / $LETTER_COUNT}")
 else
@@ -288,18 +321,26 @@ else
     LANGUAGE="en"
 fi
 
-# --- Calibrated thresholds (validated on HC3/RAID/Wikisource, n=145) ---
+# --- Calibrated thresholds ---
 # See knowledge/02-Techniques/metric-validation.md for empirical derivation.
 # Caveat: D (деепричастия density) discriminates AI vs conversational RU
 # but Tolstoy-class literary prose (~30/1000) exceeds any useful threshold.
 # Therefore D is a *soft* recommendation, not a hard fail.
+#
+# AP (negative parallelism) пере-калиброван на реальном LLM-корпусе
+# (scripts/generate-llm-corpus.sh, n=24 RU + n=12 EN, модель MiniMax-M3):
+#   RU: человек (n=8, литература) 0.40-3.45/1k; LLM 4.65-15.94/1k (медиана 5.5).
+#       Порог 4 стоит между максимумом человека и минимумом LLM.
+#   EN: человек (n=60) 0-2.36/1k; LLM 4.27-4.31/1k. Порог 3.
+# Прежний порог TH_AP=1 был неверен: он помечал 7 из 8 человеческих
+# литературных файлов и пропускал половину LLM-текстов.
 if [[ "$LANGUAGE" == "ru" ]]; then
     TH_D_SOFT=18      # RU literary prose normal: 14-30/1000. AI: ~0-11. Soft warning.
     TH_E=1            # RU: humans use em-dash. AI uses 0. Threshold <1 flags AI.
     TH_V=2            # RU: humans 0%, AI marketing 6.7%. Threshold >2 flags AI.
     TH_BURST=8        # RU: humans 18.85, AI 6.51. Threshold <8 flags AI.
     TH_R=10
-    TH_AP=1
+    TH_AP=4           # RU: humans ≤3.45, LLM ≥4.65. Порог 4 разделяет.
     TH_YAP=150        # YapScore*100.
 else
     TH_D_SOFT=7
@@ -307,7 +348,7 @@ else
     TH_V=2            # EN: humans 0%, AI Q&A 1.7%. Threshold >2 flags over-gen.
     TH_BURST=3
     TH_R=10
-    TH_AP=1
+    TH_AP=3           # EN: humans ≤2.36, LLM ≥4.27. Порог 3 разделяет.
     TH_YAP=150
 fi
 
@@ -336,6 +377,7 @@ if [[ "$JSON_MODE" == "true" ]]; then
   cat <<EOF
 {
   "language": "$LANGUAGE",
+  "frame_detectors": $FRAME_DETECTORS,
   "thresholds": {
     "AP": $TH_AP,
     "D_soft": $TH_D_SOFT,
@@ -372,10 +414,16 @@ if [[ "$JSON_MODE" == "true" ]]; then
       "opinion": "$OPINION_PRESENT"
     },
     "new_patterns": {
+      "AP_strong_frames": $AP_STRONG,
+      "AP_weak_frames": $AP_WEAK,
+      "AP_strong_per_1k": $AP_STRONG_PER_1K,
+      "AP_weak_per_1k": $AP_WEAK_PER_1K,
       "P_NEW_13_false_agency_per_1k": $P13,
       "P_NEW_16_argument_residue_per_1k": $P16,
+      "P_NEW_16_double_connectors": $P16_DOUBLES,
       "P_NEW_18_asyndeton_tricolon_per_1k": $P18,
       "P_NEW_19_mini_aphorism_closer": $P19,
+      "P_NEW_19_aphoristic_closer": $P19_APHORISTIC,
       "P_NEW_20_hedged_opener_per_1k": $P20
     }
   },
@@ -397,6 +445,7 @@ Volume:
 
 Density metrics:
   AP (negative parallelism):  $AP  per 1000 words   [target <$TH_AP]
+                               strong frames: $AP_STRONG (weak: $AP_WEAK)
   D  (RU деепричастия):       $D   per 1000 words   [target <$TH_D_SOFT]
   E  (em-dash):               $E   per 300 words     [target <$TH_E]
   V  (vacuum-filling):        $V%                   [target <$TH_V%]
@@ -414,9 +463,9 @@ Specificity:
 
 New patterns (P-NEW-13..20, per 1000 words):
   P-NEW-13 False Agency:     $P13   [target <2]
-  P-NEW-16 Argument Residue:  $P16   [target <1]
-  P-NEW-18 Asyndeton:         $P18   [target <3]
-  P-NEW-19 Mini-Aphorism:     $P19   total [target <2]
+  P-NEW-16 Argument Residue:  $P16   [target <1]  (unnamed opponents: $P16_UNNAMED)
+  P-NEW-18 Asyndeton:         $P18   [target <3]  (escalating tricolons)
+  P-NEW-19 Mini-Aphorism:     $P19   total [target <2]  (aphoristic: $P19_APHORISTIC)
   P-NEW-20 Hedged Opener:     $P20   [target <1]
 
 Format bias (Zhang 2024):

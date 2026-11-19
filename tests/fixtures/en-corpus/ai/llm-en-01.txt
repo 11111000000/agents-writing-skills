@@ -1,0 +1,17 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3.1-Flash
+seed: 20261118
+---
+
+Returning feels stranger than I expected. The place recognizes you before you recognize it. The same corner shop sits where it always sat, the awning faded in a way that feels familiar even if you have never seen that particular shade of sun. For a moment you are a visitor to your own life, walking streets that used to belong to you by instinct.
+
+Then memory starts making its own adjustments. You remember things accurately and incorrectly at once. A door is shorter than you picture. A tree is gone. The wall where you leaned still holds the outline of leaning, though no one could prove it. Small details flood back—a sound, a smell, the particular quality of light through a window—and each one opens a room you thought had been closed.
+
+At the same time, you are aware of how much has happened since you left. Other people have lived here. Rooms have been repainted. The version of you that once knew this place by heart would not understand the person standing in front of it now. There is a loosening in the chest, a mix of loss and relief, like hearing a song you loved after years of silence.
+
+You cannot live here again, and you know it. But you can walk through once, slowly, letting the place speak in its old voice, and understand that some part of you never left at all.

@@ -1,0 +1,17 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3.1-Flash
+seed: 20261118
+---
+
+The train left the city before dawn, its windows glowing like a row of pale lanterns against the snow. Fields lay white and motionless beyond the tracks, fences disappearing into drifts and distant farms buried to their roofs. Breath fogged the glass, and every time someone opened the door, cold air rushed down the corridor.
+
+Inside, the carriage was warm and close, filled with the small sounds of travel: wheels striking rails in a steady rhythm, luggage shifting, steam hissing from the radiator, and voices low beneath the hum. A family shared crackers and oranges while an old man dozed over his coat. Children chased their reflections in the dark window, then grew drowsy as the daylight lingered.
+
+By afternoon, the landscape turned harsher. Snow swept across the line, covering the smaller tracks and whitening the platforms where they passed. The train slowed, and the quiet grew thoughtful. At each stop, passengers pulled up their collars and stepped into the biting wind. Then the doors closed, warmth returned, and the long journey resumed.
+
+Evening came early. Lights appeared in scattered houses, then disappeared into the wilderness. The conductor moved through the car, checking tickets and tucking blankets around a sleeping child. Outside, snow fell thick and silent, erasing the road behind them. I watched our own reflection glide over the white fields, carried onward into the darkness.

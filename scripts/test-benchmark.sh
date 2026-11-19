@@ -280,6 +280,83 @@ fi
 
 run_no_crash_stdin "empty stdin" ""
 
+# --- Detector golden tests (P1: frame-based detectors) ----------------------
+# До P1 детекторы AP/P-NEW-19/P-NEW-16 были сломаны: AP ловил 0 из 8
+# канонических примеров каталога, P-NEW-19 не мог сработать никогда,
+# P-NEW-16 знал только английский. Эти тесты фиксируют исправленное
+# поведение, чтобы следующий рефакторинг его не сломал снова.
+
+DETECTORS_DIR="${FIXTURES}/detectors"
+
+# 1. AP: все 13 канонических форм RU из knowledge/01-Patterns/rhetorical/
+#    negative-parallelisms.md (§3.1–3.5) должны быть найдены.
+json_assert "AP detector finds all 13 canonical RU frames" \
+    "${DETECTORS_DIR}/ap-canonical-ru.txt" \
+    'd["metrics"]["new_patterns"]["AP_strong_frames"] >= 13'
+
+# 2. AP: английские формы (§4) — 8 форм, 7 strong + 1 weak.
+json_assert "AP detector finds all 8 canonical EN frames" \
+    "${DETECTORS_DIR}/ap-canonical-en.txt" \
+    'd["metrics"]["new_patterns"]["AP_strong_frames"] + d["metrics"]["new_patterns"]["AP_weak_frames"] >= 8'
+
+# 3. Нормализация потока: те же три формы, разорванные мягким переносом
+#    строки, должны давать тот же результат. До P1 построчная обработка
+#    была слепа к таким текстам.
+json_assert "AP survives soft line wrapping (normalisation regression)" \
+    "${DETECTORS_DIR}/wrapped-ap.txt" \
+    'd["metrics"]["new_patterns"]["AP_strong_frames"] >= 3'
+
+# 4. P-NEW-16: оппонент без имени (RU и EN) + не считать обычные слова.
+json_assert "P-NEW-16 finds unnamed opponents (RU)" \
+    "${DETECTORS_DIR}/p16-argument-residue-ru.txt" \
+    'd["metrics"]["new_patterns"]["P_NEW_16_argument_residue_per_1k"] > 0'
+
+# 5. P-NEW-18: бессоюзное трикольцо с нарастающей тяжестью; соседнее
+#    предложение-заглушка не считается.
+json_assert "P-NEW-18 finds escalating tricolon" \
+    "${DETECTORS_DIR}/p18-tricolon-ru.txt" \
+    'd["metrics"]["new_patterns"]["P_NEW_18_asyndeton_tricolon_per_1k"] > 0'
+
+# 6. P-NEW-19: абзац, закрытый мини-афоризмом. Прежний awk давал 0 всегда.
+json_assert "P-NEW-19 finds mini-aphorism closer (dead-detector regression)" \
+    "${DETECTORS_DIR}/p19-closer-ru.txt" \
+    'd["metrics"]["new_patterns"]["P_NEW_19_mini_aphorism_closer"] >= 1 and d["metrics"]["new_patterns"]["P_NEW_19_aphoristic_closer"] >= 1'
+
+# 7. Ложные срабатывания: человеческая литература не должна пересекать
+#    порог AP. Порог откалиброван: RU-литература ≤3.45/1k, порог 4.
+#    Это главный анти-фолс-аларм тест: старый порог TH_AP=1 помечал 7 из 8.
+#    Сравнение делаем в python: парсить JSON через awk нельзя — значение
+#    метрики содержит точку, а не только целое.
+echo ""
+echo "Test: human literature stays below the AP threshold"
+lit_check=$(python3 - "$BENCH" "$FIXTURES" <<'PYEOF'
+import glob, json, os, subprocess, sys
+bench, fixtures = sys.argv[1], sys.argv[2]
+files = sorted(glob.glob(os.path.join(fixtures, "ru-corpus", "*.txt")))
+over = []
+for path in files:
+    out = subprocess.run(["bash", bench, path, "--json"], capture_output=True, text=True)
+    try:
+        ap = json.loads(out.stdout)["metrics"]["AP"]
+    except Exception:
+        over.append((path, "parse-error"))
+        continue
+    if ap > 4:
+        over.append((os.path.basename(path), ap))
+print(json.dumps({"n": len(files), "over": over}))
+PYEOF
+)
+if LIT_CHECK="$lit_check" python3 -c 'import json, os, sys; d=json.loads(os.environ["LIT_CHECK"]); sys.exit(0 if d["n"] > 0 and not d["over"] else 1)'; then
+    pass "human literature stays below the AP threshold ($lit_check)"
+else
+    fail "human literary files exceeded AP threshold 4: $lit_check"
+fi
+
+# 8. Флаг режима детекторов честно сообщает, работали ли рамочные детекторы.
+json_assert "frame detectors are reported as active" \
+    "${DETECTORS_DIR}/ap-canonical-ru.txt" \
+    'd["frame_detectors"] == True'
+
 output=$(bash "$BENCH" missing-file.txt 2>/dev/null)
 exit_code=$?
 echo ""

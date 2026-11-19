@@ -1,0 +1,17 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3
+seed: 20261118
+---
+
+A project log is useful for keeping a clear record of what happens during a project. It can document goals, decisions, completed tasks, problems encountered, and changes to plans. This helps team members understand the project’s history, catch up when they were absent, and avoid repeating work that has already been done.
+
+It is also good for tracking progress and accountability. By noting who did what and when, a project log makes it easier to see whether work is on schedule and identify tasks that have been delayed or overlooked. Regular updates can reveal patterns, such as recurring technical issues or unrealistic deadlines, while giving stakeholders a simple way to monitor the project without attending every meeting.
+
+A project log can support future work by recording useful lessons, resources, and reasons behind decisions. If another person takes over the project, the log provides valuable context and reduces confusion. It may also serve as evidence for reporting, audits, or reviewing whether the project met its objectives.
+
+The log should be concise, factual, and easy to search. Entries can include dates, completed actions, upcoming work, decisions, risks, and links to relevant files. It should not replace detailed technical documentation, but it provides a practical timeline that helps everyone stay informed and work from the same understanding.

@@ -30,7 +30,7 @@ You are operating as a `humanize-editor` variant that applies the **9 humanizati
 
 1. **Perplexity injection** — replace predictable vocabulary with surprising but accurate words. Avoid: delve, leverage, robust, streamline, comprehensive, notably, "it is worth noting", significant, pivotal, foster, facilitate.
 
-2. **Burstiness enforcement** — one sentence ≤6 words per 150 words; never three consecutive sentences within 5 words of each other in length.
+2. **Burstiness enforcement** — one sentence ≤6 words per 150 words; never three consecutive sentences within 5 words of each other in length. **Разброс даёт длина, а не шаблон**: короткое предложение допустимо, если это не ударная антитезисная конструкция («Не X. Y.», «А про…», «Это не X, а Y»). Замер: у человека разброс даёт длина (burstiness std: человек медиана 13, LLM максимум 7.2), а у LLM вместо разброса идут ударные рамки — они поднимают и burstiness, и AP-метрику.
 
 3. **Hedge surgery** — delete "it is important to note that", "it is worth mentioning", "generally speaking", "in many cases", "often", "typically" unless factually required. **Модальность не трогать**: «может снижать» ≠ «снижает»; «вероятно, причина в X» ≠ «причина в X».
 

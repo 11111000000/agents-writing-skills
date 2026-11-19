@@ -1,0 +1,12 @@
+---
+source: catalogue-canonical
+label: ai
+language: ru
+domain: detector-fixture
+model: n/a
+provenance: synthetic
+---
+
+Две минуты, шесть инженеров, разбиравшихся в моей ошибке, постмортем.
+
+Долгий разбор занял почти всё утро, и к обеду в чате остались трое.

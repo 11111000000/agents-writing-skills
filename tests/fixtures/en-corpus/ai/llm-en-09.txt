@@ -1,0 +1,17 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3.1-Flash
+seed: 20261118
+---
+
+For months, the project has existed mostly as intentions: half-built features, unanswered questions, careful plans to make one more adjustment before anything is shown to anyone else. The first release changes the mood. What was private becomes visible, and what felt abstract acquires edges, limitations, and a strange new reality. Bugs that seemed manageable now have names and users. Small decisions become choices that other people will judge.
+
+There is relief in this, but also exposure. The project is no longer protected by the possibility that it might someday be perfect. Its rough edges are visible, its compromises are plain, and its unfinished parts can no longer be excused as work in progress. Maintenance begins to feel different from creation. Feedback arrives, some useful, some confusing, and the team must decide which voices to listen to without losing the original purpose.
+
+At the same time, the release marks a change in scale. A project that was once held in the mind of a few people now belongs partly to its users. Support requests, documentation, updates, and the need to explain not just how the software works but why it works this way become part of the work.
+
+Still, the deepest change is psychological. The long uncertainty ends. The project has crossed from promise into fact, and no matter what happens next, there is now something real to improve, defend, and build upon.

@@ -1,0 +1,17 @@
+---
+source: catalogue-canonical
+label: ai
+language: en
+domain: detector-fixture
+model: n/a
+provenance: synthetic
+---
+
+It's not just a meme — it's a celebration of grassroots car culture.
+It's not just an update, it's a complete reimagining of the platform.
+This isn't a tool, this is a methodology.
+It's not a bug, but a feature.
+It's not so much a framework as a philosophy.
+It's more than a tool. It's an ecosystem.
+Not only faster, but also more reliable.
+It's not merely a document. It's a living thing.

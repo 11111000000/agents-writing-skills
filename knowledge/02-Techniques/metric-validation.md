@@ -141,6 +141,84 @@ For a real RU-AI corpus, we'd need:
 limitation. (Synthetic data + Wikisource is directionally correct but not
 production-grade.)
 
+---
+
+## 6. Real LLM corpus + frame-based detectors (v7.1, 2026-11-18)
+
+The action item above is now closed: the corpus is real.
+
+### 6.1. What was built
+
+| Артефакт | Что это |
+|---|---|
+| `scripts/generate-llm-corpus.sh` | Сбор реальных генераций LLM (MiniMax-M3 / M3.1-Flash) через `llm-call`. Промпты намеренно не упоминают анти-паттерны. |
+| `scripts/patterns.py` | Рамочные детекторы: AP (5 классов RU + 4 EN), P-NEW-16, P-NEW-18, P-NEW-19. Нормализация потока. |
+| `tests/fixtures/ru-corpus/ai/llm-ru-*.txt` | 24 реальные RU-генерации (~200 слов каждая) |
+| `tests/fixtures/en-corpus/ai/llm-en-*.txt` | 12 реальные EN-генерации |
+| `tests/fixtures/detectors/*.txt` | Golden-фикстуры на каждую форму каталога |
+
+### 6.2. Measured separation (real data)
+
+AP = negative-parallelism frames per 1000 words (strong class only):
+
+| Группа | n | медиана | максимум | минимум ненулевого |
+|---|---|---|---|---|
+| Человек, RU литература | 8 | 1.1 | 3.45 | 0.40 |
+| **LLM, RU (MiniMax-M3)** | 24 | 5.5 | 15.94 | 4.65 |
+| Человек, EN (HC3+RAID) | 60 | 0 | 2.36 | 2.15 |
+| **LLM, EN** | 12 | 0 | 4.31 | 4.27 |
+
+Порог детектора: **RU 4**, **EN 3**. Оба стоят между максимумом человека и
+минимумом LLM. Старый порог `TH_AP=1` был неверен: он помечал 7 из 8
+человеческих литературных файлов.
+
+Burstiness (std длины предложений), RU:
+
+| Группа | n | медиана | минимум | максимум |
+|---|---|---|---|---|
+| Человек | 8 | 13.0 | 6.8 | 68.8 |
+| LLM | 24 | 5.1 | 3.8 | 7.2 |
+
+Порог 8 ловит 24/24 LLM и даёт 1 ложное срабатывание на 8 файлов (Бунин,
+«Бирюк», 6.8) — приемлемо для диагностики.
+
+### 6.3. Что НЕ разделяется (важнее, чем что разделяется)
+
+| Метрика | Человек (RU лит.) | LLM (RU) | Вывод |
+|---|---|---|---|
+| P-NEW-18 (asyndeton tricolon) | медиана 6.4/1k | медиана 0.0/1k | **Инвертирован**: литературная проза использует бессоюзное трикольцо чаще. Гейтом быть не может. |
+| P-NEW-19 (closer ≤7 слов) | медиана 11.5, максимум 74 | 0 | **Инвертирован**: короткие концовки абзаца — признак человеческой прозы. Прежний критерий «≤6 слов» без маркеров бессмыслен. Оставлен как диагностический счётчик; гейт — только по маркерной подклассе (aphoristic closer). |
+| P-NEW-16 (unnamed opponent) | 0 | 0 | Детектор ловит 6/6 канонических примеров каталога, но **естественной частоты в корпусе нет**. Диагностический, не гейт. |
+| YapScore | 1.0 | 1.0–1.1 | На реальном LLM не срабатывает: лексика «пустышек» узкая. Различает только синтетический AI-корпус (1.8–3.1). |
+| V (vacuum openers) | 0 | 0 | То же: список открывающих слишком узкий. |
+
+**Главный вывод:** на реальном LLM-выводе из всех метрик разделяют только
+**AP** и **burstiness**. Остальные либо ловят литературу, либо не ловят
+ничего. Это пересматривает статус P-NEW-18/19: они не «детекторы AI»,
+а стилистические счётчики.
+
+### 6.4. Ограничения
+
+- LLM-корпус — одно семейство моделей (MiniMax-M3 / M3.1-Flash). Перенос на
+  другие модели не проверен.
+- n=8 для человеческой литературы: верхняя граница 3.45 — оценка с большой
+  погрешностью. Порог 4 выбран с запасом, но это не «доказанный» порог.
+- Промпты — бытовая рефлексивная проза. На маркетинговых и документационных
+  жанрах картина может отличаться.
+- 7 из 24 LLM-текстов не содержат ни одной рамки: AP ловит 17/24, а не 24/24.
+  AP — не детектор AI вообще, а детектор одного маркера.
+
+### 6.5. Связанные правки
+
+- `scripts/benchmark-skill.sh`: пороги `TH_AP` (RU 4 / EN 3), новая нормализация
+  потока, P-NEW-16/18/19 переведены на рамочные детекторы, YapScore получил
+  пол базовой величины (иначе метрика уходила в 310 на перегенерированном тексте).
+- `skills/humanize-writer/SKILL.md`: re-strip после REBUILD, burstiness не через
+  антитезисы, перекрёстный гейт, обязательное поле `p9_frames_manual`.
+- `skills/anti-ai-auditor/SKILL.md`: скрипт — прокси; обязателен ручной проход
+  по формам §3.1–3.5.
+- `skills/humanize-writer/references/lexicon.md`: колонка «что приём добавляет».
+
 ## Decisions
 
 Based on the above:
@@ -151,10 +229,20 @@ Based on the above:
    on HC3 / RAID / Wikisource (n=145).
 4. **Add regression tests** that lock in the calibrated separations for the
    new fixtures.
+5. **(v7.1)** Пере-калибровать AP на реальном LLM-корпусе: порог RU 4 / EN 3
+   вместо фольклорного 1; зафиксировать, что P-NEW-18/19 инвертированы и
+   гейтами быть не могут.
 
 ## Next research questions
 
 - Do these calibrated thresholds hold for non-Western genres (Asian LLM output)?
 - Does YapBench's Borisov formula (vs our simplified one) yield better RU discrimination?
-- Can the synthetic RU-AI bias be reduced by collecting real LLM outputs?
+- ~~Can the synthetic RU-AI bias be reduced by collecting real LLM outputs?~~
+  → Сделано: `scripts/generate-llm-corpus.sh`, 24 RU + 12 EN реальных генераций.
 - Do the new patterns (P-NEW-13/16/18/19/20) actually discriminate in HC3/RAID?
+  → Частично: на реальном LLM-корпусе разделяет только AP (и burstiness).
+  P-NEW-18/19 — инвертированы, P-NEW-16 не встречается, P-NEW-13/20 — единичные.
+- Расширить корпус на другие семейства моделей (GPT, Claude, Yandex) — текущая
+  калибровка ограничена одним семейством.
+- Нужен ли отдельный гейт для «AP вырос после REBUILD» (перекрёстный гейт) —
+  сейчас это ручное объяснение, а не автоматика.

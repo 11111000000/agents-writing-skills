@@ -1,0 +1,19 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3
+seed: 20261118
+---
+
+By late evening, the city library had grown quiet. The reading room was nearly empty, its long tables covered in soft pools of light from old brass lamps. Most of the chairs sat unoccupied, though a few readers lingered over thick books, turning pages with the care of people trying not to disturb the silence.
+
+Near the entrance, the librarian looked up from her desk as someone slipped through the glass doors. Outside, the street was dark and damp, its neon signs reflected in puddles. She returned to her work, marking overdue notices with a blue pen.
+
+A student sat in the corner, surrounded by notebooks and a half-empty cup of coffee. Across from him, an elderly woman read a newspaper, the paper crinkling softly each time she folded it. Near the windows, a woman in a gray coat copied notes from a laptop, her face tired but focused.
+
+The building smelled faintly of paper, dust, and floor polish. Somewhere above, a ventilation system hummed steadily. Every sound seemed muted: footsteps, a cough, the soft click of a mouse. The shelves stood tall and shadowed, filled with thousands of patient stories waiting to be opened.
+
+When the clock above the circulation desk clicked toward ten, the librarian began stacking the last returned books. The student closed his notebook, and the woman by the window saved her work. One by one, the readers gathered their belongings and stepped back into the cool night, leaving the library glowing behind them.

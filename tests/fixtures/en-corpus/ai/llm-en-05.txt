@@ -1,0 +1,15 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3.1-Flash
+seed: 20261118
+---
+
+The old workshop stands at the end of a narrow lane, its wooden front door opening onto a room crowded with half-finished instruments. Shavings curl across the workbench, mingling with dust, rosin, and thin curls of brass. Violins, cellos, and wooden flutes wait on shelves or hang from pegs on the walls. Some are polished and gleam; others are split, cracked, or stripped of their fittings, their pale bellies exposed for inspection.
+
+An aged repairer sits beneath a shaded lamp, bent over a violin. He steadies its neck with one hand while guiding a tiny chisel with the other. Every so often he pauses, listens, and turns the instrument toward the light. Nearby, a pot of glue simmers on a small stove. Old bottles, files, clamps, and coils of gut line the bench, each tool worn smooth by years of use. A radio plays quietly in the corner, while a wall clock ticks above a cabinet full of spare strings and wooden scraps.
+
+The room smells of varnish, oil, and old pine. Dust settles in the window light, and the faint scent of linseed hangs in the air. Though the shop is modest and cluttered, everything has a place. The repairer works slowly, carefully, restoring instruments so they can carry music into the world again.

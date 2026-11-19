@@ -1,0 +1,17 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3
+seed: 20261118
+---
+
+People learn by combining prior knowledge, observation, feedback, and social interaction. Early in life, they rely on general patterns and simple rules, but experience gradually helps them build more detailed mental models. When a situation is unfamiliar, people often compare it with something they already know. This can be useful, but it can also lead them to overlook important differences or accept ideas that sound familiar without checking the evidence.
+
+People make decisions with incomplete information by balancing possible benefits, risks, time, and effort. They rarely calculate every consequence. Instead, they use shortcuts, such as trusting familiar options, following the behavior of others, or choosing the option that feels safest. These shortcuts save mental energy, but they may produce errors, especially when the situation is unusual or emotions are strong.
+
+Learning also depends on motivation and context. People remember information better when it is meaningful, connected to a clear goal, or repeated in varied situations. Feedback is especially valuable because it shows whether a previous judgment was effective. However, people do not always respond rationally to feedback; they may defend earlier choices or notice only what confirms their beliefs.
+
+Ultimately, effective learning and decision-making require curiosity, self-awareness, and a willingness to revise assumptions. Good decisions are not guaranteed, but they become more reliable when people gather relevant information, consider alternatives, seek different perspectives, and remain open to evidence that changes their minds.

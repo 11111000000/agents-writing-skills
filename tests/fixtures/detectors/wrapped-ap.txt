@@ -1,0 +1,18 @@
+---
+source: detector-regression
+label: ai
+language: ru
+domain: detector-fixture
+model: n/a
+provenance: synthetic
+---
+
+Это не баг,
+а фича.
+
+Это не конец,
+а начало.
+
+Это не столько
+фреймворк,
+сколько философия.

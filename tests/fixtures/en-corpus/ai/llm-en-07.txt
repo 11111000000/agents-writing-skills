@@ -1,0 +1,15 @@
+---
+source: llm-generation
+provenance: real
+label: ai
+language: en
+domain: generated
+model: MiniMax-M3.1-Flash
+seed: 20261118
+---
+
+A small software team usually starts with a clear problem, not a feature wish list. Product goals define who the software serves and what outcome matters most, such as reducing support requests or helping users complete a key task. The team then gathers evidence from user interviews, support tickets, usage data, and direct feedback. It also reviews the product roadmap, technical debt, and security needs. This broader context keeps urgent requests from distracting the team from larger objectives.
+
+Next, the team turns possible work into a ranked list. For each idea, members estimate its user value, confidence in that estimate, effort, time to deliver, and strategic fit. They may use simple scoring, but discussion matters more than the formula. The team asks what else could achieve the same result. An analytics improvement, for example, might solve a reporting problem faster than building a new dashboard. Ideas that are expensive, risky, or weakly connected to current goals move down the list.
+
+The final choice should be small enough to ship and learn from. The team defines success with a measurable metric, assigns an owner, and builds a limited version. After release, it watches behavior, collects feedback, and checks whether the intended outcome improved. That evidence updates priorities and may lead the team to refine, expand, or stop the feature. Thus, choosing what to build next is not a one-time decision but a continuing cycle of aligning goals, gathering evidence, ranking options, shipping a testable change, and learning from real results.
