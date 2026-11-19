@@ -24,11 +24,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1794983521,
-        "narHash": "sha256-+gTRVEKvUw35DmHGOkuc75U5/irfNa0ovBvAPNzyeOU=",
+        "lastModified": 1795105552,
+        "narHash": "sha256-XSs/Bao6Wvk5j9/K58wGsvt3OktPteG2f8nhUP55hOY=",
         "owner": "11111000000",
         "repo": "math-coding",
-        "rev": "d795eb419619a231828cf5d25715b645ea7049b3",
+        "rev": "26d463708eb8f56de8356efe7e7668f22a8f1cfa",
         "type": "github"
       },
       "original": {
